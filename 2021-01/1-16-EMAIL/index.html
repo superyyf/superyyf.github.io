@@ -222,7 +222,7 @@
 <h1 id="简单邮件传送协议SMTP（邮件发送协议）"><a href="#简单邮件传送协议SMTP（邮件发送协议）" class="headerlink" title="简单邮件传送协议SMTP（邮件发送协议）"></a>简单邮件传送协议SMTP（邮件发送协议）</h1><p>&emsp;&emsp;SMTP规定了在两个互相通信的SMTP进程之间应如何交换信息。<br>&emsp;&emsp;SMTP规定了14条<strong>命令</strong>和21种<strong>应答信息</strong>。每条命令用几个字母组成，而每一种应答信息一般只有一行信息，由一个3位数字的代码开始，后面附上（也可不附上）很简单的文字说明。</p>
 <ol>
 <li>连接建立<br>&emsp;&emsp;发件人的邮件送到发送方邮件服务器缓存后，SMTP客户就每隔一定时间对邮件缓存扫描一次。如发现有邮件，就使用SMTP的熟知端口号码25与接收方服务器的SMTP服务器建立TCP连接。在连接建立后，接收方SMTP服务器要发出“220 Service ready”（服务就绪）。然后SMTP客户向SMTP服务器发出HELO命令，附上发送方的主机名。SMTP服务器若有能力接收邮件，则回答：“250 OK”，表示已准备好接收。若SMTP服务器不可用，则回答“421 Service not available”（服务不可用）。SMTP不使用中间的邮件服务器。</li>
-<li>邮件传送<br>&emsp;&emsp;邮件的传送从MAIL命令开始。MAIL命令后面有发件人的地址。如：MAIL FROM <a href="mailto:&#119;&#x63;&#121;&#121;&#102;&#64;&#x6f;&#x75;&#116;&#108;&#111;&#111;&#x6b;&#46;&#x63;&#111;&#109;">&#119;&#x63;&#121;&#121;&#102;&#64;&#x6f;&#x75;&#116;&#108;&#111;&#111;&#x6b;&#46;&#x63;&#111;&#109;</a>。若SMTP服务器已准备好接收邮件，则回答：“250 OK”。否则，返回一个代码，指出原因。如：451（处理时出错），452（存储空间不够），500（命令无法识别）等。<br>&emsp;&emsp;下面跟着一个或多个RCPT命令，取决于把一个邮件发送给一个或多个收件人，其格式为RCPT TO: &lt;收件人地址&gt;。每发送一个RCPT命令，都应当有相应的信息从SMTP服务器返回，如：“250 OK”，表示指明的邮箱在接收方的系统中，或“550 No Such user here”（无此用户），即不存在此邮箱。<br>&emsp;&emsp;再下面就是DATA命令，表示要开始传送邮件的内容了。SMTP服务器返回的信息是：“354 Start mail input; end with &lt;CRLF&gt;.&lt;CRLF&gt;”。若不能接收邮件则返回421（服务器不可用），500（命令无法识别）等。若邮件收到了，则返回“250 OK”，或返回差错代码。</li>
+<li>邮件传送<br>&emsp;&emsp;邮件的传送从MAIL命令开始。MAIL命令后面有发件人的地址。如：MAIL FROM <a href="mailto:&#119;&#99;&#121;&#121;&#x66;&#64;&#111;&#x75;&#116;&#108;&#x6f;&#111;&#x6b;&#x2e;&#99;&#111;&#109;">&#119;&#99;&#121;&#121;&#x66;&#64;&#111;&#x75;&#116;&#108;&#x6f;&#111;&#x6b;&#x2e;&#99;&#111;&#109;</a>。若SMTP服务器已准备好接收邮件，则回答：“250 OK”。否则，返回一个代码，指出原因。如：451（处理时出错），452（存储空间不够），500（命令无法识别）等。<br>&emsp;&emsp;下面跟着一个或多个RCPT命令，取决于把一个邮件发送给一个或多个收件人，其格式为RCPT TO: &lt;收件人地址&gt;。每发送一个RCPT命令，都应当有相应的信息从SMTP服务器返回，如：“250 OK”，表示指明的邮箱在接收方的系统中，或“550 No Such user here”（无此用户），即不存在此邮箱。<br>&emsp;&emsp;再下面就是DATA命令，表示要开始传送邮件的内容了。SMTP服务器返回的信息是：“354 Start mail input; end with &lt;CRLF&gt;.&lt;CRLF&gt;”。若不能接收邮件则返回421（服务器不可用），500（命令无法识别）等。若邮件收到了，则返回“250 OK”，或返回差错代码。</li>
 <li>连接释放<br>&emsp;&emsp;邮件发送完毕后，SMTP客户应发送QUIT命令。SMTP服务器返回的信息是“221（服务器关闭）”，表示SMTP同意释放TCP连接。邮件传送的全部过程即结束。</li>
 </ol>
 <p>SMTP的缺点：</p>
@@ -553,6 +553,31 @@
 
 
   
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
 
 
 
