@@ -209,22 +209,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/应用层/动态主机配置协议DHCP</p>
-<a id="more"></a>
-<p>&emsp;&emsp;在协议软件中的参数赋值的动作叫做<strong>协议配置</strong>。具体的配置信息有哪些取决于协议栈。例如，连接到互联网的计算机的协议软件配置的项目包括：</p>
-<ol>
-<li>IP地址；</li>
-<li>子网掩码；</li>
-<li>默认路由器的IP地址；</li>
-<li>域名服务器的IP地址。</li>
-</ol>
-<p>&emsp;&emsp;用人工进行协议配置很不方便，而且容易出错。因此，应当采用自动协议配置的方法。互联网现在广泛使用的而是<strong>动态主机配置协议DHCP</strong>(Dynamic Host Configuration)，它提供了一种机制，称为<strong>即插即用网</strong>(plug-and-play network)。这种机制允许一台计算机加入新的网络和获取IP地址而不用手工参与。<br>DHCP对运行客户软件和服务器软件的计算机都适用。DHCP适用客户服务器方式。</p>
-<ol>
-<li>需要IP地址的主机在启动时就向DHCP服务器<strong>广播</strong>发送<strong>发现报文</strong>(DHCPDISCOVER)（将目的IP地址置为全1，即255.255.255.255），这时该主机称为DHCP客户。</li>
-<li>在本地网络上的所有主机都能收到这个广播报文，但只有DHCP服务器才对此广播报文进行回答。</li>
-<li>DHCP服务器先在其数据库中查找该计算机的配置信息。若找到，则返回找到的信息。若找不到，则从服务器的<strong>IP地址池</strong>(address pool)中取一个地址分配给该计算机。DHCP服务器的回答报文叫做<strong>提供报文</strong>(DHCPOFFER)。</li>
-</ol>
-<p><strong>DHCP中继代理</strong>(relay agent)：<br>&emsp;&emsp;为了避免DHCP服务器的数量太多。因此现在是每一个网络至少有一个DHCP中继代理（通常是一台路由器），它配置了DHCP服务器的IP地址信息。当DHCP中继代理收到主机A以<strong>广播</strong>形式发送的发现报文后，以<strong>单播</strong>方式向DHCP服务器转发此报文，并等待其回答。收到DHCP服务器回答的提供报文后，DHCP中继代理再把此提供报文发回给主机A。DHCP报文只是UDP用户数据报的数据。<br>&emsp;&emsp;DHCP服务器分配给DHCP客户的IP地址是临时的，因此DHCP客户只能在一段有限的时间内使用这个分配到的IP地址。DHCP协议称这段时间为<strong>租用期</strong>(lease period)。DHCP客户使用的UDP端口是68，而DHCP服务器使用的UDP端口是67。DHCP很适合于经常移动位置的计算机。</p>
+        <p>计算机网络/应用层/动态主机配置协议DHCP <a id="more"></a>   在协议软件中的参数赋值的动作叫做<strong>协议配置</strong>。具体的配置信息有哪些取决于协议栈。例如，连接到互联网的计算机的协议软件配置的项目包括： 1. IP地址； 2. 子网掩码； 3. 默认路由器的IP地址； 4. 域名服务器的IP地址。</p>
+<p>  用人工进行协议配置很不方便，而且容易出错。因此，应当采用自动协议配置的方法。互联网现在广泛使用的而是<strong>动态主机配置协议DHCP</strong>(Dynamic Host Configuration)，它提供了一种机制，称为<strong>即插即用网</strong>(plug-and-play network)。这种机制允许一台计算机加入新的网络和获取IP地址而不用手工参与。 DHCP对运行客户软件和服务器软件的计算机都适用。DHCP适用客户服务器方式。 1. 需要IP地址的主机在启动时就向DHCP服务器<strong>广播</strong>发送<strong>发现报文</strong>(DHCPDISCOVER)（将目的IP地址置为全1，即255.255.255.255），这时该主机称为DHCP客户。 2. 在本地网络上的所有主机都能收到这个广播报文，但只有DHCP服务器才对此广播报文进行回答。 3. DHCP服务器先在其数据库中查找该计算机的配置信息。若找到，则返回找到的信息。若找不到，则从服务器的<strong>IP地址池</strong>(address pool)中取一个地址分配给该计算机。DHCP服务器的回答报文叫做<strong>提供报文</strong>(DHCPOFFER)。</p>
+<p><strong>DHCP中继代理</strong>(relay agent)：   为了避免DHCP服务器的数量太多。因此现在是每一个网络至少有一个DHCP中继代理（通常是一台路由器），它配置了DHCP服务器的IP地址信息。当DHCP中继代理收到主机A以<strong>广播</strong>形式发送的发现报文后，以<strong>单播</strong>方式向DHCP服务器转发此报文，并等待其回答。收到DHCP服务器回答的提供报文后，DHCP中继代理再把此提供报文发回给主机A。DHCP报文只是UDP用户数据报的数据。   DHCP服务器分配给DHCP客户的IP地址是临时的，因此DHCP客户只能在一段有限的时间内使用这个分配到的IP地址。DHCP协议称这段时间为<strong>租用期</strong>(lease period)。DHCP客户使用的UDP端口是68，而DHCP服务器使用的UDP端口是67。DHCP很适合于经常移动位置的计算机。</p>
 <p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
 
     </div>

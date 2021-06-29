@@ -27,15 +27,15 @@
 <meta property="og:site_name" content="Play With YYF">
 <meta property="og:description" content="计算机网络&#x2F;应用层&#x2F;域名系统DNS">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png">
-<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8.png">
-<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/DNS%E6%9F%A5%E8%AF%A2.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/域名空间.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/域名服务器.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/DNS查询.png">
 <meta property="article:published_time" content="2021-01-13T09:19:37.000Z">
 <meta property="article:modified_time" content="2021-06-28T13:00:20.018Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png">
+<meta name="twitter:image" content="https://yyf.zone/2021-01/1-13-DNS/域名空间.png">
 
 <link rel="canonical" href="https://yyf.zone/2021-01/1-13-DNS/">
 
@@ -213,38 +213,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/应用层/域名系统DNS</p>
-<a id="more"></a>
-<h1 id="应用层概述"><a href="#应用层概述" class="headerlink" title="应用层概述"></a>应用层概述</h1><p>&emsp;&emsp;应用层协议<strong>为不同的网络应用的应用进程之间的通信提供规则</strong>。每个应用层协议都是为了解决某一类的应用问题，而问题的解决又要通过位于不同主机的多个应用进程之间的通信和协同工作来完成。应用层的具体内容就是精确定义这些通信规则。</p>
-<h1 id="域名系统概述"><a href="#域名系统概述" class="headerlink" title="域名系统概述"></a>域名系统概述</h1><p>&emsp;&emsp;域名系统DNS(Domain Name System)是互联网使用的命名系统，用来把便于人们使用的<strong>机器名称转换为IP地址</strong>。<br>&emsp;&emsp;互联网的域名系统DNS被设计成为一个<strong>联机分布式数据库系统</strong>，并采用客户服务器方式。<br>&emsp;&emsp;当某一个应用进程需要把主机名解析为IP地址时，该应用进程就调用解析程序(resolver)，并称为DNS的一个客户，把待解析的域名放在DNS请求报文中，以UDP用户数据报的方式发给本地域名服务器。本地域名服务器在查找域名后，把对应的IP地址放在回答报文中返回。应用进程获得目的主机的IP地址后即可进行通信。<br>&emsp;&emsp;若本地域名服务器不能回答该请求，则此域名服务器就暂时称为DNS的另一个客户，并向其他域名服务器发出查询请求。这种过程直至找到能够回答该请求的域名服务器为止。</p>
-<h1 id="互联网的域名结构"><a href="#互联网的域名结构" class="headerlink" title="互联网的域名结构"></a>互联网的域名结构</h1><p>&emsp;&emsp;互联网采用<strong>层次树状结构</strong>的命名方法。<br>&emsp;&emsp;每一个域名都由标号(label)序列组成，而各标号之间用点隔开。DNS规定，域名中的标号都由英文字母和数字组成，每一个标号不超过63个字符（但为了记忆方便，最好不要超过12个字符），不区分大小写。标号中除连字符(-)外不能使用其他的标点符号。级别最低的域名写在最左边，级别最高的域名写在最右边。由多个标号组成的完整域名总共不超过255个字符。</p>
-<p><img src="/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png" alt="域名空间"></p>
-<p><strong>顶级域名</strong>：</p>
-<ol>
-<li>国家顶级域名nTLD：如cn（中国），us（美国）等等。</li>
-<li>通用顶级域名gTLD：如com（公司企业），org（非营利组织），net（网络服务机构）等等。</li>
-<li>基础服务结构域名：只有一个，即arpa，用于反向域名解析。</li>
-</ol>
-<p><strong>二级域名</strong>，我国把二级域名划分为两类：</p>
-<ol>
-<li>类别域名：如ac（科研机构），com（企业），edu（教育机构）等等。</li>
-<li>行政区域名：如bj（北京市），js（江苏省）等等。</li>
-</ol>
-<h1 id="域名服务器"><a href="#域名服务器" class="headerlink" title="域名服务器"></a>域名服务器</h1><p>&emsp;&emsp;上面讲述的域名体系是抽象的。但具体实现域名系统则是使用分布在各地的域名服务器。理论上，可以让每一级的域名都有一个相对应的域名服务器，但这样会使服务器数量太多，运行效率降低。因此DNS就采用划分区的办法来解决这个问题。<br>&emsp;&emsp;一个服务器所负责管辖的（或有权限的）范围叫做<strong>区</strong>(zone)。每一个区设置响应的<strong>权限域名服务器</strong>，用来保存该区中所有主机的域名到IP地址的映射。<strong>区是“域”的子集</strong>。</p>
-<p><img src="/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8.png" alt="域名服务器"></p>
-<ol>
+        <p>计算机网络/应用层/域名系统DNS <a id="more"></a> # 应用层概述   应用层协议<strong>为不同的网络应用的应用进程之间的通信提供规则</strong>。每个应用层协议都是为了解决某一类的应用问题，而问题的解决又要通过位于不同主机的多个应用进程之间的通信和协同工作来完成。应用层的具体内容就是精确定义这些通信规则。</p>
+<h1 id="域名系统概述">域名系统概述</h1>
+<p>  域名系统DNS(Domain Name System)是互联网使用的命名系统，用来把便于人们使用的<strong>机器名称转换为IP地址</strong>。   互联网的域名系统DNS被设计成为一个<strong>联机分布式数据库系统</strong>，并采用客户服务器方式。   当某一个应用进程需要把主机名解析为IP地址时，该应用进程就调用解析程序(resolver)，并称为DNS的一个客户，把待解析的域名放在DNS请求报文中，以UDP用户数据报的方式发给本地域名服务器。本地域名服务器在查找域名后，把对应的IP地址放在回答报文中返回。应用进程获得目的主机的IP地址后即可进行通信。   若本地域名服务器不能回答该请求，则此域名服务器就暂时称为DNS的另一个客户，并向其他域名服务器发出查询请求。这种过程直至找到能够回答该请求的域名服务器为止。</p>
+<h1 id="互联网的域名结构">互联网的域名结构</h1>
+<p>  互联网采用<strong>层次树状结构</strong>的命名方法。   每一个域名都由标号(label)序列组成，而各标号之间用点隔开。DNS规定，域名中的标号都由英文字母和数字组成，每一个标号不超过63个字符（但为了记忆方便，最好不要超过12个字符），不区分大小写。标号中除连字符(-)外不能使用其他的标点符号。级别最低的域名写在最左边，级别最高的域名写在最右边。由多个标号组成的完整域名总共不超过255个字符。</p>
+<figure>
+<img src="域名空间.png" alt="域名空间" /><figcaption aria-hidden="true">域名空间</figcaption>
+</figure>
+<p><strong>顶级域名</strong>： 1. 国家顶级域名nTLD：如cn（中国），us（美国）等等。 2. 通用顶级域名gTLD：如com（公司企业），org（非营利组织），net（网络服务机构）等等。 3. 基础服务结构域名：只有一个，即arpa，用于反向域名解析。</p>
+<p><strong>二级域名</strong>，我国把二级域名划分为两类： 1. 类别域名：如ac（科研机构），com（企业），edu（教育机构）等等。 2. 行政区域名：如bj（北京市），js（江苏省）等等。</p>
+<h1 id="域名服务器">域名服务器</h1>
+<p>  上面讲述的域名体系是抽象的。但具体实现域名系统则是使用分布在各地的域名服务器。理论上，可以让每一级的域名都有一个相对应的域名服务器，但这样会使服务器数量太多，运行效率降低。因此DNS就采用划分区的办法来解决这个问题。   一个服务器所负责管辖的（或有权限的）范围叫做<strong>区</strong>(zone)。每一个区设置响应的<strong>权限域名服务器</strong>，用来保存该区中所有主机的域名到IP地址的映射。<strong>区是“域”的子集</strong>。</p>
+<figure>
+<img src="域名服务器.png" alt="域名服务器" /><figcaption aria-hidden="true">域名服务器</figcaption>
+</figure>
+<ol type="1">
 <li><strong>根域名服务器</strong>(root name server)：根域名服务器是最高层次的域名服务器，也是最重要的域名服务器。所有的根服务器都知道所有的顶级域名服务器的域名和IP地址。不管是哪一个本地域名服务器，只要自己无法解析，就首先求助于根域名服务器。全球共有13组根服务器，分布在588个地点(IPv4)。代号A~M。采用任播技术。在许多情况下，根域名服务器并不直接把待查询的域名直接转换成IP地址，而是告诉本地域名服务器下一步应当找哪一个顶级域名服务器进行查询。</li>
 <li><strong>顶级域名服务器</strong>（TLD服务器）：负责管理在该顶级域名服务器注册的所有二级域名。当收到DNS查询请求时，可能给出最后的结果，也可能是下一步应当找的域名服务器的IP地址。</li>
 <li><strong>权限域名服务器</strong>：负责一个区的域名服务器。当一个权限域名服务器不能给出最后的查询回答时，就告诉DNS客户，下一步应当找哪一个权限域名服务器。</li>
 <li><strong>本地域名服务器</strong>(local name server)：当一台主机发出DNS查询请求时，这个查询请求就发送给本地域名服务器。非常的重要。</li>
 </ol>
-<p><strong>域名解析过程</strong>：</p>
-<ol>
-<li>本机向本地域名服务器的查询一般都是采用<strong>递归查询</strong>。即“<strong>你帮我查</strong>”。</li>
-<li>本地服务器向根服务器的查询一般是采用<strong>迭代查询</strong>。即“<strong>你告诉我怎么查</strong>”。</li>
-</ol>
-<p><img src="/2021-01/1-13-DNS/DNS%E6%9F%A5%E8%AF%A2.png" alt="DNS查询"></p>
-<p>&emsp;&emsp;为了提高DNS的查询效率，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名已经从何处获得域名映射信息的记录。</p>
+<p><strong>域名解析过程</strong>： 1. 本机向本地域名服务器的查询一般都是采用<strong>递归查询</strong>。即“<strong>你帮我查</strong>”。 2. 本地服务器向根服务器的查询一般是采用<strong>迭代查询</strong>。即“<strong>你告诉我怎么查</strong>”。</p>
+<figure>
+<img src="DNS查询.png" alt="DNS查询" /><figcaption aria-hidden="true">DNS查询</figcaption>
+</figure>
+<p>  为了提高DNS的查询效率，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名已经从何处获得域名映射信息的记录。</p>
 <p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
 
     </div>
@@ -330,7 +324,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">应用层概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">域名系统概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">互联网的域名结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">域名服务器</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">域名系统概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">互联网的域名结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">域名服务器</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

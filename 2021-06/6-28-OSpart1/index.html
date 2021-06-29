@@ -201,42 +201,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>面经整理/操作系统（part 1）</p>
-<a id="more"></a>
-<h1 id="操作系统-Part-1"><a href="#操作系统-Part-1" class="headerlink" title="操作系统(Part 1)"></a>操作系统(Part 1)</h1><h2 id="什么是操作系统？"><a href="#什么是操作系统？" class="headerlink" title="什么是操作系统？"></a>什么是操作系统？</h2><p>操作系统是一种软件，具有以下的功能：</p>
-<ol>
-<li><strong>屏蔽硬件</strong>，为用户和其他软件提供接口。</li>
-<li><strong>管理资源</strong>，合理的分配和调度资源。</li>
-</ol>
-<h2 id="什么是用户态和内核态？"><a href="#什么是用户态和内核态？" class="headerlink" title="什么是用户态和内核态？"></a>什么是用户态和内核态？</h2><ol>
+        <p>面经整理/操作系统（part 1） <a id="more"></a> # 操作系统(Part 1)</p>
+<h2 id="什么是操作系统">什么是操作系统？</h2>
+<p>操作系统是一种软件，具有以下的功能： 1. <strong>屏蔽硬件</strong>，为用户和其他软件提供接口。 2. <strong>管理资源</strong>，合理的分配和调度资源。</p>
+<h2 id="什么是用户态和内核态">什么是用户态和内核态？</h2>
+<ol type="1">
 <li>在用户态下，CPU只能受限的访问内存，并且不允许访问外围设备，用户态下的 CPU 不允许独占，也就是说 CPU 能够被其他程序获取。</li>
 <li>在内核态下，CPU可以访问任意的数据，允许访问外围设备，处于内核态的 CPU 可以从一个程序切换到另外一个程序，并且占用CPU不会发生抢占情况，一般处于特权级0的状态我们称之为内核态。</li>
 </ol>
-<h2 id="用户态和内核态是如何切换的？"><a href="#用户态和内核态是如何切换的？" class="headerlink" title="用户态和内核态是如何切换的？"></a>用户态和内核态是如何切换的？</h2><p>从用户态到内核态切换可以通过三种方式：</p>
-<ol>
-<li>系统调用（软中断）。</li>
-<li>外设中断（硬中断）。</li>
-<li>异常。如果当前进程运行在用户态，这时候发生了异常事件就会触发切换。</li>
-</ol>
-<h2 id="请分别简单说一说进程和线程以及它们的区别。"><a href="#请分别简单说一说进程和线程以及它们的区别。" class="headerlink" title="请分别简单说一说进程和线程以及它们的区别。"></a>请分别简单说一说进程和线程以及它们的区别。</h2><p><strong>进程</strong>：进程是资源分配与调度的基本单位，具有一定独立功能的程序的一次实例。<br><strong>线程</strong>：线程是程序执行的基本单位。线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈)，它可与同属一个进程的其他的线程共享进程所拥有的全部资源。<br>区别：</p>
-<ol>
-<li>进程是资源分配的基本单位；线程是程序执行的基本单位。</li>
-<li>进程拥有自己的资源空间，没启动一个进程，系统就会为它分配地址空间；而线程与CPU资源分配无关，多个线程共享同一进程内的资源，使用相同的地址空间。</li>
-<li>一个进程可以包含若干个线程。</li>
-</ol>
-<h2 id="进程的通信方式有哪些？"><a href="#进程的通信方式有哪些？" class="headerlink" title="进程的通信方式有哪些？"></a>进程的通信方式有哪些？</h2><ol>
-<li><p>管道：<br>(1) 匿名管道（pipe）：fork产生的子进程会继承父进程对应的文件描述符。利用这个特性，父进程先pipe创建管道之后，子进程也会得到同一个管道的读写文件描述符。从而实现了父子两个进程使用一个管道完成半双工通信。<br>(2) 命名管道（fifo）：命名管道在底层的实现跟匿名管道完全一致，区别只是命名管道会有一个全局可见的文件名以供其他进程使用。</p>
+<h2 id="用户态和内核态是如何切换的">用户态和内核态是如何切换的？</h2>
+<p>从用户态到内核态切换可以通过三种方式： 1. 系统调用（软中断）。 2. 外设中断（硬中断）。 2. 异常。如果当前进程运行在用户态，这时候发生了异常事件就会触发切换。</p>
+<h2 id="请分别简单说一说进程和线程以及它们的区别">请分别简单说一说进程和线程以及它们的区别。</h2>
+<p><strong>进程</strong>：进程是资源分配与调度的基本单位，具有一定独立功能的程序的一次实例。<br />
+<strong>线程</strong>：线程是程序执行的基本单位。线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈)，它可与同属一个进程的其他的线程共享进程所拥有的全部资源。 区别： 1. 进程是资源分配的基本单位；线程是程序执行的基本单位。 2. 进程拥有自己的资源空间，没启动一个进程，系统就会为它分配地址空间；而线程与CPU资源分配无关，多个线程共享同一进程内的资源，使用相同的地址空间。 3. 一个进程可以包含若干个线程。</p>
+<h2 id="进程的通信方式有哪些">进程的通信方式有哪些？</h2>
+<ol type="1">
+<li>管道：
+<ol type="1">
+<li>匿名管道（pipe）：fork产生的子进程会继承父进程对应的文件描述符。利用这个特性，父进程先pipe创建管道之后，子进程也会得到同一个管道的读写文件描述符。从而实现了父子两个进程使用一个管道完成半双工通信。<br />
 </li>
-<li><p>消息队列（message）：<br>(1) 消息队列传递的数据具有某种结构，而不是简单的字节流。<br>(2) 消息队列的本质其实是一个内核提供的链表。<br><img src="/2021-06/6-28-OSpart1/message.jpg" alt="message"></p>
+<li>命名管道（fifo）：命名管道在底层的实现跟匿名管道完全一致，区别只是命名管道会有一个全局可见的文件名以供其他进程使用。</li>
+</ol></li>
+<li>消息队列（message）：
+<ol type="1">
+<li>消息队列传递的数据具有某种结构，而不是简单的字节流。<br />
 </li>
-<li><p>共享内存（shared memory）：<br>(1) 共享内存在各种进程间通信方式中具有最高的效率。<br>(2) 共享内存允许两个或更多进程访问同一块内存，就如同 malloc() 函数向不同进程返回了指向同一个物理内存区域的指针。当一个进程改变了这块地址中的内容的时候，其它进程都会察觉到这个更改。<br>(3)  使用共享内存要注意的是多个进程之间对一个给定存储区访问的互斥。若一个进程正在向共享内存区写数据，则在它做完这一步操作前，别的进程不应当去读、写这些数据。  </p>
+<li>消息队列的本质其实是一个内核提供的链表。<br />
+<img src="message.jpg" alt="message" /></li>
+</ol></li>
+<li>共享内存（shared memory）：
+<ol type="1">
+<li>共享内存在各种进程间通信方式中具有最高的效率。<br />
 </li>
-</ol>
-<ol start="4">
-<li><p>信号量：<br>(1) 信号量是解决互斥共享资源的同步问题而引入的机制。</p>
+<li>共享内存允许两个或更多进程访问同一块内存，就如同 malloc() 函数向不同进程返回了指向同一个物理内存区域的指针。当一个进程改变了这块地址中的内容的时候，其它进程都会察觉到这个更改。<br />
 </li>
-<li><p>socket：<br>(1) socket是基于TCP或UDP协议实现的。流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。数据报套接字使用UDP协议，提供数据打包发送服务。</p>
-</li>
+<li>使用共享内存要注意的是多个进程之间对一个给定存储区访问的互斥。若一个进程正在向共享内存区写数据，则在它做完这一步操作前，别的进程不应当去读、写这些数据。</li>
+</ol></li>
+<li>信号量：
+<ol type="1">
+<li>信号量是解决互斥共享资源的同步问题而引入的机制。</li>
+</ol></li>
+<li>socket：
+<ol type="1">
+<li>socket是基于TCP或UDP协议实现的。流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。数据报套接字使用UDP协议，提供数据打包发送服务。</li>
+</ol></li>
 </ol>
 
     </div>
@@ -319,7 +327,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-Part-1"><span class="nav-number">1.</span> <span class="nav-text">操作系统(Part 1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是操作系统？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%EF%BC%9F"><span class="nav-number">1.2.</span> <span class="nav-text">什么是用户态和内核态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%87%E6%8D%A2%E7%9A%84%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">用户态和内核态是如何切换的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E5%88%86%E5%88%AB%E7%AE%80%E5%8D%95%E8%AF%B4%E4%B8%80%E8%AF%B4%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E4%BB%A5%E5%8F%8A%E5%AE%83%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%82"><span class="nav-number">1.4.</span> <span class="nav-text">请分别简单说一说进程和线程以及它们的区别。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">进程的通信方式有哪些？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是操作系统？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81"><span class="nav-number">2.</span> <span class="nav-text">什么是用户态和内核态？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%87%E6%8D%A2%E7%9A%84"><span class="nav-number">3.</span> <span class="nav-text">用户态和内核态是如何切换的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E5%88%86%E5%88%AB%E7%AE%80%E5%8D%95%E8%AF%B4%E4%B8%80%E8%AF%B4%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E4%BB%A5%E5%8F%8A%E5%AE%83%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">请分别简单说一说进程和线程以及它们的区别。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">5.</span> <span class="nav-text">进程的通信方式有哪些？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

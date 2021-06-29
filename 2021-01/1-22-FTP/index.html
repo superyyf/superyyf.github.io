@@ -211,22 +211,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/应用层/文件传送协议FTP</p>
-<a id="more"></a>
-<p>文件共享协议：</p>
-<ol>
-<li><strong>复制整个文件的</strong>：FTP，TFTP</li>
-<li><strong>联机访问</strong>：NFS</li>
-</ol>
-<h1 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h1><p>&emsp;&emsp;FTP使用客户服务器方式。一个FTP服务器进程可同时为多个客户提供服务。FTP的服务进程有两大部分组成：一个<strong>主进程</strong>，负责接受新的请求；另外有若干个<strong>从属进程</strong>，负责处理单个请求。</p>
-<p><img src="/2021-01/1-22-FTP/FTP.png" alt="FTP"></p>
-<p>&emsp;&emsp;图中椭圆表示在系统中运行的进程。图中服务器端有两个从属进程：控制进程和数据传送进程。<br>&emsp;&emsp;在进行文件传输时，<strong>FTP的客户和服务器之间要建立两个并行的TCP连接</strong>：“<strong>控制连接</strong>”和“<strong>数据连接</strong>”。FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际传输文件的是“数据连接”。服务器端的控制进程在接收到FTP客户发送来的文件传输请求后就创建“数据传送进程”和“数据连接”，用来连接客户端和服务器端的数据传送进程。数据传送进程实际完成文件的传送，在传送完毕后关闭“数据传送连接”并结束运行。</p>
-<h1 id="NFS"><a href="#NFS" class="headerlink" title="NFS"></a>NFS</h1><p>&emsp;&emsp;FTP并非对所有的数据传输都是最佳的。例如，要在远地计算机的一个很大的文件末尾添加一行信息。若使用FTP则要先把文件传送过来，添加信息后在传送过去。网络文件系统NFS则采用另一种思路。<strong>NFS允许应用进程打开一个远地文件，并能在该文件的某一个特定的位置上好事读写数据</strong>。对于上述例子，NFS客户把要添加的数据和在文件后面写数据的请求一起发送到远地计算机，NFS服务器更新文件后返回应答信息。</p>
-<h1 id="TFTP"><a href="#TFTP" class="headerlink" title="TFTP"></a>TFTP</h1><p>&emsp;&emsp;简单文件传送协议TFTP也使用客户服务器方式，但它<strong>使用UDP数据报</strong>。因此TFTP需要有自己的差错改正措施。TFTP只支持文件传输而不支持交互。TFTP没有一个庞大的命令集，没有列目录的功能，也不能对用户进行身份鉴别。TFTP的工作很像停止等待协议。<br>优点：</p>
-<ol>
-<li>可用于UDP环境</li>
-<li>TFTP代码所占的内存小。这对较小的计算机或某些特殊用途的设备很重要。</li>
-</ol>
+        <p>计算机网络/应用层/文件传送协议FTP <a id="more"></a> 文件共享协议： 1. <strong>复制整个文件的</strong>：FTP，TFTP 2. <strong>联机访问</strong>：NFS</p>
+<h1 id="ftp">FTP</h1>
+<p>  FTP使用客户服务器方式。一个FTP服务器进程可同时为多个客户提供服务。FTP的服务进程有两大部分组成：一个<strong>主进程</strong>，负责接受新的请求；另外有若干个<strong>从属进程</strong>，负责处理单个请求。</p>
+<figure>
+<img src="FTP.png" alt="FTP" /><figcaption aria-hidden="true">FTP</figcaption>
+</figure>
+<p>  图中椭圆表示在系统中运行的进程。图中服务器端有两个从属进程：控制进程和数据传送进程。   在进行文件传输时，<strong>FTP的客户和服务器之间要建立两个并行的TCP连接</strong>：“<strong>控制连接</strong>”和“<strong>数据连接</strong>”。FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际传输文件的是“数据连接”。服务器端的控制进程在接收到FTP客户发送来的文件传输请求后就创建“数据传送进程”和“数据连接”，用来连接客户端和服务器端的数据传送进程。数据传送进程实际完成文件的传送，在传送完毕后关闭“数据传送连接”并结束运行。</p>
+<h1 id="nfs">NFS</h1>
+<p>  FTP并非对所有的数据传输都是最佳的。例如，要在远地计算机的一个很大的文件末尾添加一行信息。若使用FTP则要先把文件传送过来，添加信息后在传送过去。网络文件系统NFS则采用另一种思路。<strong>NFS允许应用进程打开一个远地文件，并能在该文件的某一个特定的位置上好事读写数据</strong>。对于上述例子，NFS客户把要添加的数据和在文件后面写数据的请求一起发送到远地计算机，NFS服务器更新文件后返回应答信息。</p>
+<h1 id="tftp">TFTP</h1>
+<p>  简单文件传送协议TFTP也使用客户服务器方式，但它<strong>使用UDP数据报</strong>。因此TFTP需要有自己的差错改正措施。TFTP只支持文件传输而不支持交互。TFTP没有一个庞大的命令集，没有列目录的功能，也不能对用户进行身份鉴别。TFTP的工作很像停止等待协议。 优点： 1. 可用于UDP环境 2. TFTP代码所占的内存小。这对较小的计算机或某些特殊用途的设备很重要。</p>
 <p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
 
     </div>
@@ -312,7 +307,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FTP"><span class="nav-number">1.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NFS"><span class="nav-number">2.</span> <span class="nav-text">NFS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TFTP"><span class="nav-number">3.</span> <span class="nav-text">TFTP</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ftp"><span class="nav-number">1.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#nfs"><span class="nav-number">2.</span> <span class="nav-text">NFS</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tftp"><span class="nav-number">3.</span> <span class="nav-text">TFTP</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

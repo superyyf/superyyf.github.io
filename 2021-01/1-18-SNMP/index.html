@@ -27,14 +27,14 @@
 <meta property="og:site_name" content="Play With YYF">
 <meta property="og:description" content="计算机网络&#x2F;应用层&#x2F;简单网络管理协议SNMP">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yyf.zone/2021-01/1-18-SNMP/%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86.png">
-<meta property="og:image" content="https://yyf.zone/2021-01/1-18-SNMP/%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-18-SNMP/网络管理.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-18-SNMP/报文格式.png">
 <meta property="article:published_time" content="2021-01-18T08:39:52.000Z">
 <meta property="article:modified_time" content="2021-06-28T13:00:20.034Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yyf.zone/2021-01/1-18-SNMP/%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86.png">
+<meta name="twitter:image" content="https://yyf.zone/2021-01/1-18-SNMP/网络管理.png">
 
 <link rel="canonical" href="https://yyf.zone/2021-01/1-18-SNMP/">
 
@@ -212,41 +212,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/应用层/简单网络管理协议SNMP</p>
-<a id="more"></a>
-<h1 id="网络管理的基本概念"><a href="#网络管理的基本概念" class="headerlink" title="网络管理的基本概念"></a>网络管理的基本概念</h1><p>&emsp;&emsp;网络管理包括对硬件、软件和人力的使用、综合与协调，以便对网络资源进行监视、测试、配置、分析、评价和控制，这样就能以合理的价格满足网络的一些需求，如实时运行性能、服务质量等。</p>
-<p><img src="/2021-01/1-18-SNMP/%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86.png" alt="网络管理"></p>
-<p>网络管理模型中的主要构件</p>
-<ol>
-<li>管理站。</li>
-</ol>
-<p><strong>管理站</strong>又称为管理器，是整个网络管理系统的核心，它通常是个有着良好图形界面高性能的工作站，并由网络管理员直接操作和控制。管理站的所在部门也常称为<strong>网络运行中心NOC</strong>(Network Operations Center)。管理站中的关键构件是<strong>管理程序</strong>。管理程序在运行时就成为<strong>管理进程</strong>。管理站（硬件）或管理程序（软件）都可称为管理者(Manager)或管理器。<br>2. 被管设备。<br>在被管网络中有很多的<strong>被管设备</strong>（包括设备中的软件）。被管设备可以是主机、路由器、打印机、集线器、网桥或调制解调器等。在每一个被管设备中可能有许多<strong>被管对象</strong>(Managed Object)。被管设备有时可称为网络元素或简称为网元。<br>3. 网络管理协议。<br><strong>简单网络管理协议SNMP</strong>(Simple Network Management Protocol)中的管理程序和代理程序按客户服务器方式工作。管理程序运行SNMP客户程序，而代理程序运行SNMP服务器程序。</p>
-<p>网络管理的基本原则</p>
-<ol>
-<li>若要管理某个对象，就必然会给该对象添加一些软件或硬件，但这种“添加”对原有对象的影响必须尽量小些。</li>
-<li>SNMP最重要的指导思想就是要<strong>尽可能简单</strong>。SNMP的基本功能包括监视网络性能、检测分析网络差错和配置网络设备等。</li>
-</ol>
-<p>SNMP的网络管理由三个部分组成</p>
-<ol>
-<li><strong>SNMP本身</strong>。SNMP定义了管理站和代理之间所交换的分组格式。</li>
-<li><strong>管理信息结构SMI</strong>(Structure of Management Information)。SMI定义了命名对象和定义对象类型（包括范围和长度）的通用规则，以及把对象和对象的值进行编码的规则。</li>
-<li><strong>管理信息库MIB</strong>(Management Information Base)。MIB在被管理的实体中创建了命名对象，并规定了其类型。</li>
-</ol>
+        <p>计算机网络/应用层/简单网络管理协议SNMP <a id="more"></a> # 网络管理的基本概念   网络管理包括对硬件、软件和人力的使用、综合与协调，以便对网络资源进行监视、测试、配置、分析、评价和控制，这样就能以合理的价格满足网络的一些需求，如实时运行性能、服务质量等。</p>
+<figure>
+<img src="网络管理.png" alt="网络管理" /><figcaption aria-hidden="true">网络管理</figcaption>
+</figure>
+<p>网络管理模型中的主要构件 1. 管理站。 <strong>管理站</strong>又称为管理器，是整个网络管理系统的核心，它通常是个有着良好图形界面高性能的工作站，并由网络管理员直接操作和控制。管理站的所在部门也常称为<strong>网络运行中心NOC</strong>(Network Operations Center)。管理站中的关键构件是<strong>管理程序</strong>。管理程序在运行时就成为<strong>管理进程</strong>。管理站（硬件）或管理程序（软件）都可称为管理者(Manager)或管理器。 2. 被管设备。 在被管网络中有很多的<strong>被管设备</strong>（包括设备中的软件）。被管设备可以是主机、路由器、打印机、集线器、网桥或调制解调器等。在每一个被管设备中可能有许多<strong>被管对象</strong>(Managed Object)。被管设备有时可称为网络元素或简称为网元。 3. 网络管理协议。 <strong>简单网络管理协议SNMP</strong>(Simple Network Management Protocol)中的管理程序和代理程序按客户服务器方式工作。管理程序运行SNMP客户程序，而代理程序运行SNMP服务器程序。</p>
+<p>网络管理的基本原则 1. 若要管理某个对象，就必然会给该对象添加一些软件或硬件，但这种“添加”对原有对象的影响必须尽量小些。 2. SNMP最重要的指导思想就是要<strong>尽可能简单</strong>。SNMP的基本功能包括监视网络性能、检测分析网络差错和配置网络设备等。</p>
+<p>SNMP的网络管理由三个部分组成 1. <strong>SNMP本身</strong>。SNMP定义了管理站和代理之间所交换的分组格式。 2. <strong>管理信息结构SMI</strong>(Structure of Management Information)。SMI定义了命名对象和定义对象类型（包括范围和长度）的通用规则，以及把对象和对象的值进行编码的规则。 3. <strong>管理信息库MIB</strong>(Management Information Base)。MIB在被管理的实体中创建了命名对象，并规定了其类型。</p>
 <p><strong>总之，SMI建立规则，MIB对变量进行说明，而SNMP完成网管的动作</strong>。</p>
-<h1 id="管理信息结构SMI"><a href="#管理信息结构SMI" class="headerlink" title="管理信息结构SMI"></a>管理信息结构SMI</h1><p>SMI的功能应当有三个：被管对象应怎样命令；用来存储被管对象的数据类型有哪些；在网络上传送的管理数据应如何编码。</p>
-<ol>
-<li>被管对象的命名<br>SMI规定，所有被管对象都必须处在<strong>对象命名树</strong>(object naming tree)上。</li>
-<li>被管对象的数据类型<br>SMI使用基本的抽象语法记法1（即ISO制定的<strong>ASN.1</strong>）来定义数据类型，但又增加了一些新的定义。SMI把数据类型分为两大类：简单类型和结构化类型。</li>
-<li>编码方法<br>SMI使用ASN.1制定的<strong>基本编码规则BER</strong>(Basic Encoding Rule)进行数据的编码。BER指明了每种数据的类型和值。ASN.1把所有的数据元素都表示为T-L-V三个字段组成的序列。T字段(Tag)定义的数据的类型，L字段(Length)定义V字段的长度，而V字段(Value)定义数据的值。</li>
-</ol>
-<h1 id="管理信息库MIB"><a href="#管理信息库MIB" class="headerlink" title="管理信息库MIB"></a>管理信息库MIB</h1><p>&emsp;&emsp;所谓“管理信息”就是指在互联网的网管框架中被管对象的集合。被管对象必须维持可供管理程序读写的若干控制和状态信息。这些被管对象构成了一个虚构的信息存储器，所以才称为管理信息库MIB。管理程序就使用MIB中这些信息的值对网络进行管理（如读取或重新设置管理这些值）。只有在MIB中的对象才是SNMP所能够管理的。</p>
-<h1 id="SNMP的协议数据单位和报文"><a href="#SNMP的协议数据单位和报文" class="headerlink" title="SNMP的协议数据单位和报文"></a>SNMP的协议数据单位和报文</h1><p>实际上，SNMP的操作只有两种基本的管理功能，即：</p>
-<ol>
-<li>“读”操作，用Get报文来检测各被管对象的状况；</li>
-<li>“写”操作，用Set报文来改变各被管对象的状况。</li>
-</ol>
-<p>&emsp;&emsp;SNMP的这些功能通过<strong>探询</strong>操作来实现，即SNMP管理进程定时向被管理设备周期性地发送探询信息。探寻的好处是：第一，可使系统相对简单；第二，能限制通过网络所产生的管理信息的通信量。<br>&emsp;&emsp;当SNMP不是完全的探询协议，它允许不经过询问就能发送某些信息。这种信息称为<strong>陷阱</strong>(trap)，表示他能够捕捉“事件”。但这种陷阱信息的参数是受限制的。<br>&emsp;&emsp;当被管对象的代理检测到有事件发生时，就检查其门限值。代理只向管理进程报告达到某些门限值的事件（这就叫做过滤）。这种方法的好处是：第一，仅在严重事件发生时才发送陷阱；第二，陷阱信息很简单且所需要的字节数很少。<br>&emsp;&emsp;总之，使用探询（至少是周期性地）以维持对网络资源的实时监视，同时也采用陷阱机制报告特殊事件，使用SNMP成为一种有效的网络管理协议。<br>&emsp;&emsp;SNMP使用无连接的<strong>UDP</strong>，因此在网络上传送SNMP报文的开销较小。</p>
-<p><img src="/2021-01/1-18-SNMP/%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F.png" alt="报文格式"></p>
+<h1 id="管理信息结构smi">管理信息结构SMI</h1>
+<p>SMI的功能应当有三个：被管对象应怎样命令；用来存储被管对象的数据类型有哪些；在网络上传送的管理数据应如何编码。 1. 被管对象的命名 SMI规定，所有被管对象都必须处在<strong>对象命名树</strong>(object naming tree)上。 2. 被管对象的数据类型 SMI使用基本的抽象语法记法1（即ISO制定的<strong>ASN.1</strong>）来定义数据类型，但又增加了一些新的定义。SMI把数据类型分为两大类：简单类型和结构化类型。 3. 编码方法 SMI使用ASN.1制定的<strong>基本编码规则BER</strong>(Basic Encoding Rule)进行数据的编码。BER指明了每种数据的类型和值。ASN.1把所有的数据元素都表示为T-L-V三个字段组成的序列。T字段(Tag)定义的数据的类型，L字段(Length)定义V字段的长度，而V字段(Value)定义数据的值。</p>
+<h1 id="管理信息库mib">管理信息库MIB</h1>
+<p>  所谓“管理信息”就是指在互联网的网管框架中被管对象的集合。被管对象必须维持可供管理程序读写的若干控制和状态信息。这些被管对象构成了一个虚构的信息存储器，所以才称为管理信息库MIB。管理程序就使用MIB中这些信息的值对网络进行管理（如读取或重新设置管理这些值）。只有在MIB中的对象才是SNMP所能够管理的。</p>
+<h1 id="snmp的协议数据单位和报文">SNMP的协议数据单位和报文</h1>
+<p>实际上，SNMP的操作只有两种基本的管理功能，即： 1. “读”操作，用Get报文来检测各被管对象的状况； 2. “写”操作，用Set报文来改变各被管对象的状况。</p>
+<p>  SNMP的这些功能通过<strong>探询</strong>操作来实现，即SNMP管理进程定时向被管理设备周期性地发送探询信息。探寻的好处是：第一，可使系统相对简单；第二，能限制通过网络所产生的管理信息的通信量。   当SNMP不是完全的探询协议，它允许不经过询问就能发送某些信息。这种信息称为<strong>陷阱</strong>(trap)，表示他能够捕捉“事件”。但这种陷阱信息的参数是受限制的。   当被管对象的代理检测到有事件发生时，就检查其门限值。代理只向管理进程报告达到某些门限值的事件（这就叫做过滤）。这种方法的好处是：第一，仅在严重事件发生时才发送陷阱；第二，陷阱信息很简单且所需要的字节数很少。   总之，使用探询（至少是周期性地）以维持对网络资源的实时监视，同时也采用陷阱机制报告特殊事件，使用SNMP成为一种有效的网络管理协议。   SNMP使用无连接的<strong>UDP</strong>，因此在网络上传送SNMP报文的开销较小。</p>
+<figure>
+<img src="报文格式.png" alt="报文格式" /><figcaption aria-hidden="true">报文格式</figcaption>
+</figure>
 <p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
 
     </div>
@@ -332,7 +315,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">网络管理的基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%BF%A1%E6%81%AF%E7%BB%93%E6%9E%84SMI"><span class="nav-number">2.</span> <span class="nav-text">管理信息结构SMI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%BF%A1%E6%81%AF%E5%BA%93MIB"><span class="nav-number">3.</span> <span class="nav-text">管理信息库MIB</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SNMP%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%95%B0%E6%8D%AE%E5%8D%95%E4%BD%8D%E5%92%8C%E6%8A%A5%E6%96%87"><span class="nav-number">4.</span> <span class="nav-text">SNMP的协议数据单位和报文</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%BF%A1%E6%81%AF%E7%BB%93%E6%9E%84smi"><span class="nav-number">1.</span> <span class="nav-text">管理信息结构SMI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E4%BF%A1%E6%81%AF%E5%BA%93mib"><span class="nav-number">2.</span> <span class="nav-text">管理信息库MIB</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#snmp%E7%9A%84%E5%8D%8F%E8%AE%AE%E6%95%B0%E6%8D%AE%E5%8D%95%E4%BD%8D%E5%92%8C%E6%8A%A5%E6%96%87"><span class="nav-number">3.</span> <span class="nav-text">SNMP的协议数据单位和报文</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
