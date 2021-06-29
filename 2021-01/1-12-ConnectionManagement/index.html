@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络&#x2F;运输层&#x2F;TCP的运输连接管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP的运输连接管理">
+<meta property="og:url" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/index.html">
+<meta property="og:site_name" content="Play With YYF">
+<meta property="og:description" content="计算机网络&#x2F;运输层&#x2F;TCP的运输连接管理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/%E8%BF%9E%E6%8E%A5%E9%87%8A%E6%94%BE.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA.png">
+<meta property="article:published_time" content="2021-01-12T08:32:10.000Z">
+<meta property="article:modified_time" content="2021-06-28T13:00:20.010Z">
+<meta property="article:author" content="Ye Yunfei">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B.png">
+
+<link rel="canonical" href="https://yyf.zone/2021-01/1-12-ConnectionManagement/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>TCP的运输连接管理 | Play With YYF</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Play With YYF</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">yyf's blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yyf.zone/2021-01/1-12-ConnectionManagement/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ye Yunfei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Play With YYF">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TCP的运输连接管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-12 16:32:10" itemprop="dateCreated datePublished" datetime="2021-01-12T16:32:10+08:00">2021-01-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">运输层</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>计算机网络/运输层/TCP的运输连接管理</p>
+<a id="more"></a>
+<p>&emsp;&emsp;TCP是面向连接的协议。运输连接有三个阶段：<strong>连接建立</strong>、<strong>数据传送</strong>和<strong>连接释放</strong>。<br>&emsp;&emsp;TCP连接的建立采用客户服务器方式。主动发起连接建立的应用进程叫做客户(client)，被动等待连接建立的应用进程叫做服务器(server)。</p>
+<h1 id="TCP的连接建立"><a href="#TCP的连接建立" class="headerlink" title="TCP的连接建立"></a>TCP的连接建立</h1><p><img src="/2021-01/1-12-ConnectionManagement/%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B.png" alt="连接建立"></p>
+<h2 id="具体过程："><a href="#具体过程：" class="headerlink" title="具体过程："></a>具体过程：</h2><ol>
+<li>客户进程A创建首先传输控制模块TCB，然后在打算建立TCP连接时，向服务器B发出连接请求报文段（首部中同步位SYN=1，初始序号seq=x）。这时，TCP客户进程进入SYN-SENT（同步已发送）状态。</li>
+<li>B收到连接请求报文段后，如果同意建立连接，则向A发送确认报文段（同部位SYN=1，确认位ACK=1，确认号ack=x+1，初始序号seq=y）。这时，TCP服务器进入SYN-RCVD（同步收到）状态。</li>
+<li>A收到B的确认后，还要向B发送确认报文段（确认位ACK=1，确认号ack=y+1，序号seq=x+1）。A进入ESTABLISHED（已建立连接）状态。</li>
+<li>B收到A的确认后，也进入ESTABLISHED状态。</li>
+</ol>
+<p>&emsp;&emsp;总结：<strong>请求连接则置同步位SYN=1</strong>，<strong>确认连接就置确认位ACK=1</strong>（TCP规定，SYN报文段不能携带数据，但要消耗一个序号；ACK报文段可以携带数据，但如果不携带数据则不消耗序号）。</p>
+<h2 id="个人思考："><a href="#个人思考：" class="headerlink" title="个人思考："></a>个人思考：</h2><p>&emsp;&emsp;可以将三次握手看做四次，即建立连接的双方都要有发送请求和接收确认两个步骤才能最终建立连接。这样可以有效避免确认报文迟到造成的单方面的误认为连接，同时使连接程序适应性更强，<strong>每个TCP进程在连接建立过程中是平等的</strong>。</p>
+<h1 id="TCP的连接释放"><a href="#TCP的连接释放" class="headerlink" title="TCP的连接释放"></a>TCP的连接释放</h1><p><img src="/2021-01/1-12-ConnectionManagement/%E8%BF%9E%E6%8E%A5%E9%87%8A%E6%94%BE.png" alt="连接释放"></p>
+<h2 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h2><ol>
+<li>A的应用进程先向B发送连接释放报文段（终止控制位FIN=1，序号seq=u），并停止发送数据，进入FIN-WAIT-1（终止等待1）状态。</li>
+<li>B收到连接释放报文段后即发出确认报文段（确认位ACK=1，序号seq=v，确认号ack=u+1），然后B进入CLOSE-WAIT（关闭等待）状态。此时A到B方向的连接已经释放，B若要发送数据，A仍要接收。</li>
+<li>A收到来自B的确认后，就进入FIN-WAIT-2（终止等待2）状态，等待B发出的连接释放报文段。</li>
+<li>B若没有要向A发送的数据了，就发送连接释放报文段（终止位FIN=1，序号seq=w，确认号ack=u+1），然后B就进入LAST-ACK（最后确认）状态，等待A的确认。</li>
+<li>A收到B的连接释放报文段后，必须对此发出确认（ACK=1，ack=w+1，seq=u+1）。然后进入TIME-WAIT（时间等待）状态。此时，TCP连接还没有释放掉。必须经过2倍最长报文段寿命(MSL)时间后（通常MSL=2分钟），TCP连接结束。</li>
+</ol>
+<p>总结：<strong>请求释放连接则置FIN=1</strong>，<strong>确认释放则置ACK=1</strong>。</p>
+<p>为什么要等待2MSL时间？</p>
+<ol>
+<li>为了保证A发送的最后一个ACK报文段能够到达B。</li>
+<li>防止“已失效的连接请求报文段”出现在本连接中。</li>
+</ol>
+<p>保活计时器：<br>&emsp;&emsp;客户端主机出现故障时，服务器会白白等待下去。为此需要设置保活计时器。<br>服务器每收到一次客户的数据，就重置计时器，时间通常是两小时。若两小时没有收到客户端的数据，服务器就发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文段后仍无客户的响应，服务器就认为客户端出现了故障，接着的关闭这个连接。</p>
+<h1 id="TCP的有限状态机"><a href="#TCP的有限状态机" class="headerlink" title="TCP的有限状态机"></a>TCP的有限状态机</h1><p><img src="/2021-01/1-12-ConnectionManagement/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA.png" alt="有限状态机"></p>
+<p>&emsp;&emsp;粗实线箭头表示对客户进程的正常变迁。粗虚线箭头表示对服务器进程的正常变迁。另一种细线箭头表示异常变迁。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021-01/1-11-CongestionControl/" rel="prev" title="TCP的拥塞控制">
+      <i class="fa fa-chevron-left"></i> TCP的拥塞控制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021-01/1-13-DNS/" rel="next" title="域名系统DNS">
+      域名系统DNS <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E7%9A%84%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B"><span class="nav-number">1.</span> <span class="nav-text">TCP的连接建立</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">具体过程：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E6%80%9D%E8%80%83%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">个人思考：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E7%9A%84%E8%BF%9E%E6%8E%A5%E9%87%8A%E6%94%BE"><span class="nav-number">2.</span> <span class="nav-text">TCP的连接释放</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">具体过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP%E7%9A%84%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA"><span class="nav-number">3.</span> <span class="nav-text">TCP的有限状态机</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ye Yunfei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ye Yunfei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

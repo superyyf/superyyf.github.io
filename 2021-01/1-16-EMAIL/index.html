@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络&#x2F;应用层&#x2F;电子邮件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="电子邮件">
+<meta property="og:url" content="https://yyf.zone/2021-01/1-16-EMAIL/index.html">
+<meta property="og:site_name" content="Play With YYF">
+<meta property="og:description" content="计算机网络&#x2F;应用层&#x2F;电子邮件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-16-EMAIL/%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9E%84%E4%BB%B6.png">
+<meta property="article:published_time" content="2021-01-16T08:46:24.000Z">
+<meta property="article:modified_time" content="2021-06-28T13:00:20.034Z">
+<meta property="article:author" content="Ye Yunfei">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yyf.zone/2021-01/1-16-EMAIL/%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9E%84%E4%BB%B6.png">
+
+<link rel="canonical" href="https://yyf.zone/2021-01/1-16-EMAIL/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>电子邮件 | Play With YYF</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Play With YYF</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">yyf's blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yyf.zone/2021-01/1-16-EMAIL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ye Yunfei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Play With YYF">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          电子邮件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-16 16:46:24" itemprop="dateCreated datePublished" datetime="2021-01-16T16:46:24+08:00">2021-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">应用层</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>计算机网络/应用层/电子邮件</p>
+<a id="more"></a>
+<h1 id="电子邮件概述"><a href="#电子邮件概述" class="headerlink" title="电子邮件概述"></a>电子邮件概述</h1><p>&emsp;&emsp;一个电子邮件系统应具有三个主要组成构件，这就是<strong>用户代理</strong>、<strong>邮件服务器</strong>、以及<strong>邮件发送协议和邮件读取协议</strong>。</p>
+<p><img src="/2021-01/1-16-EMAIL/%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9E%84%E4%BB%B6.png" alt="三个主要构件"></p>
+<p>&emsp;&emsp;电子邮件由<strong>信封</strong>(envelope)和<strong>内容</strong>(content)两部分组成。在邮件的信封上，最重要的就是收件人的地址。电子邮件地址如下：</p>
+<blockquote>
+<p>用户名@邮件服务器的域名</p>
+</blockquote>
+<h1 id="简单邮件传送协议SMTP（邮件发送协议）"><a href="#简单邮件传送协议SMTP（邮件发送协议）" class="headerlink" title="简单邮件传送协议SMTP（邮件发送协议）"></a>简单邮件传送协议SMTP（邮件发送协议）</h1><p>&emsp;&emsp;SMTP规定了在两个互相通信的SMTP进程之间应如何交换信息。<br>&emsp;&emsp;SMTP规定了14条<strong>命令</strong>和21种<strong>应答信息</strong>。每条命令用几个字母组成，而每一种应答信息一般只有一行信息，由一个3位数字的代码开始，后面附上（也可不附上）很简单的文字说明。</p>
+<ol>
+<li>连接建立<br>&emsp;&emsp;发件人的邮件送到发送方邮件服务器缓存后，SMTP客户就每隔一定时间对邮件缓存扫描一次。如发现有邮件，就使用SMTP的熟知端口号码25与接收方服务器的SMTP服务器建立TCP连接。在连接建立后，接收方SMTP服务器要发出“220 Service ready”（服务就绪）。然后SMTP客户向SMTP服务器发出HELO命令，附上发送方的主机名。SMTP服务器若有能力接收邮件，则回答：“250 OK”，表示已准备好接收。若SMTP服务器不可用，则回答“421 Service not available”（服务不可用）。SMTP不使用中间的邮件服务器。</li>
+<li>邮件传送<br>&emsp;&emsp;邮件的传送从MAIL命令开始。MAIL命令后面有发件人的地址。如：MAIL FROM <a href="mailto:&#119;&#x63;&#121;&#121;&#102;&#64;&#x6f;&#117;&#116;&#x6c;&#x6f;&#111;&#x6b;&#46;&#x63;&#x6f;&#109;">&#119;&#x63;&#121;&#121;&#102;&#64;&#x6f;&#117;&#116;&#x6c;&#x6f;&#111;&#x6b;&#46;&#x63;&#x6f;&#109;</a>。若SMTP服务器已准备好接收邮件，则回答：“250 OK”。否则，返回一个代码，指出原因。如：451（处理时出错），452（存储空间不够），500（命令无法识别）等。<br>&emsp;&emsp;下面跟着一个或多个RCPT命令，取决于把一个邮件发送给一个或多个收件人，其格式为RCPT TO: &lt;收件人地址&gt;。每发送一个RCPT命令，都应当有相应的信息从SMTP服务器返回，如：“250 OK”，表示指明的邮箱在接收方的系统中，或“550 No Such user here”（无此用户），即不存在此邮箱。<br>&emsp;&emsp;再下面就是DATA命令，表示要开始传送邮件的内容了。SMTP服务器返回的信息是：“354 Start mail input; end with &lt;CRLF&gt;.&lt;CRLF&gt;”。若不能接收邮件则返回421（服务器不可用），500（命令无法识别）等。若邮件收到了，则返回“250 OK”，或返回差错代码。</li>
+<li>连接释放<br>&emsp;&emsp;邮件发送完毕后，SMTP客户应发送QUIT命令。SMTP服务器返回的信息是“221（服务器关闭）”，表示SMTP同意释放TCP连接。邮件传送的全部过程即结束。</li>
+</ol>
+<p>SMTP的缺点：</p>
+<ol>
+<li>发送电子邮件不需要进过鉴别。方便了垃圾邮件作者。</li>
+<li>SMTP传送非ASCII码的长文时，传输效率不高。</li>
+<li>SMTP传送的邮件是明文，不利于保密。</li>
+</ol>
+<p>ESMTP(Extended SMTP)新增的内容:</p>
+<ol>
+<li>客户端的鉴别</li>
+<li>服务器接受二进制报文</li>
+<li>服务器接受分块传送的大报文</li>
+<li>发送前先检查报文的大小</li>
+<li>使用安全传输TLS</li>
+<li>使用国际化地址等</li>
+</ol>
+<h1 id="电子邮件的信息格式"><a href="#电子邮件的信息格式" class="headerlink" title="电子邮件的信息格式"></a>电子邮件的信息格式</h1><p>&emsp;&emsp;一个电子邮件分为信封和内容两大部分。用户写邮件内容的首部后，邮件系统自动地将信封所需的信息提取出来并写在信封上。所以用户不需要填写电子邮件信封上的信息。<br>&emsp;&emsp;邮件内容首部包括一些关键字，后面加上冒号。最重要的关键字是：To和Subject。<br>&emsp;&emsp;“To:”后面填入一个或多个收件人的电子邮件地址。<br>&emsp;&emsp;“Subject:”是邮件的主题，它反映了邮件的主要内容。<br>&emsp;&emsp;“Cc:”是抄送，意思是留下一个复写副本。<br>&emsp;&emsp;“From:”和“Date:”表示发件人的电子邮箱地址和发信日期。这两项一般都是由邮件系统自动填入。<br>&emsp;&emsp;“Reply-To:”即对方回信所要用的地址。</p>
+<h1 id="邮件读取协议POP3和IMAP（邮件读取协议）"><a href="#邮件读取协议POP3和IMAP（邮件读取协议）" class="headerlink" title="邮件读取协议POP3和IMAP（邮件读取协议）"></a>邮件读取协议POP3和IMAP（邮件读取协议）</h1><p>邮局协议POP是一个非常简单、功能有限的邮件读取协议</p>
+<ol>
+<li>POP3服务器只有在用户输入鉴别信息（用户名和口令）后，才允许对邮箱进行读取。</li>
+<li>只要用户从POP3服务器读取了邮件，POP3服务器就把该邮件删除。</li>
+</ol>
+<p>另一个读取邮件的协议是网际报文存取协议IMAP。</p>
+<ol>
+<li>用户在自己的计算机上就可以操纵邮件服务器的邮箱，就像在本地操纵一样，因此IMAP是一个联机协议。</li>
+<li>在用户未发出删除邮件的命令之前，IMAP服务器邮箱中的邮件一直保存着。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">操作位置</th>
+<th align="center">操作内容</th>
+<th align="center">IMAP</th>
+<th align="center">POP3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">收件箱</td>
+<td align="center">阅读、标记、移动、删除邮件等</td>
+<td align="center">客户端与邮箱更新同步</td>
+<td align="center">仅在客户端内</td>
+</tr>
+<tr>
+<td align="center">发件箱</td>
+<td align="center">保存到已发送</td>
+<td align="center">客户端与邮箱更新同步</td>
+<td align="center">仅在客户端内</td>
+</tr>
+<tr>
+<td align="center">创建文件夹</td>
+<td align="center">新建自定义的文件夹</td>
+<td align="center">客户端与邮箱更新同步</td>
+<td align="center">仅在客户端内</td>
+</tr>
+<tr>
+<td align="center">草稿</td>
+<td align="center">保存草稿</td>
+<td align="center">客户端与邮箱更新同步</td>
+<td align="center">仅在客户端内</td>
+</tr>
+<tr>
+<td align="center">垃圾文件夹</td>
+<td align="center">接收并移入垃圾文件夹的邮件</td>
+<td align="center">支持</td>
+<td align="center">不支持</td>
+</tr>
+<tr>
+<td align="center">广告邮件</td>
+<td align="center">接收并移入广告文件夹的邮件</td>
+<td align="center">支持</td>
+<td align="center">不支持</td>
+</tr>
+</tbody></table>
+<h1 id="基于万维网的电子邮件"><a href="#基于万维网的电子邮件" class="headerlink" title="基于万维网的电子邮件"></a>基于万维网的电子邮件</h1><ol>
+<li>使用万维网电子邮件不需要在计算机中再安装用户代理软件。浏览器本身可以向用户提供非常友好的电子邮件界面。</li>
+<li>在浏览器和互联网上的邮件服务器之间传送邮件时，使用HTTP协议。但是在各邮件服务器之间传送邮件时，则仍然使用SMTP协议。</li>
+</ol>
+<h1 id="通用互联网邮件扩充MIME"><a href="#通用互联网邮件扩充MIME" class="headerlink" title="通用互联网邮件扩充MIME"></a>通用互联网邮件扩充MIME</h1><h2 id="MIME概述"><a href="#MIME概述" class="headerlink" title="MIME概述"></a>MIME概述</h2><p>SMTP的缺点：</p>
+<ol>
+<li>SMTP不能传送可执行文件或其他的二进制对象。</li>
+<li>SMTP限于传送7位的ASCII码。</li>
+<li>SMTP服务器会拒绝超过一定长度的邮件。</li>
+<li>SMTP的实现并没有按照SMTP的互联网标准。</li>
+</ol>
+<p>&emsp;&emsp;在这种情况下就提出了通用互联网邮件扩充MIME。MIME并没有改动或取代SMTP。MIME的意图是继续使用原来的邮件格式，但增加了邮件主体结构，并定义了传送非ASCII码的编码规则。<br>MIME主要包括以下三部分内容：</p>
+<ol>
+<li>5个新的邮件首部字段，它们可包含在原来的邮件首部中。</li>
+<li>定义了许多邮件内容的格式，对多媒体电子邮件的表示方法进行了标准化。</li>
+<li>定义了传送编码，可对任何内容格式进行转换，而不会被邮件系统改变。</li>
+</ol>
+<h2 id="内容传送编码"><a href="#内容传送编码" class="headerlink" title="内容传送编码"></a>内容传送编码</h2><ol>
+<li>7为ASCII编码。MIME对这种由ASCII码构成的邮件主体不进行任何转换。</li>
+<li>qutoed-printable。这种编码方式适用于所传送的数据中只有少量的非ASCII码，用“=”加两个十六进制数字来表示非ASCII码数据。</li>
+<li>对于任意的二进制文件，可用base64编码。这种编码方法先把二进制代码划分为一个个24位长的单位，然后把每一个24位单位划分为4个6位组。每一个6位组先转换为base64码，再用ASCII编码发送。</li>
+</ol>
+<h2 id="内容类型"><a href="#内容类型" class="headerlink" title="内容类型"></a>内容类型</h2><p>&emsp;&emsp;MIME标准规定Content-Type说明必须含有两个标识符，即内容类型(type)和子类型(subtype)，中间用“/”分开。</p>
+<table>
+<thead>
+<tr>
+<th>内容类型</th>
+<th>子类型举例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>text（文本）</td>
+<td>plain,html,xml,css</td>
+<td>不同格式的文本</td>
+</tr>
+<tr>
+<td>image（图像）</td>
+<td>gif,jpeg,tiff</td>
+<td>不同格式的静止图像</td>
+</tr>
+<tr>
+<td>audio（音频）</td>
+<td>basic,mpeg,mp4</td>
+<td>可听见的声音</td>
+</tr>
+<tr>
+<td>video（视频）</td>
+<td>mpeg,mp4,quicktime</td>
+<td>不同格式的影片</td>
+</tr>
+<tr>
+<td>model（模型）</td>
+<td>vrml</td>
+<td>3D模型</td>
+</tr>
+<tr>
+<td>application（应用）</td>
+<td>octet-stream,pdf,javascript,zip</td>
+<td>不同应用程序产生的数据</td>
+</tr>
+<tr>
+<td>message（报文）</td>
+<td>http,rfc822</td>
+<td>封装的报文</td>
+</tr>
+<tr>
+<td>multipart（多部分）</td>
+<td>mixed,alternative,parallel,,digest</td>
+<td>多种类型的组合</td>
+</tr>
+</tbody></table>
+<p>MIME的内容类型的multipart很有用，因为它使邮件增加了相当大的灵活性。</p>
+<ol>
+<li>mixed子类型允许单个报文含有多个相互独立的子报文，每个子报文可有自己的类型和编码。</li>
+<li>alternative子类型报文含有同一数据的多种表示。</li>
+<li>parallel子类型允许单个报文含有可同时显示的各个子部分（如图像和声音子部分必须一起播放）。</li>
+<li>digest子类型允许单个报文含有一组其他报文（如从讨论中收集电子邮件报文）。</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021-01/1-15-WWW/" rel="prev" title="万维网WWW">
+      <i class="fa fa-chevron-left"></i> 万维网WWW
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021-01/1-16-DHCP/" rel="next" title="动态主机配置协议DHCP">
+      动态主机配置协议DHCP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">电子邮件概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E9%82%AE%E4%BB%B6%E4%BC%A0%E9%80%81%E5%8D%8F%E8%AE%AESMTP%EF%BC%88%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">简单邮件传送协议SMTP（邮件发送协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%9A%84%E4%BF%A1%E6%81%AF%E6%A0%BC%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">电子邮件的信息格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%AE%E4%BB%B6%E8%AF%BB%E5%8F%96%E5%8D%8F%E8%AE%AEPOP3%E5%92%8CIMAP%EF%BC%88%E9%82%AE%E4%BB%B6%E8%AF%BB%E5%8F%96%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">邮件读取协议POP3和IMAP（邮件读取协议）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E4%B8%87%E7%BB%B4%E7%BD%91%E7%9A%84%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">基于万维网的电子邮件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E4%BA%92%E8%81%94%E7%BD%91%E9%82%AE%E4%BB%B6%E6%89%A9%E5%85%85MIME"><span class="nav-number">6.</span> <span class="nav-text">通用互联网邮件扩充MIME</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MIME%E6%A6%82%E8%BF%B0"><span class="nav-number">6.1.</span> <span class="nav-text">MIME概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E4%BC%A0%E9%80%81%E7%BC%96%E7%A0%81"><span class="nav-number">6.2.</span> <span class="nav-text">内容传送编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="nav-number">6.3.</span> <span class="nav-text">内容类型</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ye Yunfei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ye Yunfei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

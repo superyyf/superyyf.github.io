@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络&#x2F;物理层&#x2F;物理层的基本概念及涉及的基础知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="物理层的基本概念及涉及的基础知识">
+<meta property="og:url" content="https://yyf.zone/2021-01/1-31-PhysicalLayer/index.html">
+<meta property="og:site_name" content="Play With YYF">
+<meta property="og:description" content="计算机网络&#x2F;物理层&#x2F;物理层的基本概念及涉及的基础知识">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-31T02:06:18.000Z">
+<meta property="article:modified_time" content="2021-06-28T13:00:20.082Z">
+<meta property="article:author" content="Ye Yunfei">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://yyf.zone/2021-01/1-31-PhysicalLayer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>物理层的基本概念及涉及的基础知识 | Play With YYF</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Play With YYF</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">yyf's blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yyf.zone/2021-01/1-31-PhysicalLayer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ye Yunfei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Play With YYF">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          物理层的基本概念及涉及的基础知识
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-31 10:06:18" itemprop="dateCreated datePublished" datetime="2021-01-31T10:06:18+08:00">2021-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">物理层</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>计算机网络/物理层/物理层的基本概念及涉及的基础知识</p>
+<a id="more"></a>
+<h1 id="物理层的基本概念"><a href="#物理层的基本概念" class="headerlink" title="物理层的基本概念"></a>物理层的基本概念</h1><p>&emsp;&emsp;物理层考虑的是怎样才能在连接各种计算机的传输媒体上传输数据比特流，而不是指具体的传输媒体。<br>物理层的主要任务：</p>
+<ol>
+<li><p>可以将物理层的主要任务描述为<strong>确定与传输媒体的接口有关的一些特性</strong>，即：</p>
+<ol>
+<li>机械特性。指明接口所用接线器的形状和尺寸、引脚数目和排列、固定和锁定装置等。</li>
+<li>电气特性。指明在接口电缆的各条线上出现的电压的范围。</li>
+<li>功能特性。指明某条线上出现某一电平的电压的意义。</li>
+<li>过程特性。指明对于不同功能的各种可能事件的出现顺序。</li>
+</ol>
+</li>
+<li><p>物理层还要完成<strong>传输方式的转换</strong>：并行转串行。</p>
+</li>
+</ol>
+<h1 id="数据通信的基础知识"><a href="#数据通信的基础知识" class="headerlink" title="数据通信的基础知识"></a>数据通信的基础知识</h1><h2 id="数据通信系统模型"><a href="#数据通信系统模型" class="headerlink" title="数据通信系统模型"></a>数据通信系统模型</h2><p>&emsp;&emsp;一个数据通信系统可以划分为三大部分，即<strong>源系统</strong>、<strong>传输系统</strong>和<strong>目的系统</strong>。<br>信号可以分为两大类：</p>
+<ol>
+<li>模拟信号</li>
+<li>数字信号</li>
+</ol>
+<h2 id="有关信道的几个基本概念"><a href="#有关信道的几个基本概念" class="headerlink" title="有关信道的几个基本概念"></a>有关信道的几个基本概念</h2><p>从通信的双方信息交互方式来看，可以有以下三种基本方式：</p>
+<ol>
+<li>单向通信，又称<strong>单工通信</strong>，即只能有一个方向的通信而没有反方向的交互。</li>
+<li>双向交替通信，又称<strong>半双工通信</strong>，即通信的双方都可以发送消息，但不能双方同时发送。</li>
+<li>双向同时通信，又称<strong>全双工通信</strong>，即通信的双方可以同时发送和接收信息。</li>
+</ol>
+<h3 id="编码与调制"><a href="#编码与调制" class="headerlink" title="编码与调制"></a>编码与调制</h3><p>&emsp;&emsp;来自信源的信号常称为<strong>基带信号</strong>（即基本频带信号）。基带信号往往包含有较多的低频成分，甚至有直流成分，而许多信道并不能传输这种低频分量或直流分量。为了解决这一问题，就必须对基带信号进行调制(modulation)。</p>
+<ol>
+<li><p><strong>基带调制</strong>（编码）。仅仅对基带信号的波形进行变换，使它能够与信道特性向适应。变换后的信号仍然是基带信号。常用编码方式有：</p>
+<ul>
+<li><strong>不归零制</strong>。正电平代表１，负电平代表０。</li>
+<li><strong>归零制</strong>。正脉冲代表１，负脉冲代表０。</li>
+<li><strong>曼彻斯特编码</strong>。位周期中心的向上跳变代表０，位周期中心的向下跳变代表１。但也可反过来定义。</li>
+<li><strong>差分曼彻斯特编码</strong>。在每一位的中心处始终都有跳变。位开始边界有跳变代表０，而位开始边界没有跳变代表１。</li>
+</ul>
+</li>
+<li><p><strong>带通调制</strong>。使用载波(carrier)进行调制，把基带信号的频率范围搬移到较高的频段，并转换为模拟信号。基本的带通调制方法有：</p>
+<ul>
+<li><strong>调幅</strong>(AM)，即载波的振幅随基带数字信号而变化。</li>
+<li><strong>调频</strong>(FM)，即载波的频率随基带数字信号而变化。</li>
+<li><strong>调相</strong>(PM)，即载波的初始相位随基带数字信号而变化。</li>
+<li>为了达到更高的信息传输速率，必须采用技术上更为复杂的多元制的振幅相位混合调制方法。例如，<strong>正交振幅调制QAM</strong>(Quadrature Amplitude Modulation)。</li>
+</ul>
+</li>
+</ol>
+<h3 id="信道的极限容量"><a href="#信道的极限容量" class="headerlink" title="信道的极限容量"></a>信道的极限容量</h3><p>从概念上讲，限制码元在信道上的传输速率的因素有以下两个：</p>
+<ol>
+<li><p>信道能够通过的频率范围</p>
+<ul>
+<li><strong>码间串扰</strong>。如果信号中的高频分量在传输时受到衰减，那么在接收端收到的波形前沿和后沿就变得不那么陡峭了，每一个码元所占的时间界限也不再是很明确的，而是前后都拖了“尾巴”。</li>
+<li><strong>奈氏准则</strong>表明，在任何信道中，码元传输的速率是有上限的，传输速率超过此上限，就会出现严重的码间串扰的问题，使接收端对码元的判决（即识别）成为不可能。</li>
+<li>如果信道的频带越宽，也就是能够通过的信号高频分量越多，那么就可以用更高的速率传送码元而不出现码间串扰。</li>
+</ul>
+</li>
+<li><p>信噪比</p>
+<ul>
+<li><p>信噪比就是信号的平均功率和噪声的平均功率之比，常记为$S/N$，并用分贝(dB)作为度量单位。</p>
+</li>
+<li><p>$$信噪比(dB)=10lg(S/N)$$</p>
+</li>
+<li><p>香农公式表明，信道的<strong>带宽</strong>或信道中的<strong>信噪比</strong>越大，信息的极限传输速率就越高。</p>
+</li>
+<li><p>$$C=Wlog_{2}(1+S/N)(bit/s)$$</p>
+</li>
+<li><p>式中，C为信道的极限信息传输速率；W为信道的带宽（以Hz为单位）；S为信道内所传信号的平均功率；N为信道内部的高斯噪声功率。</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021-01/1-29-FastEthernet/" rel="prev" title="高速以太网">
+      <i class="fa fa-chevron-left"></i> 高速以太网
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021-01/1-31-TransmissionMedium/" rel="next" title="物理层下面的传输媒体">
+      物理层下面的传输媒体 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%A9%E7%90%86%E5%B1%82%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">物理层的基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">2.</span> <span class="nav-text">数据通信的基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%80%9A%E4%BF%A1%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.1.</span> <span class="nav-text">数据通信系统模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E5%85%B3%E4%BF%A1%E9%81%93%E7%9A%84%E5%87%A0%E4%B8%AA%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">2.2.</span> <span class="nav-text">有关信道的几个基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E4%B8%8E%E8%B0%83%E5%88%B6"><span class="nav-number">2.2.1.</span> <span class="nav-text">编码与调制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%A1%E9%81%93%E7%9A%84%E6%9E%81%E9%99%90%E5%AE%B9%E9%87%8F"><span class="nav-number">2.2.2.</span> <span class="nav-text">信道的极限容量</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ye Yunfei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ye Yunfei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

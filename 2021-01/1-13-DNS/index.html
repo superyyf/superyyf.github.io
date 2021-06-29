@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="计算机网络&#x2F;应用层&#x2F;域名系统DNS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="域名系统DNS">
+<meta property="og:url" content="https://yyf.zone/2021-01/1-13-DNS/index.html">
+<meta property="og:site_name" content="Play With YYF">
+<meta property="og:description" content="计算机网络&#x2F;应用层&#x2F;域名系统DNS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8.png">
+<meta property="og:image" content="https://yyf.zone/2021-01/1-13-DNS/DNS%E6%9F%A5%E8%AF%A2.png">
+<meta property="article:published_time" content="2021-01-13T09:19:37.000Z">
+<meta property="article:modified_time" content="2021-06-28T13:00:20.018Z">
+<meta property="article:author" content="Ye Yunfei">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yyf.zone/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png">
+
+<link rel="canonical" href="https://yyf.zone/2021-01/1-13-DNS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>域名系统DNS | Play With YYF</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Play With YYF</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">yyf's blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yyf.zone/2021-01/1-13-DNS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ye Yunfei">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Play With YYF">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          域名系统DNS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-13 17:19:37" itemprop="dateCreated datePublished" datetime="2021-01-13T17:19:37+08:00">2021-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">应用层</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>计算机网络/应用层/域名系统DNS</p>
+<a id="more"></a>
+<h1 id="应用层概述"><a href="#应用层概述" class="headerlink" title="应用层概述"></a>应用层概述</h1><p>&emsp;&emsp;应用层协议<strong>为不同的网络应用的应用进程之间的通信提供规则</strong>。每个应用层协议都是为了解决某一类的应用问题，而问题的解决又要通过位于不同主机的多个应用进程之间的通信和协同工作来完成。应用层的具体内容就是精确定义这些通信规则。</p>
+<h1 id="域名系统概述"><a href="#域名系统概述" class="headerlink" title="域名系统概述"></a>域名系统概述</h1><p>&emsp;&emsp;域名系统DNS(Domain Name System)是互联网使用的命名系统，用来把便于人们使用的<strong>机器名称转换为IP地址</strong>。<br>&emsp;&emsp;互联网的域名系统DNS被设计成为一个<strong>联机分布式数据库系统</strong>，并采用客户服务器方式。<br>&emsp;&emsp;当某一个应用进程需要把主机名解析为IP地址时，该应用进程就调用解析程序(resolver)，并称为DNS的一个客户，把待解析的域名放在DNS请求报文中，以UDP用户数据报的方式发给本地域名服务器。本地域名服务器在查找域名后，把对应的IP地址放在回答报文中返回。应用进程获得目的主机的IP地址后即可进行通信。<br>&emsp;&emsp;若本地域名服务器不能回答该请求，则此域名服务器就暂时称为DNS的另一个客户，并向其他域名服务器发出查询请求。这种过程直至找到能够回答该请求的域名服务器为止。</p>
+<h1 id="互联网的域名结构"><a href="#互联网的域名结构" class="headerlink" title="互联网的域名结构"></a>互联网的域名结构</h1><p>&emsp;&emsp;互联网采用<strong>层次树状结构</strong>的命名方法。<br>&emsp;&emsp;每一个域名都由标号(label)序列组成，而各标号之间用点隔开。DNS规定，域名中的标号都由英文字母和数字组成，每一个标号不超过63个字符（但为了记忆方便，最好不要超过12个字符），不区分大小写。标号中除连字符(-)外不能使用其他的标点符号。级别最低的域名写在最左边，级别最高的域名写在最右边。由多个标号组成的完整域名总共不超过255个字符。</p>
+<p><img src="/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E7%A9%BA%E9%97%B4.png" alt="域名空间"></p>
+<p><strong>顶级域名</strong>：</p>
+<ol>
+<li>国家顶级域名nTLD：如cn（中国），us（美国）等等。</li>
+<li>通用顶级域名gTLD：如com（公司企业），org（非营利组织），net（网络服务机构）等等。</li>
+<li>基础服务结构域名：只有一个，即arpa，用于反向域名解析。</li>
+</ol>
+<p><strong>二级域名</strong>，我国把二级域名划分为两类：</p>
+<ol>
+<li>类别域名：如ac（科研机构），com（企业），edu（教育机构）等等。</li>
+<li>行政区域名：如bj（北京市），js（江苏省）等等。</li>
+</ol>
+<h1 id="域名服务器"><a href="#域名服务器" class="headerlink" title="域名服务器"></a>域名服务器</h1><p>&emsp;&emsp;上面讲述的域名体系是抽象的。但具体实现域名系统则是使用分布在各地的域名服务器。理论上，可以让每一级的域名都有一个相对应的域名服务器，但这样会使服务器数量太多，运行效率降低。因此DNS就采用划分区的办法来解决这个问题。<br>&emsp;&emsp;一个服务器所负责管辖的（或有权限的）范围叫做<strong>区</strong>(zone)。每一个区设置响应的<strong>权限域名服务器</strong>，用来保存该区中所有主机的域名到IP地址的映射。<strong>区是“域”的子集</strong>。</p>
+<p><img src="/2021-01/1-13-DNS/%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8.png" alt="域名服务器"></p>
+<ol>
+<li><strong>根域名服务器</strong>(root name server)：根域名服务器是最高层次的域名服务器，也是最重要的域名服务器。所有的根服务器都知道所有的顶级域名服务器的域名和IP地址。不管是哪一个本地域名服务器，只要自己无法解析，就首先求助于根域名服务器。全球共有13组根服务器，分布在588个地点(IPv4)。代号A~M。采用任播技术。在许多情况下，根域名服务器并不直接把待查询的域名直接转换成IP地址，而是告诉本地域名服务器下一步应当找哪一个顶级域名服务器进行查询。</li>
+<li><strong>顶级域名服务器</strong>（TLD服务器）：负责管理在该顶级域名服务器注册的所有二级域名。当收到DNS查询请求时，可能给出最后的结果，也可能是下一步应当找的域名服务器的IP地址。</li>
+<li><strong>权限域名服务器</strong>：负责一个区的域名服务器。当一个权限域名服务器不能给出最后的查询回答时，就告诉DNS客户，下一步应当找哪一个权限域名服务器。</li>
+<li><strong>本地域名服务器</strong>(local name server)：当一台主机发出DNS查询请求时，这个查询请求就发送给本地域名服务器。非常的重要。</li>
+</ol>
+<p><strong>域名解析过程</strong>：</p>
+<ol>
+<li>本机向本地域名服务器的查询一般都是采用<strong>递归查询</strong>。即“<strong>你帮我查</strong>”。</li>
+<li>本地服务器向根服务器的查询一般是采用<strong>迭代查询</strong>。即“<strong>你告诉我怎么查</strong>”。</li>
+</ol>
+<p><img src="/2021-01/1-13-DNS/DNS%E6%9F%A5%E8%AF%A2.png" alt="DNS查询"></p>
+<p>&emsp;&emsp;为了提高DNS的查询效率，在域名服务器中广泛使用了<strong>高速缓存</strong>。高速缓存用来存放最近查询过的域名已经从何处获得域名映射信息的记录。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021-01/1-12-ConnectionManagement/" rel="prev" title="TCP的运输连接管理">
+      <i class="fa fa-chevron-left"></i> TCP的运输连接管理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021-01/1-14-FTP/" rel="next" title="文件传送协议FTP">
+      文件传送协议FTP <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">应用层概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">域名系统概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E5%9F%9F%E5%90%8D%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">互联网的域名结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">4.</span> <span class="nav-text">域名服务器</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ye Yunfei</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ye Yunfei</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
