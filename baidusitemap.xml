@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://yyf.zone/2021-06/6-30-OSpart2/</loc>
+    <lastmod>2021-06-30</lastmod>
+  </url>
+  <url>
     <loc>https://yyf.zone/2021-01/1-9-HeadOfTCP/</loc>
     <lastmod>2021-06-29</lastmod>
   </url>
@@ -57,14 +61,6 @@
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-5-VPNandNAT/</loc>
-    <lastmod>2021-06-28</lastmod>
-  </url>
-  <url>
-    <loc>https://yyf.zone/2021-01/1-29-FastEthernet/</loc>
-    <lastmod>2021-06-28</lastmod>
-  </url>
-  <url>
     <loc>https://yyf.zone/2021-01/1-31-TransmissionMedium/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
@@ -73,15 +69,23 @@
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
+    <loc>https://yyf.zone/2021-01/1-29-FastEthernet/</loc>
+    <lastmod>2021-06-28</lastmod>
+  </url>
+  <url>
+    <loc>https://yyf.zone/2021-01/1-5-VPNandNAT/</loc>
+    <lastmod>2021-06-28</lastmod>
+  </url>
+  <url>
     <loc>https://yyf.zone/2021-01/1-29-ExtendedEthernet/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-22-TELNET/</loc>
+    <loc>https://yyf.zone/2021-01/1-25-PPP/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-25-PPP/</loc>
+    <loc>https://yyf.zone/2021-01/1-22-TELNET/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
@@ -97,15 +101,15 @@
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-21-ICMP/</loc>
-    <lastmod>2021-06-28</lastmod>
-  </url>
-  <url>
     <loc>https://yyf.zone/2021-01/1-21-CIDR/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-19-P2P/</loc>
+    <loc>https://yyf.zone/2021-01/1-21-ICMP/</loc>
+    <lastmod>2021-06-28</lastmod>
+  </url>
+  <url>
+    <loc>https://yyf.zone/2021-01/1-19-Route/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
@@ -113,7 +117,7 @@
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
-    <loc>https://yyf.zone/2021-01/1-19-Route/</loc>
+    <loc>https://yyf.zone/2021-01/1-19-P2P/</loc>
     <lastmod>2021-06-28</lastmod>
   </url>
   <url>
