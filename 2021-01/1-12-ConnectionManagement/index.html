@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/连接释放.png">
 <meta property="og:image" content="https://yyf.zone/2021-01/1-12-ConnectionManagement/有限状态机.png">
 <meta property="article:published_time" content="2021-01-12T08:32:10.000Z">
-<meta property="article:modified_time" content="2021-06-28T13:00:20.010Z">
+<meta property="article:modified_time" content="2021-07-01T08:20:26.574Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+                <time title="修改时间：2021-07-01 16:20:26" itemprop="dateModified" datetime="2021-07-01T16:20:26+08:00">2021-07-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,33 +218,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/运输层/TCP的运输连接管理 <a id="more"></a>   TCP是面向连接的协议。运输连接有三个阶段：<strong>连接建立</strong>、<strong>数据传送</strong>和<strong>连接释放</strong>。   TCP连接的建立采用客户服务器方式。主动发起连接建立的应用进程叫做客户(client)，被动等待连接建立的应用进程叫做服务器(server)。 # TCP的连接建立</p>
+        <p>计算机网络/运输层/TCP的运输连接管理<br />
+<a id="more"></a>   TCP是面向连接的协议。运输连接有三个阶段：<strong>连接建立</strong>、<strong>数据传送</strong>和<strong>连接释放</strong>。<br />
+  TCP连接的建立采用客户服务器方式。主动发起连接建立的应用进程叫做客户(client)，被动等待连接建立的应用进程叫做服务器(server)。<br />
+# TCP的连接建立</p>
 <figure>
 <img src="连接建立.png" alt="连接建立" /><figcaption aria-hidden="true">连接建立</figcaption>
 </figure>
 <h2 id="具体过程">具体过程：</h2>
 <ol type="1">
-<li>客户进程A创建首先传输控制模块TCB，然后在打算建立TCP连接时，向服务器B发出连接请求报文段（首部中同步位SYN=1，初始序号seq=x）。这时，TCP客户进程进入SYN-SENT（同步已发送）状态。</li>
-<li>B收到连接请求报文段后，如果同意建立连接，则向A发送确认报文段（同部位SYN=1，确认位ACK=1，确认号ack=x+1，初始序号seq=y）。这时，TCP服务器进入SYN-RCVD（同步收到）状态。</li>
-<li>A收到B的确认后，还要向B发送确认报文段（确认位ACK=1，确认号ack=y+1，序号seq=x+1）。A进入ESTABLISHED（已建立连接）状态。</li>
+<li>客户进程A创建首先传输控制模块TCB，然后在打算建立TCP连接时，向服务器B发出连接请求报文段（首部中同步位SYN=1，初始序号seq=x）。这时，TCP客户进程进入SYN-SENT（同步已发送）状态。<br />
+</li>
+<li>B收到连接请求报文段后，如果同意建立连接，则向A发送确认报文段（同部位SYN=1，确认位ACK=1，确认号ack=x+1，初始序号seq=y）。这时，TCP服务器进入SYN-RCVD（同步收到）状态。<br />
+</li>
+<li>A收到B的确认后，还要向B发送确认报文段（确认位ACK=1，确认号ack=y+1，序号seq=x+1）。A进入ESTABLISHED（已建立连接）状态。<br />
+</li>
 <li>B收到A的确认后，也进入ESTABLISHED状态。</li>
 </ol>
-<p>  总结：<strong>请求连接则置同步位SYN=1</strong>，<strong>确认连接就置确认位ACK=1</strong>（TCP规定，SYN报文段不能携带数据，但要消耗一个序号；ACK报文段可以携带数据，但如果不携带数据则不消耗序号）。 ## 个人思考：   可以将三次握手看做四次，即建立连接的双方都要有发送请求和接收确认两个步骤才能最终建立连接。这样可以有效避免确认报文迟到造成的单方面的误认为连接，同时使连接程序适应性更强，<strong>每个TCP进程在连接建立过程中是平等的</strong>。</p>
+<p>  总结：<strong>请求连接则置同步位SYN=1</strong>，<strong>确认连接就置确认位ACK=1</strong>（TCP规定，SYN报文段不能携带数据，但要消耗一个序号；ACK报文段可以携带数据，但如果不携带数据则不消耗序号）。<br />
+## 个人思考：   可以将三次握手看做四次，即建立连接的双方都要有发送请求和接收确认两个步骤才能最终建立连接。这样可以有效避免确认报文迟到造成的单方面的误认为连接，同时使连接程序适应性更强，<strong>每个TCP进程在连接建立过程中是平等的</strong>。</p>
 <h1 id="tcp的连接释放">TCP的连接释放</h1>
 <figure>
 <img src="连接释放.png" alt="连接释放" /><figcaption aria-hidden="true">连接释放</figcaption>
 </figure>
 <h2 id="具体过程-1">具体过程</h2>
 <ol type="1">
-<li>A的应用进程先向B发送连接释放报文段（终止控制位FIN=1，序号seq=u），并停止发送数据，进入FIN-WAIT-1（终止等待1）状态。</li>
-<li>B收到连接释放报文段后即发出确认报文段（确认位ACK=1，序号seq=v，确认号ack=u+1），然后B进入CLOSE-WAIT（关闭等待）状态。此时A到B方向的连接已经释放，B若要发送数据，A仍要接收。</li>
-<li>A收到来自B的确认后，就进入FIN-WAIT-2（终止等待2）状态，等待B发出的连接释放报文段。</li>
-<li>B若没有要向A发送的数据了，就发送连接释放报文段（终止位FIN=1，序号seq=w，确认号ack=u+1），然后B就进入LAST-ACK（最后确认）状态，等待A的确认。</li>
+<li>A的应用进程先向B发送连接释放报文段（终止控制位FIN=1，序号seq=u），并停止发送数据，进入FIN-WAIT-1（终止等待1）状态。<br />
+</li>
+<li>B收到连接释放报文段后即发出确认报文段（确认位ACK=1，序号seq=v，确认号ack=u+1），然后B进入CLOSE-WAIT（关闭等待）状态。此时A到B方向的连接已经释放，B若要发送数据，A仍要接收。<br />
+</li>
+<li>A收到来自B的确认后，就进入FIN-WAIT-2（终止等待2）状态，等待B发出的连接释放报文段。<br />
+</li>
+<li>B若没有要向A发送的数据了，就发送连接释放报文段（终止位FIN=1，序号seq=w，确认号ack=u+1），然后B就进入LAST-ACK（最后确认）状态，等待A的确认。<br />
+</li>
 <li>A收到B的连接释放报文段后，必须对此发出确认（ACK=1，ack=w+1，seq=u+1）。然后进入TIME-WAIT（时间等待）状态。此时，TCP连接还没有释放掉。必须经过2倍最长报文段寿命(MSL)时间后（通常MSL=2分钟），TCP连接结束。</li>
 </ol>
 <p>总结：<strong>请求释放连接则置FIN=1</strong>，<strong>确认释放则置ACK=1</strong>。</p>
-<p>为什么要等待2MSL时间？ 1. 为了保证A发送的最后一个ACK报文段能够到达B。 2. 防止“已失效的连接请求报文段”出现在本连接中。</p>
-<p>保活计时器：   客户端主机出现故障时，服务器会白白等待下去。为此需要设置保活计时器。 服务器每收到一次客户的数据，就重置计时器，时间通常是两小时。若两小时没有收到客户端的数据，服务器就发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文段后仍无客户的响应，服务器就认为客户端出现了故障，接着的关闭这个连接。</p>
+<p>为什么要等待2MSL时间？<br />
+1. 为了保证A发送的最后一个ACK报文段能够到达B。<br />
+2. 防止“已失效的连接请求报文段”出现在本连接中。</p>
+<p>保活计时器：<br />
+  客户端主机出现故障时，服务器会白白等待下去。为此需要设置保活计时器。<br />
+服务器每收到一次客户的数据，就重置计时器，时间通常是两小时。若两小时没有收到客户端的数据，服务器就发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文段后仍无客户的响应，服务器就认为客户端出现了故障，接着的关闭这个连接。</p>
 <h1 id="tcp的有限状态机">TCP的有限状态机</h1>
 <figure>
 <img src="有限状态机.png" alt="有限状态机" /><figcaption aria-hidden="true">有限状态机</figcaption>

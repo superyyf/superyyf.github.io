@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yyf.zone/2021-01/1-18-socket/TCP系统调用.png">
 <meta property="article:published_time" content="2021-01-18T11:56:07.000Z">
-<meta property="article:modified_time" content="2021-06-28T13:00:20.038Z">
+<meta property="article:modified_time" content="2021-07-01T08:13:44.881Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+                <time title="修改时间：2021-07-01 16:13:44" itemprop="dateModified" datetime="2021-07-01T16:13:44+08:00">2021-07-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,9 +216,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>计算机网络/应用层/应用进程跨越网络的通信 <a id="more"></a> # 系统调用和应用编程接口   大多数操作系统使用<strong>系统调用</strong>(system call)的机制在应用程序和操作系统之间传递控制权。应用进程需要从操作系统获得服务，就要把控制权传递给操作系统，操作系统在执行必要的操作后把控制权返回给应用进程。因此，系统调用接口实际上就是应用进程的控制权和操作系统的控制权进行转换的一个接口。由于应用程序在使用系统调用之前要编写一些程序，特别是需要设置系统调用的许多参数，因此这种系统调用接口又称为<strong>应用编程接口API</strong>(Application Programming Interface)。   在讨论网络编程时常常把<strong>套接字</strong>作为应用进程和运输层协议之间的接口。当应用进程（客户或服务器）需要使用网络进行通信时，必须首先发出socket系统调用，请求操作系统为其创建一个“套接字”。这个调用的实际效果是请求操作系统把网络通信所需要的一些系统资源（存储空间、CPU时间、网络带宽等）分配给应用进程。操作系统作为这些资源的总和用一个叫做套接字描述符(socket descriptor)的号码（小的整数）来表示，然后把这个套接字描述符返回给应用进程。几乎所有的网络系统调用都把这个套接字描述符作为套接字的许多参数中的第一个参数。通信完毕后，应用进程通过一个关闭套接字的close系统调用通知操作系统回收与该套接字描述符相关的所有资源。由此可见，套接字是应用进程为了获得网络通信服务而与操作系统进行交互时使用的一种机制。</p>
+        <p>计算机网络/应用层/应用进程跨越网络的通信<br />
+<a id="more"></a> # 系统调用和应用编程接口   大多数操作系统使用<strong>系统调用</strong>(system call)的机制在应用程序和操作系统之间传递控制权。应用进程需要从操作系统获得服务，就要把控制权传递给操作系统，操作系统在执行必要的操作后把控制权返回给应用进程。因此，系统调用接口实际上就是应用进程的控制权和操作系统的控制权进行转换的一个接口。由于应用程序在使用系统调用之前要编写一些程序，特别是需要设置系统调用的许多参数，因此这种系统调用接口又称为<strong>应用编程接口API</strong>(Application Programming Interface)。<br />
+  在讨论网络编程时常常把<strong>套接字</strong>作为应用进程和运输层协议之间的接口。当应用进程（客户或服务器）需要使用网络进行通信时，必须首先发出socket系统调用，请求操作系统为其创建一个“套接字”。这个调用的实际效果是请求操作系统把网络通信所需要的一些系统资源（存储空间、CPU时间、网络带宽等）分配给应用进程。操作系统作为这些资源的总和用一个叫做套接字描述符(socket descriptor)的号码（小的整数）来表示，然后把这个套接字描述符返回给应用进程。几乎所有的网络系统调用都把这个套接字描述符作为套接字的许多参数中的第一个参数。通信完毕后，应用进程通过一个关闭套接字的close系统调用通知操作系统回收与该套接字描述符相关的所有资源。由此可见，套接字是应用进程为了获得网络通信服务而与操作系统进行交互时使用的一种机制。</p>
 <h1 id="常用的系统调用">常用的系统调用</h1>
-<p>以TCP的服务为例 1. 连接建立阶段   当套接字被创建后，它的端口号和IP地址都是空的，因此应用进程要调用<strong>bind</strong>（绑定）来指明套接字的本地地址（本地端口号和本地IP地址）。在服务器端调用bind时就是把熟知端口和本地IP地址填写到已创建的套接字中。这就叫做把本地地址绑定到套接字。在客户端也可以不调用bind，这时由操作系统内核自动分配一个动态端口号（通信结束后由系统收回）。   服务器在调用bind后，还必须调用<strong>listen</strong>（监听）把套接字设置为被动方式，以便随时接收客户的服务请求。UDP服务器由于只提供无连接服务，不使用listen系统调用。   服务器紧接着就调用<strong>accept</strong>（接受），以便把远地客户进程发来的连接请求提取出来。系统调用accept的一个变量就是要指明是从哪一个套接字发起的连接。   调用accept要完成的动作较多。这是因为一个服务器必须能够同时处理多个连接。这样的服务器常称为并发方式(concurrent)工作的服务器。   当使用TCP协议的客户已经调用socket创建了套接字后，客户进程就调用<strong>connect</strong>，以便和远地服务器建立连接。在connect系统调用中，客户必须指明远地端点（即远地服务器的IP地址和端口号）。 2. 数据传送阶段   客户和服务器都在TCP连接上使用<strong>send</strong>系统调用传送数据，使用<strong>recv</strong>系统调用接收数据。   调用send需要三个变量：数据要发往的套接字的描述符、要发送的数据的地址以及数据的长度。   调用recv也需要三个变量：要使用的套接字的描述符、缓存的地址以及缓存空间的长度。 3. 连接释放阶段   调用close释放连接和撤销套接字。</p>
+<p>以TCP的服务为例<br />
+1. 连接建立阶段<br />
+  当套接字被创建后，它的端口号和IP地址都是空的，因此应用进程要调用<strong>bind</strong>（绑定）来指明套接字的本地地址（本地端口号和本地IP地址）。在服务器端调用bind时就是把熟知端口和本地IP地址填写到已创建的套接字中。这就叫做把本地地址绑定到套接字。在客户端也可以不调用bind，这时由操作系统内核自动分配一个动态端口号（通信结束后由系统收回）。<br />
+  服务器在调用bind后，还必须调用<strong>listen</strong>（监听）把套接字设置为被动方式，以便随时接收客户的服务请求。UDP服务器由于只提供无连接服务，不使用listen系统调用。<br />
+  服务器紧接着就调用<strong>accept</strong>（接受），以便把远地客户进程发来的连接请求提取出来。系统调用accept的一个变量就是要指明是从哪一个套接字发起的连接。<br />
+  调用accept要完成的动作较多。这是因为一个服务器必须能够同时处理多个连接。这样的服务器常称为并发方式(concurrent)工作的服务器。<br />
+  当使用TCP协议的客户已经调用socket创建了套接字后，客户进程就调用<strong>connect</strong>，以便和远地服务器建立连接。在connect系统调用中，客户必须指明远地端点（即远地服务器的IP地址和端口号）。<br />
+2. 数据传送阶段<br />
+  客户和服务器都在TCP连接上使用<strong>send</strong>系统调用传送数据，使用<strong>recv</strong>系统调用接收数据。<br />
+  调用send需要三个变量：数据要发往的套接字的描述符、要发送的数据的地址以及数据的长度。<br />
+  调用recv也需要三个变量：要使用的套接字的描述符、缓存的地址以及缓存空间的长度。<br />
+3. 连接释放阶段<br />
+  调用close释放连接和撤销套接字。</p>
 <figure>
 <img src="TCP系统调用.png" alt="TCP系统调用" /><figcaption aria-hidden="true">TCP系统调用</figcaption>
 </figure>

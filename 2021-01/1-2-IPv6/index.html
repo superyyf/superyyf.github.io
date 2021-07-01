@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yyf.zone/2021-01/1-2-IPv6/jibenshoubu.png">
 <meta property="article:published_time" content="2021-01-02T15:16:36.000Z">
-<meta property="article:modified_time" content="2021-06-28T13:00:20.050Z">
+<meta property="article:modified_time" content="2021-07-01T08:28:48.441Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
@@ -189,7 +189,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+                <time title="修改时间：2021-07-01 16:28:48" itemprop="dateModified" datetime="2021-07-01T16:28:48+08:00">2021-07-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +216,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>网络层/IPv6 <a id="more"></a></p>
+        <p>网络层/IPv6<br />
+<a id="more"></a></p>
 <h1 id="ipv6">IPv6</h1>
 <h2 id="ipv6地址">IPv6地址</h2>
 <p>在IPv6中，每个地址占128位，地址空间大于<span class="math inline">\(3.4\times10^{38}\)</span>。</p>
@@ -270,27 +271,50 @@
 <h3 id="基本首部">基本首部</h3>
 <p>与IPv4相比，IPv6对首部中的字段进行了如下更改：</p>
 <ul>
-<li>取消了首部长度字段，因为它的首部长度是固定的(40字节)。</li>
-<li>取消了服务类型字段，因为优先级和流标号字段实现了服务类型字段的功能。</li>
-<li>取消了总长度字段，改用有效载荷长度字段。</li>
-<li>取消了标识、标志和片偏移字段，因为这些功能已包含在分片扩展首部中。</li>
-<li>把TTL字段改称为跳数限制字段，作用是一样的。</li>
-<li>取消了协议字段，改用下一个首部字段。</li>
-<li>取消了检验和字段。</li>
+<li>取消了首部长度字段，因为它的首部长度是固定的(40字节)。<br />
+</li>
+<li>取消了服务类型字段，因为优先级和流标号字段实现了服务类型字段的功能。<br />
+</li>
+<li>取消了总长度字段，改用有效载荷长度字段。<br />
+</li>
+<li>取消了标识、标志和片偏移字段，因为这些功能已包含在分片扩展首部中。<br />
+</li>
+<li>把TTL字段改称为跳数限制字段，作用是一样的。<br />
+</li>
+<li>取消了协议字段，改用下一个首部字段。<br />
+</li>
+<li>取消了检验和字段。<br />
+</li>
 <li>取消了选项字段，而用扩展首部来实现选项功能。</li>
 </ul>
 <figure>
 <img src="jibenshoubu.png" alt="基本首部" /><figcaption aria-hidden="true">基本首部</figcaption>
 </figure>
-<p>各字段的作用如下: 1. <strong>版本</strong>(version) 占4位。指明协议的版本，对IPv6该字段是6。 2. <strong>通信量类</strong>(traffic class) 占8位。这是为了区分不同数据报的类别或优先级。 3. <strong>流标号</strong>(flow label) 占20位。IPv6的一个新的机制是支持资源预分配，并且允许路由器把每一个数据报与一个给定的资源分配相联系。IPv6提出流(flow)的抽象概念，“流”就是互联网上从特定源点到特定终点(单播或多播)的一系列数据报，而在这个“流”所经过的路径上的路由器都保证指明的服务质量。所有属于同一个流的数据报都具有同样的流标号。因此，流标号对实时音频/视频数据的传送特别有用。关于流标号可参考<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc6437">RFC 6437</a>。 4. <strong>有效载荷长度</strong>(payload length) 占16位。它指明IPv6数据报除基本首部以外的字节数。最大值是64KB。 5. <strong>下一个首部</strong>(next header) 占8位。它相当于IPv4的协议字段或可选字段 - 当数据报没有拓展首部时，下一个首部字段的作用和IPv4的协议字段一样。 - 列表项当出现拓展首部时，下一首部字段的值就标识后面第一个拓展首部的类型。 6. <strong>跳数限制</strong>(hop limit) 占8位。用来防止数据报在网络中无限期地存在。 7. <strong>源地址</strong> 占128位。是数据报的发送端的IP地址。 8. <strong>目的地址</strong> 占128位。是接收端的IP地址。</p>
+<p>各字段的作用如下:<br />
+1. <strong>版本</strong>(version) 占4位。指明协议的版本，对IPv6该字段是6。<br />
+2. <strong>通信量类</strong>(traffic class) 占8位。这是为了区分不同数据报的类别或优先级。<br />
+3. <strong>流标号</strong>(flow label) 占20位。IPv6的一个新的机制是支持资源预分配，并且允许路由器把每一个数据报与一个给定的资源分配相联系。IPv6提出流(flow)的抽象概念，“流”就是互联网上从特定源点到特定终点(单播或多播)的一系列数据报，而在这个“流”所经过的路径上的路由器都保证指明的服务质量。所有属于同一个流的数据报都具有同样的流标号。因此，流标号对实时音频/视频数据的传送特别有用。关于流标号可参考<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc6437">RFC 6437</a>。<br />
+4. <strong>有效载荷长度</strong>(payload length) 占16位。它指明IPv6数据报除基本首部以外的字节数。最大值是64KB。<br />
+5. <strong>下一个首部</strong>(next header) 占8位。它相当于IPv4的协议字段或可选字段<br />
+- 当数据报没有拓展首部时，下一个首部字段的作用和IPv4的协议字段一样。<br />
+- 列表项当出现拓展首部时，下一首部字段的值就标识后面第一个拓展首部的类型。<br />
+6. <strong>跳数限制</strong>(hop limit) 占8位。用来防止数据报在网络中无限期地存在。<br />
+7. <strong>源地址</strong> 占128位。是数据报的发送端的IP地址。<br />
+8. <strong>目的地址</strong> 占128位。是接收端的IP地址。</p>
 <h3 id="拓展首部">拓展首部</h3>
 <p>IPv6把原来IPv4首部中选项的功能都放在拓展首部中，并把拓展首部留给路径两端的源点和终点的主机来处理，而数据报途中的经过的路由器都不处理这些首部（只有一个首部例外，即逐跳选项拓展首部），这样<strong>大大提高了路由器的处理效率</strong>。<br />
-在<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2460">RFC 2460</a>中定义了以下六种拓展首部： (1) <strong>逐跳选项</strong><br />
-(2) <strong>路由选项</strong> (3) <strong>分片</strong> (4) <strong>鉴别</strong> (5) <strong>封装安全有效载荷</strong> (6) <strong>目的站选项</strong><br />
+在<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc2460">RFC 2460</a>中定义了以下六种拓展首部：<br />
+(1) <strong>逐跳选项</strong><br />
+(2) <strong>路由选项</strong><br />
+(3) <strong>分片</strong><br />
+(4) <strong>鉴别</strong><br />
+(5) <strong>封装安全有效载荷</strong><br />
+(6) <strong>目的站选项</strong><br />
 每一个拓展首部长度可以不同，但第一个字段都是8位的“下一首部”字段。此字段的值指出了在该拓展首部后面的字段是什么。当使用多个拓展首部时，应按以上的先后顺序出现。<strong>高层首部总是放在最后面</strong>。</p>
 <h2 id="从ipv4向ipv6过渡">从IPv4向IPv6过渡</h2>
 <ol type="1">
-<li><strong>双协议栈</strong>。使一部分主机（或路由器）装有双协议栈：一个IPv4和一个IPv6。这表明它同时具有两种IP地址：一个IPv6地址和一个IPv4地址。</li>
+<li><strong>双协议栈</strong>。使一部分主机（或路由器）装有双协议栈：一个IPv4和一个IPv6。这表明它同时具有两种IP地址：一个IPv6地址和一个IPv4地址。<br />
+</li>
 <li><strong>隧道技术</strong>。这种方法的要点是在IPv6数据报要进入IPv4网络时，把IPv6数据报封装为IPv4数据报。</li>
 </ol>
 <h2 id="icmpv6">ICMPv6</h2>
@@ -298,9 +322,12 @@
 ICMPv6是面向报文的协议，它利用报文来报告差错，获取信息，探测邻站和管理多播通信。<br />
 ICMPv6报文：</p>
 <ul>
-<li>差错报文</li>
-<li>信息报文</li>
-<li>邻站发现报文（ND协议）</li>
+<li>差错报文<br />
+</li>
+<li>信息报文<br />
+</li>
+<li>邻站发现报文（ND协议）<br />
+</li>
 <li>组成员关系报文（MLD协议）</li>
 </ul>
 <p>参考文献：《计算机网络（第7版）》谢希仁著。</p>

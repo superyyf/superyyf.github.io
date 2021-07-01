@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://yyf.zone/2021-01/1-7-OverviewOfTransportLayer/运输层.png">
 <meta property="og:image" content="https://yyf.zone/2021-01/1-7-OverviewOfTransportLayer/应用场景.png">
 <meta property="article:published_time" content="2021-01-07T07:11:59.000Z">
-<meta property="article:modified_time" content="2021-06-28T13:00:20.090Z">
+<meta property="article:modified_time" content="2021-07-01T08:26:33.851Z">
 <meta property="article:author" content="Ye Yunfei">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
@@ -190,7 +190,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-06-28 21:00:20" itemprop="dateModified" datetime="2021-06-28T21:00:20+08:00">2021-06-28</time>
+                <time title="修改时间：2021-07-01 16:26:33" itemprop="dateModified" datetime="2021-07-01T16:26:33+08:00">2021-07-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,7 +217,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>运输层/运输层概述 <a id="more"></a></p>
+        <p>运输层/运输层概述<br />
+<a id="more"></a></p>
 <h1 id="运输层协议概述">运输层协议概述</h1>
 <h2 id="运输层的主要任务">运输层的主要任务</h2>
 <p>网络层为主机之间提供逻辑通信，而运输层<strong>为应用进程之间提供端到端的逻辑通信</strong>。</p>
@@ -228,8 +229,10 @@
 <hr />
 <h2 id="运输层的功能">运输层的功能</h2>
 <ol type="1">
-<li>运输层还要对收到的报文进行<strong>差错检测</strong>。在网络层中，IP数据报首部中的检验和字段，只检验首部是否出现差错。</li>
-<li>运输层向高层用户<strong>屏蔽</strong>了下面网络核心的细节。</li>
+<li>运输层还要对收到的报文进行<strong>差错检测</strong>。在网络层中，IP数据报首部中的检验和字段，只检验首部是否出现差错。<br />
+</li>
+<li>运输层向高层用户<strong>屏蔽</strong>了下面网络核心的细节。<br />
+</li>
 <li><strong>复用</strong>和<strong>分用</strong>应用层所有的应用进程都可以通过运输层再传送到IP层（网络层），这就是复用。运输层从IP层收到发给各应用进程的数据后，必须分别交付指明的各应用进程，这就是分用。</li>
 </ol>
 <hr />
@@ -271,9 +274,20 @@
 </figure>
 <hr />
 <h2 id="运输层中端口的概念">运输层中端口的概念</h2>
-<p><strong>端口就是对进程标识符进行“统一度量衡”操作。</strong> 要解决的问题： 为了实现运输层复用和分用的功能功能，我们必须对应用层的每个应用进程赋予一个非常明确的标志。 遇到的困难： 1. 我们知道，在单个计算机中的进程是用进程标识符（一个不大的整数）来标志的。但是在互联网环境下，计算机的操作系统不同，不同的操作系统又使用不同格式的进程标识符。 2. 把特定机器上运行的特定进程指明为通信的最后终点是不可行的。因为进程的创建和撤销都是动态的。</p>
-<p>解决问题的方法： 运输层使用协议端口号(Protocol port number)，或简称<strong>端口</strong>(port)。虽然通信的终点是应用进程，但只要把所传送的报文交到目的主机的某个合适端口，剩下的工作就由TCP或UDP来完成。此处的端口指软件端口。TCP/IP的运输层用一个16位端口号来标志一个端口。<strong>端口号只具有本地意义</strong>，它只是为了标志本计算机应用层中的各个进程在和运输层交互时的<strong>层间接口</strong>。 &gt;硬件端口：不同硬件设备进行交互的接口。 &gt;软件端口：应用层的各种协议进程与运输实体进行层间交互的一种地址。</p>
-<p>运输层端口号的分类: 1. 服务器端使用的端口号 1. 熟知端口号(well-known port number)或系统端口号，数值为0~1023。这些端口号指派给了TCP/IP最重要的一些应用程序。如下图。 2. 登记端口号。数值为1024~49151。使用这类端口号必须在IANA登记，以防止重复。 2. 客户端使用的端口号 数值为49152~65535。这类端口号仅在客户进程运行时才动态选择，因此又叫做短暂端口号。</p>
+<p><strong>端口就是对进程标识符进行“统一度量衡”操作。</strong><br />
+要解决的问题：<br />
+为了实现运输层复用和分用的功能功能，我们必须对应用层的每个应用进程赋予一个非常明确的标志。<br />
+遇到的困难：<br />
+1. 我们知道，在单个计算机中的进程是用进程标识符（一个不大的整数）来标志的。但是在互联网环境下，计算机的操作系统不同，不同的操作系统又使用不同格式的进程标识符。<br />
+2. 把特定机器上运行的特定进程指明为通信的最后终点是不可行的。因为进程的创建和撤销都是动态的。</p>
+<p>解决问题的方法：<br />
+运输层使用协议端口号(Protocol port number)，或简称<strong>端口</strong>(port)。虽然通信的终点是应用进程，但只要把所传送的报文交到目的主机的某个合适端口，剩下的工作就由TCP或UDP来完成。此处的端口指软件端口。TCP/IP的运输层用一个16位端口号来标志一个端口。<strong>端口号只具有本地意义</strong>，它只是为了标志本计算机应用层中的各个进程在和运输层交互时的<strong>层间接口</strong>。<br />
+&gt;硬件端口：不同硬件设备进行交互的接口。 &gt;软件端口：应用层的各种协议进程与运输实体进行层间交互的一种地址。</p>
+<p>运输层端口号的分类:<br />
+1. 服务器端使用的端口号<br />
+1. 熟知端口号(well-known port number)或系统端口号，数值为0~1023。这些端口号指派给了TCP/IP最重要的一些应用程序。如下图。<br />
+2. 登记端口号。数值为1024~49151。使用这类端口号必须在IANA登记，以防止重复。 2. 客户端使用的端口号<br />
+数值为49152~65535。这类端口号仅在客户进程运行时才动态选择，因此又叫做短暂端口号。</p>
 <table>
 <thead>
 <tr class="header">
