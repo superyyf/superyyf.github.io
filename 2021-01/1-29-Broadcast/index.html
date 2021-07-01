@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"yyf.zone","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="计算机网络&#x2F;数据链路层&#x2F;使用广播信道的数据链路层">
@@ -436,7 +436,7 @@ mjx-container[display="true"] + br {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%80%82%E9%85%8D%E5%99%A8%E7%BD%91%E5%8D%A1"><span class="nav-number">1.</span> <span class="nav-text">网络适配器（网卡）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#csmacd%E5%8D%8F%E8%AE%AE"><span class="nav-number"></span> <span class="nav-text">CSMA&#x2F;CD协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9B%86%E7%BA%BF%E5%99%A8%E7%9A%84%E6%98%9F%E5%BD%A2%E6%8B%93%E6%89%91"><span class="nav-number"></span> <span class="nav-text">使用集线器的星形拓扑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84%E4%BF%A1%E9%81%93%E5%88%A9%E7%94%A8%E7%8E%87"><span class="nav-number"></span> <span class="nav-text">以太网的信道利用率</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84mac%E5%B1%82"><span class="nav-number"></span> <span class="nav-text">以太网的MAC层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mac%E5%B1%82%E7%9A%84%E7%A1%AC%E4%BB%B6%E5%9C%B0%E5%9D%80"><span class="nav-number">1.</span> <span class="nav-text">MAC层的硬件地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mac%E5%B8%A7%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">MAC帧的格式</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E9%80%82%E9%85%8D%E5%99%A8%E7%BD%91%E5%8D%A1"><span class="nav-text">网络适配器（网卡）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#csmacd%E5%8D%8F%E8%AE%AE"><span class="nav-text">CSMA&#x2F;CD协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%9B%86%E7%BA%BF%E5%99%A8%E7%9A%84%E6%98%9F%E5%BD%A2%E6%8B%93%E6%89%91"><span class="nav-text">使用集线器的星形拓扑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84%E4%BF%A1%E9%81%93%E5%88%A9%E7%94%A8%E7%8E%87"><span class="nav-text">以太网的信道利用率</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A5%E5%A4%AA%E7%BD%91%E7%9A%84mac%E5%B1%82"><span class="nav-text">以太网的MAC层</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mac%E5%B1%82%E7%9A%84%E7%A1%AC%E4%BB%B6%E5%9C%B0%E5%9D%80"><span class="nav-text">MAC层的硬件地址</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mac%E5%B8%A7%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-text">MAC帧的格式</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -466,6 +466,11 @@ mjx-container[display="true"] + br {
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/superyyf" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;superyyf" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
 
 
 
@@ -494,7 +499,7 @@ mjx-container[display="true"] + br {
   </span>
   <span class="author" itemprop="copyrightHolder">Ye Yunfei</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
         
