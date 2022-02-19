@@ -1,0 +1,147 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>应用进程跨越网络的通信 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/应用层/应用进程跨越网络的通信">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="应用进程跨越网络的通信">
+<meta property="og:description" content="计算机网络/应用层/应用进程跨越网络的通信">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-18-socket/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-18T19:56:07+00:00">
+<meta property="article:modified_time" content="2021-01-18T19:56:07+00:00">
+<meta itemprop=name content="应用进程跨越网络的通信">
+<meta itemprop=description content="计算机网络/应用层/应用进程跨越网络的通信"><meta itemprop=datePublished content="2021-01-18T19:56:07+00:00">
+<meta itemprop=dateModified content="2021-01-18T19:56:07+00:00">
+<meta itemprop=wordCount content="24">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="应用进程跨越网络的通信">
+<meta name=twitter:description content="计算机网络/应用层/应用进程跨越网络的通信">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">应用进程跨越网络的通信</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-18T19:56:07Z>January 18, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/应用层/应用进程跨越网络的通信</p>
+<h1 id=系统调用和应用编程接口>系统调用和应用编程接口</h1>
+<p>  大多数操作系统使用<strong>系统调用</strong>(system call)的机制在应用程序和操作系统之间传递控制权。应用进程需要从操作系统获得服务，就要把控制权传递给操作系统，操作系统在执行必要的操作后把控制权返回给应用进程。因此，系统调用接口实际上就是应用进程的控制权和操作系统的控制权进行转换的一个接口。由于应用程序在使用系统调用之前要编写一些程序，特别是需要设置系统调用的许多参数，因此这种系统调用接口又称为<strong>应用编程接口API</strong>(Application Programming Interface)。<br>
+  在讨论网络编程时常常把<strong>套接字</strong>作为应用进程和运输层协议之间的接口。当应用进程（客户或服务器）需要使用网络进行通信时，必须首先发出socket系统调用，请求操作系统为其创建一个“套接字”。这个调用的实际效果是请求操作系统把网络通信所需要的一些系统资源（存储空间、CPU时间、网络带宽等）分配给应用进程。操作系统作为这些资源的总和用一个叫做套接字描述符(socket descriptor)的号码（小的整数）来表示，然后把这个套接字描述符返回给应用进程。几乎所有的网络系统调用都把这个套接字描述符作为套接字的许多参数中的第一个参数。通信完毕后，应用进程通过一个关闭套接字的close系统调用通知操作系统回收与该套接字描述符相关的所有资源。由此可见，套接字是应用进程为了获得网络通信服务而与操作系统进行交互时使用的一种机制。</p>
+<h1 id=常用的系统调用>常用的系统调用</h1>
+<p>以TCP的服务为例</p>
+<ol>
+<li>连接建立阶段<br>
+  当套接字被创建后，它的端口号和IP地址都是空的，因此应用进程要调用<strong>bind</strong>（绑定）来指明套接字的本地地址（本地端口号和本地IP地址）。在服务器端调用bind时就是把熟知端口和本地IP地址填写到已创建的套接字中。这就叫做把本地地址绑定到套接字。在客户端也可以不调用bind，这时由操作系统内核自动分配一个动态端口号（通信结束后由系统收回）。<br>
+  服务器在调用bind后，还必须调用<strong>listen</strong>（监听）把套接字设置为被动方式，以便随时接收客户的服务请求。UDP服务器由于只提供无连接服务，不使用listen系统调用。<br>
+  服务器紧接着就调用<strong>accept</strong>（接受），以便把远地客户进程发来的连接请求提取出来。系统调用accept的一个变量就是要指明是从哪一个套接字发起的连接。<br>
+  调用accept要完成的动作较多。这是因为一个服务器必须能够同时处理多个连接。这样的服务器常称为并发方式(concurrent)工作的服务器。<br>
+  当使用TCP协议的客户已经调用socket创建了套接字后，客户进程就调用<strong>connect</strong>，以便和远地服务器建立连接。在connect系统调用中，客户必须指明远地端点（即远地服务器的IP地址和端口号）。</li>
+<li>数据传送阶段<br>
+  客户和服务器都在TCP连接上使用<strong>send</strong>系统调用传送数据，使用<strong>recv</strong>系统调用接收数据。<br>
+  调用send需要三个变量：数据要发往的套接字的描述符、要发送的数据的地址以及数据的长度。<br>
+  调用recv也需要三个变量：要使用的套接字的描述符、缓存的地址以及缓存空间的长度。</li>
+<li>连接释放阶段<br>
+  调用close释放连接和撤销套接字。</li>
+</ol>
+<p><img src=/image/TCP%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8.png alt=TCP系统调用></p>
+<p>  UDP服务器由于只提供无连接服务，因此不使用listen和accept系统调用。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-18-snmp/>简单网络管理协议SNMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-dhcp/>动态主机配置协议DHCP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-email/>电子邮件</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-15-www/>万维网WWW</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-14-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

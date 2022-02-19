@@ -1,0 +1,226 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>网际协议IP | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/网络层/网际协议IP">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="网际协议IP">
+<meta property="og:description" content="计算机网络/网络层/网际协议IP">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-22-ip/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-22T15:48:41+00:00">
+<meta property="article:modified_time" content="2021-01-22T15:48:41+00:00">
+<meta itemprop=name content="网际协议IP">
+<meta itemprop=description content="计算机网络/网络层/网际协议IP"><meta itemprop=datePublished content="2021-01-22T15:48:41+00:00">
+<meta itemprop=dateModified content="2021-01-22T15:48:41+00:00">
+<meta itemprop=wordCount content="80">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="网际协议IP">
+<meta name=twitter:description content="计算机网络/网络层/网际协议IP">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">网际协议IP</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-22T15:48:41Z>January 22, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/网络层/网际协议IP</p>
+<p>与IP协议配套使用的还有三个协议：</p>
+<ul>
+<li><strong>地址解析协议ARP</strong>(Address Resolution Protocol)</li>
+<li><strong>网际控制报文协议ICMP</strong>(Internet Control Message Protocol)</li>
+<li><strong>网际组管理协议IGMP</strong>(Internet Group Management Protocol)</li>
+</ul>
+<h1 id=分类的ip地址>分类的IP地址</h1>
+<h2 id=ip地址及其表示方法>IP地址及其表示方法</h2>
+<p>IP地址的编址方法共经过三个历史阶段。</p>
+<ol>
+<li>分类的IP地址。这是最基本的编址方法。</li>
+<li>子网的划分。这是对最基本的编址方法的改进。</li>
+<li>构成超网。这是比较新的无分类编址方法。</li>
+</ol>
+<blockquote>
+<p>IP地址::={&lt;网络号>,&lt;主机号>}</p>
+</blockquote>
+<p><img src=/image/IP%E5%9C%B0%E5%9D%80.png alt=IP地址></p>
+<h2 id=常见的ip地址>常见的IP地址</h2>
+<p><img src=/image/%E5%B8%B8%E8%A7%81%E5%9C%B0%E5%9D%80.png alt=常见地址></p>
+<p>IP地址具有以下一些重要特点。</p>
+<ol>
+<li>每一个IP地址都由<strong>网络号</strong>和<strong>主机号</strong>两部分组成。</li>
+<li>实际上IP地址是标志一台主机（或路由器）和一条链路的接口。</li>
+<li>按照互联网的观点，一个网络是指具有相同网络号net-id的主机集合。</li>
+<li>在IP地址中，所有分配到网络号的网络（不管是范围很小的局域网，还是可能覆盖很大地理范围的广域网）都是<strong>平等的</strong>。</li>
+</ol>
+<h1 id=ip地址与硬件地址>IP地址与硬件地址</h1>
+<p>  从层次的角度看，<strong>物理地址</strong>是数据链路层和物理层使用的地址，而<strong>IP地址</strong>是网络层和以上各层使用的地址，是一种逻辑地址（称IP地址为逻辑地址是因为IP地址是用软件实现的）。</p>
+<p><img src=/image/IP%E5%9C%B0%E5%9D%80%E4%B8%8E%E7%A1%AC%E4%BB%B6%E5%9C%B0%E5%9D%80.png alt=IP地址与硬件地址></p>
+<ol>
+<li>在IP层抽象的互联网上只能看到IP数据报。</li>
+<li>虽然在IP数据报首部有源站IP地址，但路由器只根据目的站的IP地址的网络号进行路由选择。</li>
+<li>在局域网的链路层，只能看见MAC帧。</li>
+<li>尽管互连在一起的网络的硬件地址体系各不相同，但IP层抽象的互联网却屏蔽了下层这些很复杂的细节。</li>
+</ol>
+<h1 id=地址解析协议arp>地址解析协议ARP</h1>
+<p>  ARP协议的用途是为了从网络层使用的IP地址，解析出在数据链路层使用的硬件地址。<br>
+  每一台主机都设有一个<strong>ARP高速缓存</strong>(ARP cache)，里面有本局域网上的各主机和路由器的IP地址到硬件地址的映射表，并且这个映射表还经常动态更新。<br>
+映射表的更新通过<strong>广播</strong>ARP请求分组和<strong>单播</strong>ARP响应分组来完成。ARP对保存在高速缓存中的每一个映射地址项目都设置生存时间。凡超过生存时间的项目就从高速缓存中删除。</p>
+<p><img src=/image/ARP.png alt=ARP></p>
+<p>ARP是解决同一个局域网上的主机或路由器的IP地址和硬件地址的映射问题。</p>
+<h1 id=ip数据报的格式>IP数据报的格式</h1>
+<p><img src=/image/IP%E6%95%B0%E6%8D%AE%E6%8A%A5.png alt=IP数据报></p>
+<h2 id=ip数据报首部的固定部分中的各字段>IP数据报首部的固定部分中的各字段</h2>
+<ol>
+<li>
+<p><strong>版本</strong>  占4位，指IP协议的版本。</p>
+</li>
+<li>
+<p><strong>首部长度</strong>  占4位，可表示的最大十进制数值是15。</p>
+</li>
+<li>
+<p><strong>区分服务</strong>  占8位，用来获得更好的服务。未使用</p>
+</li>
+<li>
+<p><strong>总长度</strong>  占16位，总长度指首部和数据之和的长度，单位为字节。</p>
+</li>
+<li>
+<p><strong>标识</strong>(identification)  占16位。IP软件在存储器中维持一个计数器，每产生一个数据报，计数器就加1，并将此值赋给标识字段。</p>
+</li>
+<li>
+<p><strong>标志</strong>(flag)  占3位，但目前只有两位有意义。</p>
+<ul>
+<li>MF(More Fragment)。MF=1即表示后面“还有分片”的数据报。MF=0表示这已是若干数据报片中的最后一个。</li>
+<li>DF(Don&rsquo;t Fragment)。意思是“不能分片”。只有当DF=0时才允许分片。</li>
+</ul>
+</li>
+<li>
+<p><strong>片偏移</strong>  占13位。片偏移指出：较长的分组在分片后，某片在原分组中的相对位置。</p>
+</li>
+<li>
+<p><strong>生存时间</strong>  占8位，生存时间字段常用的英文缩写是TTL(Time To Live)，表明这是数据报在网络中的寿命，即跳数限制。</p>
+</li>
+<li>
+<p><strong>协议</strong>  占8位，协议字段指出此数据报携带的数据是使用何种协议。</p>
+</li>
+<li>
+<p><strong>首部检验和</strong>  占16位。这个字段只检验数据报的首部，但不包括数据部分。</p>
+</li>
+<li>
+<p><strong>源地址</strong>  占32位。</p>
+</li>
+<li>
+<p><strong>目的地址</strong>  占32位。</p>
+</li>
+<li>
+<p><strong>可变部分</strong>。IP数据报首部的可变部分就是一个选项字段。选项字段用来支持排错、测量以及安全等措施。此字段的长度可变，从1个字节到40个字节不等，取决于所选择的项目。</p>
+</li>
+</ol>
+<h1 id=ip层转发分组的流程>IP层转发分组的流程</h1>
+<p>分组转发算法如下：</p>
+<ol>
+<li>从数据报的首部提取目的主机的IP地址D，得出目的网络地址为N。</li>
+<li>若N就是此路由器直接相连的某个网络，则进行直接交付，不需要再经过其他的路由器，直接把数据报交付目的主机（这里包括把目的主机地址D转换为具体硬件地址，把数据报封装为MAC帧，再发送此帧）；否则就是间接交付，执行(3)</li>
+<li>若路由表中有目的地址为D的特定主机路由，则把数据报传送给路由表中所指明的下一跳路由器；否则，执行(4)。</li>
+<li>若路由表中有到达网络N的路由，则把数据报传送给路由表中所指明的下一跳路由器；否则，执行(5)。</li>
+<li>若路由表中有一个默认路由，则把数据报传送给路由表中所指明的默认路由器；否则执行(6)。</li>
+<li>报告转发分组出错。</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-icmp/>网际控制报文协议ICMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-route/>互联网的路由选择协议</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-p2p/>P2P应用</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-socket/>应用进程跨越网络的通信</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-snmp/>简单网络管理协议SNMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-dhcp/>动态主机配置协议DHCP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-email/>电子邮件</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-15-www/>万维网WWW</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-14-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

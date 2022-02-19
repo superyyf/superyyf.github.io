@@ -1,0 +1,172 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>点对点协议PPP | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/数据链路层/点对点协议PPP">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="点对点协议PPP">
+<meta property="og:description" content="计算机网络/数据链路层/点对点协议PPP">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-25-ppp/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-25T16:18:41+00:00">
+<meta property="article:modified_time" content="2021-01-25T16:18:41+00:00">
+<meta itemprop=name content="点对点协议PPP">
+<meta itemprop=description content="计算机网络/数据链路层/点对点协议PPP"><meta itemprop=datePublished content="2021-01-25T16:18:41+00:00">
+<meta itemprop=dateModified content="2021-01-25T16:18:41+00:00">
+<meta itemprop=wordCount content="43">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="点对点协议PPP">
+<meta name=twitter:description content="计算机网络/数据链路层/点对点协议PPP">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">点对点协议PPP</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-25T16:18:41Z>January 25, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/数据链路层/点对点协议PPP</p>
+<h1 id=ppp协议的特点>PPP协议的特点</h1>
+<ol>
+<li><strong>简单</strong>。IETF在设计互联网体系结构时把其中最复杂的部分放在TCP协议中，而网际协议IP则相对比较简单，它提供的是不可靠的数据服务。在这种情况下，数据链路层没有必要提供比IP协议更多的功能。因此，对数据链路层的帧，不需要纠错，不需要序号，也不需要流量控制。</li>
+<li><strong>封装成帧</strong>。PPP协议必须规定特殊的字符作为帧定界符。</li>
+<li><strong>透明性</strong>。PPP协议必须保证数据传输的透明性。</li>
+<li><strong>多种网络层协议</strong>。PPP协议必须能够在同一条物理链路上同时支持多种网络层协议的运行。</li>
+<li><strong>多种类型链路</strong>。PPP协议必须能够在多种类型的链路上运行。</li>
+<li><strong>差错检测</strong>(error detection)。PPP协议必须能够对接收端收到的帧进行检测，并立即丢弃有差错的帧。</li>
+<li><strong>检测连接状态</strong>。PPP协议必须具有一种机制能够及时（不超过几分钟）自动检测出链路是否处于正常工作状态。</li>
+<li><strong>最大传送单元</strong>。PPP协议必须对每一个种类型的点对点链路设置最大传送单元的标准默认值。</li>
+<li><strong>网络层地址协商</strong>。PPP协议必须提供一种机制使通信的两个网络层（例如，两个IP层）的实体能够通过协商知道或能够配置彼此的网络层地址。</li>
+<li><strong>数据压缩协商</strong>。ppp协议必须提供一种方法来协商数据压缩算法。</li>
+</ol>
+<p>PPP协议有三个组成部分：</p>
+<ol>
+<li>一个将IP数据报封装到串行链路的方法。</li>
+<li>一个用来建立、配置和测试数据链路连接的链路控制协议LCP(Link Control Protocol)。</li>
+<li>一套网络控制协议NCP(Network Control Protocol)，其中的每一个协议支持不同的网络层协议。</li>
+</ol>
+<h1 id=ppp协议的帧格式>PPP协议的帧格式</h1>
+<p><img src=/image/PPP%E5%B8%A7%E6%A0%BC%E5%BC%8F.png alt=PPP帧格式></p>
+<h2 id=各字段的意义>各字段的意义</h2>
+<p>PPP帧的首部和尾部分别为四个字段和两个字段。</p>
+<ol>
+<li>首部的第一个字段和尾部的第二个字段都是<strong>标志字段F</strong>(Flag)，规定为0x7E。标志字段表示一个帧的开始或结束（<strong>定界符</strong>）。</li>
+<li>首部中的地址字段A规定为0xFF，控制字段C规定为0x03。最初曾考虑以后再对这两个字段的值进行其他定义，但至今也没有给出。可见这两个字段实际上并没有携带PPP帧的信息。</li>
+<li>首部的第四个字段是2字节的协议字段。当协议字段为0x0021时，PPP帧的信息字段就是IP数据报。若为0xC021，则信息字段是PPP链路控制协议LCP的数据，而0x8021表示这是网络层的控制数据。</li>
+<li>信息字段的长度是可变的，不超过1500字节。</li>
+<li>尾部中的第一个字段（2字节）是使用CRC的帧检验序列FCS。</li>
+</ol>
+<h2 id=透明传输的实现>透明传输的实现</h2>
+<h3 id=字节填充>字节填充</h3>
+<p>  当信息字段中出现和标志字段一样的比特(0x7E)组合时，就必须采取一些措施使这种形式上和标志字段一样的比特组合不出现在信息字段中。<br>
+  当PPP使用异步传输时，它把转义字符定义为0x7D，并使用字节填充。</p>
+<ol>
+<li>把信息字段中出现的每一个0x7E字节转变成为2字节序列(0x7D,0x5E)。</li>
+<li>如信息字段中出现一个0x7D的字节（即出现了和转义字符一样的比特组合），则把0x7D转变成为2字节序列(0x7D,0x5D)。</li>
+<li>若信息字段中出现ASCII码的控制字符（即数值小于0x20的字符），则在该字符前面要加入一个0x7D字节，同时将该字符的编码加以改变。</li>
+</ol>
+<h3 id=零比特填充>零比特填充</h3>
+<p>  PPP协议用在SONET/SDH链路时，使用同步传输（一连串的比特连续传送）而不是异步传输（逐个字符地传送）。在这种情况下，PPP协议采用零比特填充的方法来实现透明传输。<br>
+  零比特填充的具体做法是：在发送端，先扫描整个信息字段。只要发现有5个连续1，则立即填入一个0。因此经过这种零比特填充后的数据，就可以保证在信息字段中不会出现6个连续的1。</p>
+<h1 id=ppp协议的工作状态>PPP协议的工作状态</h1>
+<p><img src=/image/PPP%E5%B7%A5%E4%BD%9C%E7%8A%B6%E6%80%81.png alt=PPP工作状态></p>
+<p>  当用户拨号接入ISP后，就建立了一条从用户个人电脑到ISP的物理连接。这时，用户个人电脑向ISP发送一系列的<strong>链路控制协议LCP</strong>分组（封装成多个PPP帧），以便建立LCP连接。这些分组及其响应选择了将要使用的一些PPP参数。接着还要进行网络层配置，<strong>网络控制协议NCP</strong>给新接入的用户个人电脑分配一个临时的IP地址。这样，用户个人电脑就成为互联网上的一个有IP地址的主机了。<br>
+  当用户通信完毕时，NCP释放网络层连接，收回原来分配出去的IP地址。接着，LCP释放数据链路层连接。最后释放的是物理层的连接。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ip/>网际协议IP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-icmp/>网际控制报文协议ICMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-route/>互联网的路由选择协议</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-p2p/>P2P应用</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-socket/>应用进程跨越网络的通信</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-snmp/>简单网络管理协议SNMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-dhcp/>动态主机配置协议DHCP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-email/>电子邮件</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-15-www/>万维网WWW</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-14-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

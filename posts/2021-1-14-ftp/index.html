@@ -1,0 +1,139 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>文件传送协议FTP | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/应用层/文件传送协议FTP">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="文件传送协议FTP">
+<meta property="og:description" content="计算机网络/应用层/文件传送协议FTP">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-14-ftp/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-14T21:34:37+00:00">
+<meta property="article:modified_time" content="2021-01-14T21:34:37+00:00">
+<meta itemprop=name content="文件传送协议FTP">
+<meta itemprop=description content="计算机网络/应用层/文件传送协议FTP"><meta itemprop=datePublished content="2021-01-14T21:34:37+00:00">
+<meta itemprop=dateModified content="2021-01-14T21:34:37+00:00">
+<meta itemprop=wordCount content="16">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="文件传送协议FTP">
+<meta name=twitter:description content="计算机网络/应用层/文件传送协议FTP">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">文件传送协议FTP</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-14T21:34:37Z>January 14, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/应用层/文件传送协议FTP</p>
+<p>文件共享协议：</p>
+<ol>
+<li><strong>复制整个文件的</strong>：FTP，TFTP</li>
+<li><strong>联机访问</strong>：NFS</li>
+</ol>
+<h1 id=ftp>FTP</h1>
+<p>  FTP使用客户服务器方式。一个FTP服务器进程可同时为多个客户提供服务。FTP的服务进程有两大部分组成：一个<strong>主进程</strong>，负责接受新的请求；另外有若干个<strong>从属进程</strong>，负责处理单个请求。</p>
+<p><img src=/image/FTP.png alt=FTP></p>
+<p>  图中椭圆表示在系统中运行的进程。图中服务器端有两个从属进程：控制进程和数据传送进程。<br>
+  在进行文件传输时，<strong>FTP的客户和服务器之间要建立两个并行的TCP连接</strong>：“<strong>控制连接</strong>”和“<strong>数据连接</strong>”。FTP客户所发出的传送请求，通过控制连接发送给服务器端的控制进程，但控制连接并不用来传送文件。实际传输文件的是“数据连接”。服务器端的控制进程在接收到FTP客户发送来的文件传输请求后就创建“数据传送进程”和“数据连接”，用来连接客户端和服务器端的数据传送进程。数据传送进程实际完成文件的传送，在传送完毕后关闭“数据传送连接”并结束运行。</p>
+<h1 id=nfs>NFS</h1>
+<p>  FTP并非对所有的数据传输都是最佳的。例如，要在远地计算机的一个很大的文件末尾添加一行信息。若使用FTP则要先把文件传送过来，添加信息后在传送过去。网络文件系统NFS则采用另一种思路。<strong>NFS允许应用进程打开一个远地文件，并能在该文件的某一个特定的位置上好事读写数据</strong>。对于上述例子，NFS客户把要添加的数据和在文件后面写数据的请求一起发送到远地计算机，NFS服务器更新文件后返回应答信息。</p>
+<h1 id=tftp>TFTP</h1>
+<p>  简单文件传送协议TFTP也使用客户服务器方式，但它<strong>使用UDP数据报</strong>。因此TFTP需要有自己的差错改正措施。TFTP只支持文件传输而不支持交互。TFTP没有一个庞大的命令集，没有列目录的功能，也不能对用户进行身份鉴别。TFTP的工作很像停止等待协议。<br>
+优点：</p>
+<ol>
+<li>可用于UDP环境</li>
+<li>TFTP代码所占的内存小。这对较小的计算机或某些特殊用途的设备很重要。</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipv6/>IPv6</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

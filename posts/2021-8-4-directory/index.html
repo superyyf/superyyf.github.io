@@ -1,0 +1,175 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>目录 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="目录">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="目录">
+<meta property="og:description" content="目录">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-8-4-directory/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-08-04T17:26:16+00:00">
+<meta property="article:modified_time" content="2021-08-04T17:26:16+00:00">
+<meta itemprop=name content="目录">
+<meta itemprop=description content="目录"><meta itemprop=datePublished content="2021-08-04T17:26:16+00:00">
+<meta itemprop=dateModified content="2021-08-04T17:26:16+00:00">
+<meta itemprop=wordCount content="25">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="目录">
+<meta name=twitter:description content="目录">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">目录</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-08-04T17:26:16Z>August 4, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=目录>目录</h1>
+<ol>
+<li>
+<p><strong>目录层次结构</strong></p>
+<ol>
+<li>一级目录系统</li>
+<li>层次目录系统</li>
+</ol>
+</li>
+<li>
+<p><strong>路径名</strong></p>
+<ol>
+<li>
+<p>绝对路径：它由从根目录到文件的路径组成。如果路径名的第一个字符是分隔符，则这个路径就是绝对路径。</p>
+</li>
+<li>
+<p>相对路径：它常和工作目录（也称作当前目录）一起使用。所有不从根目录开始的路径名都是相对于工作目录的。</p>
+</li>
+<li>
+<p>两个特殊的目录项</p>
+<p>&ldquo;<strong>.</strong>"：当前目录<br>
+&ldquo;<strong>..</strong>"：父目录</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>目录操作</strong></p>
+<ol>
+<li>create。创建目录。</li>
+<li>delete。删除目录。只有空目录可删除。</li>
+<li>opendir。目录内容可被读取。</li>
+<li>closedir。关闭目录以释放内部表空间。</li>
+<li>readdir。返回打开目录的下一个目录项。</li>
+<li>rename。重命名。</li>
+<li>link。链接技术允许在多个目录中出现同一个文件。</li>
+<li>unlink。删除目录项。</li>
+</ol>
+</li>
+<li>
+<p><strong>链接</strong></p>
+<ul>
+<li>硬链接：链接文件和原文件的inode值一样，也就是它们的i节点相同，i节点类似智能指针，指向物理硬盘的一个区块，i节点会维护一个引用计数，只要有文件指向这个区块，它就不会从硬盘上消失。所以删除原文件不会对链接文件产生影响。</li>
+<li>软链接：链接文件和原文件的inode值不同，软链接文件的inode指向的内容实际上是保存了一个绝对路径，当用户访问这个文件时，系统会自动将其替换成其所指向的文件路径。所有删除原文件会使软链接文件失效。</li>
+</ul>
+</li>
+</ol>
+<p>参考：</p>
+<ol>
+<li>《现代操作系统》</li>
+<li><a href=https://www.linuxprobe.com/soft-and-hard-links.html>博客</a></li>
+</ol><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-8-3-file/>文件</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-8-3-binarysearch/>二分查找的简单总结</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-7-25-tree/>AVL树、红黑树、B树和B+树</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-7-2-addressspace/>地址空间和交换技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-6-30-ospart2/>操作系统面经(Part 2)</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

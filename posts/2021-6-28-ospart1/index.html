@@ -1,0 +1,181 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>操作系统面经(Part 1) | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="面经整理/操作系统（part 1）">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="操作系统面经(Part 1)">
+<meta property="og:description" content="面经整理/操作系统（part 1）">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-6-28-ospart1/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-06-28T21:44:32+00:00">
+<meta property="article:modified_time" content="2021-06-28T21:44:32+00:00">
+<meta itemprop=name content="操作系统面经(Part 1)">
+<meta itemprop=description content="面经整理/操作系统（part 1）"><meta itemprop=datePublished content="2021-06-28T21:44:32+00:00">
+<meta itemprop=dateModified content="2021-06-28T21:44:32+00:00">
+<meta itemprop=wordCount content="56">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="操作系统面经(Part 1)">
+<meta name=twitter:description content="面经整理/操作系统（part 1）">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">操作系统面经(Part 1)</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-06-28T21:44:32Z>June 28, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>面经整理/操作系统（part 1）</p>
+<h1 id=操作系统part-1>操作系统(Part 1)</h1>
+<h2 id=什么是操作系统>什么是操作系统？</h2>
+<p>操作系统是一种软件，具有以下的功能：</p>
+<ol>
+<li><strong>屏蔽硬件</strong>，为用户和其他软件提供接口。</li>
+<li><strong>管理资源</strong>，合理的分配和调度资源。</li>
+</ol>
+<h2 id=什么是用户态和内核态>什么是用户态和内核态？</h2>
+<ol>
+<li>在用户态下，CPU只能受限的访问内存，并且不允许访问外围设备，用户态下的 CPU 不允许独占，也就是说 CPU 能够被其他程序获取。</li>
+<li>在内核态下，CPU可以访问任意的数据，允许访问外围设备，处于内核态的 CPU 可以从一个程序切换到另外一个程序，并且占用CPU不会发生抢占情况，一般处于特权级0的状态我们称之为内核态。</li>
+</ol>
+<h2 id=用户态和内核态是如何切换的>用户态和内核态是如何切换的？</h2>
+<p>从用户态到内核态切换可以通过三种方式：</p>
+<ol>
+<li>系统调用（软中断）。</li>
+<li>外设中断（硬中断）。</li>
+<li>异常。如果当前进程运行在用户态，这时候发生了异常事件就会触发切换。</li>
+</ol>
+<h2 id=请分别简单说一说进程和线程以及它们的区别>请分别简单说一说进程和线程以及它们的区别。</h2>
+<p><strong>进程</strong>：进程是资源分配与调度的基本单位，具有一定独立功能的程序的一次实例。<br>
+<strong>线程</strong>：线程是程序执行的基本单位。线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈)，它可与同属一个进程的其他的线程共享进程所拥有的全部资源。
+区别：</p>
+<ol>
+<li>进程是资源分配的基本单位；线程是程序执行的基本单位。</li>
+<li>进程拥有自己的资源空间，没启动一个进程，系统就会为它分配地址空间；而线程与CPU资源分配无关，多个线程共享同一进程内的资源，使用相同的地址空间。</li>
+<li>一个进程可以包含若干个线程。</li>
+</ol>
+<h2 id=进程的通信方式有哪些>进程的通信方式有哪些？</h2>
+<ol>
+<li>
+<p>管道：<br>
+(1) 匿名管道（pipe）：fork产生的子进程会继承父进程对应的文件描述符。利用这个特性，父进程先pipe创建管道之后，子进程也会得到同一个管道的读写文件描述符。从而实现了父子两个进程使用一个管道完成半双工通信。<br>
+(2) 命名管道（fifo）：命名管道在底层的实现跟匿名管道完全一致，区别只是命名管道会有一个全局可见的文件名以供其他进程使用。</p>
+</li>
+<li>
+<p>消息队列（message）：<br>
+(1) 消息队列传递的数据具有某种结构，而不是简单的字节流。<br>
+(2) 消息队列的本质其实是一个内核提供的链表。<br>
+<img src=/image/message.jpg alt=message></p>
+</li>
+<li>
+<p>共享内存（shared memory）：<br>
+(1) 共享内存在各种进程间通信方式中具有最高的效率。<br>
+(2) 共享内存允许两个或更多进程访问同一块内存，就如同 malloc() 函数向不同进程返回了指向同一个物理内存区域的指针。当一个进程改变了这块地址中的内容的时候，其它进程都会察觉到这个更改。<br>
+(3) 使用共享内存要注意的是多个进程之间对一个给定存储区访问的互斥。若一个进程正在向共享内存区写数据，则在它做完这一步操作前，别的进程不应当去读、写这些数据。</p>
+</li>
+<li>
+<p>信号量：
+(1) 信号量是解决互斥共享资源的同步问题而引入的机制。</p>
+</li>
+<li>
+<p>socket：
+(1) socket是基于TCP或UDP协议实现的。流套接字将TCP作为其端对端协议，提供了一个可信赖的字节流服务。数据报套接字使用UDP协议，提供数据打包发送服务。</p>
+</li>
+</ol><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ip/>网际协议IP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-icmp/>网际控制报文协议ICMP</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

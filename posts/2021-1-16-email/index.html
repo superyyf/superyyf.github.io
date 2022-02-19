@@ -1,0 +1,315 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>电子邮件 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/应用层/电子邮件">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="电子邮件">
+<meta property="og:description" content="计算机网络/应用层/电子邮件">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-16-email/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-16T16:46:24+00:00">
+<meta property="article:modified_time" content="2021-01-16T16:46:24+00:00">
+<meta itemprop=name content="电子邮件">
+<meta itemprop=description content="计算机网络/应用层/电子邮件"><meta itemprop=datePublished content="2021-01-16T16:46:24+00:00">
+<meta itemprop=dateModified content="2021-01-16T16:46:24+00:00">
+<meta itemprop=wordCount content="148">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="电子邮件">
+<meta name=twitter:description content="计算机网络/应用层/电子邮件">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">电子邮件</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-16T16:46:24Z>January 16, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/应用层/电子邮件</p>
+<h1 id=电子邮件概述>电子邮件概述</h1>
+<p>  一个电子邮件系统应具有三个主要组成构件，这就是<strong>用户代理</strong>、<strong>邮件服务器</strong>、以及<strong>邮件发送协议和邮件读取协议</strong>。</p>
+<p><img src=/image/%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E6%9E%84%E4%BB%B6.png alt=三个主要构件></p>
+<p>  电子邮件由<strong>信封</strong>(envelope)和<strong>内容</strong>(content)两部分组成。在邮件的信封上，最重要的就是收件人的地址。电子邮件地址如下：</p>
+<blockquote>
+<p>用户名@邮件服务器的域名</p>
+</blockquote>
+<h1 id=简单邮件传送协议smtp邮件发送协议>简单邮件传送协议SMTP（邮件发送协议）</h1>
+<p>  SMTP规定了在两个互相通信的SMTP进程之间应如何交换信息。<br>
+  SMTP规定了14条<strong>命令</strong>和21种<strong>应答信息</strong>。每条命令用几个字母组成，而每一种应答信息一般只有一行信息，由一个3位数字的代码开始，后面附上（也可不附上）很简单的文字说明。</p>
+<ol>
+<li>连接建立<br>
+  发件人的邮件送到发送方邮件服务器缓存后，SMTP客户就每隔一定时间对邮件缓存扫描一次。如发现有邮件，就使用SMTP的熟知端口号码25与接收方服务器的SMTP服务器建立TCP连接。在连接建立后，接收方SMTP服务器要发出“220 Service ready”（服务就绪）。然后SMTP客户向SMTP服务器发出HELO命令，附上发送方的主机名。SMTP服务器若有能力接收邮件，则回答：“250 OK”，表示已准备好接收。若SMTP服务器不可用，则回答“421 Service not available”（服务不可用）。SMTP不使用中间的邮件服务器。</li>
+<li>邮件传送<br>
+  邮件的传送从MAIL命令开始。MAIL命令后面有发件人的地址。如：MAIL FROM <a href=mailto:wcyyf@outlook.com>wcyyf@outlook.com</a>。若SMTP服务器已准备好接收邮件，则回答：“250 OK”。否则，返回一个代码，指出原因。如：451（处理时出错），452（存储空间不够），500（命令无法识别）等。<br>
+  下面跟着一个或多个RCPT命令，取决于把一个邮件发送给一个或多个收件人，其格式为RCPT TO: &lt;收件人地址>。每发送一个RCPT命令，都应当有相应的信息从SMTP服务器返回，如：“250 OK”，表示指明的邮箱在接收方的系统中，或“550 No Such user here”（无此用户），即不存在此邮箱。<br>
+  再下面就是DATA命令，表示要开始传送邮件的内容了。SMTP服务器返回的信息是：“354 Start mail input; end with &lt;CRLF>.&lt;CRLF>”。若不能接收邮件则返回421（服务器不可用），500（命令无法识别）等。若邮件收到了，则返回“250 OK”，或返回差错代码。</li>
+<li>连接释放<br>
+  邮件发送完毕后，SMTP客户应发送QUIT命令。SMTP服务器返回的信息是“221（服务器关闭）”，表示SMTP同意释放TCP连接。邮件传送的全部过程即结束。</li>
+</ol>
+<p>SMTP的缺点：</p>
+<ol>
+<li>发送电子邮件不需要进过鉴别。方便了垃圾邮件作者。</li>
+<li>SMTP传送非ASCII码的长文时，传输效率不高。</li>
+<li>SMTP传送的邮件是明文，不利于保密。</li>
+</ol>
+<p>ESMTP(Extended SMTP)新增的内容:</p>
+<ol>
+<li>客户端的鉴别</li>
+<li>服务器接受二进制报文</li>
+<li>服务器接受分块传送的大报文</li>
+<li>发送前先检查报文的大小</li>
+<li>使用安全传输TLS</li>
+<li>使用国际化地址等</li>
+</ol>
+<h1 id=电子邮件的信息格式>电子邮件的信息格式</h1>
+<p>  一个电子邮件分为信封和内容两大部分。用户写邮件内容的首部后，邮件系统自动地将信封所需的信息提取出来并写在信封上。所以用户不需要填写电子邮件信封上的信息。<br>
+  邮件内容首部包括一些关键字，后面加上冒号。最重要的关键字是：To和Subject。<br>
+  “To:”后面填入一个或多个收件人的电子邮件地址。<br>
+  “Subject:”是邮件的主题，它反映了邮件的主要内容。<br>
+  “Cc:”是抄送，意思是留下一个复写副本。<br>
+  “From:”和“Date:”表示发件人的电子邮箱地址和发信日期。这两项一般都是由邮件系统自动填入。<br>
+  “Reply-To:”即对方回信所要用的地址。</p>
+<h1 id=邮件读取协议pop3和imap邮件读取协议>邮件读取协议POP3和IMAP（邮件读取协议）</h1>
+<p>邮局协议POP是一个非常简单、功能有限的邮件读取协议</p>
+<ol>
+<li>POP3服务器只有在用户输入鉴别信息（用户名和口令）后，才允许对邮箱进行读取。</li>
+<li>只要用户从POP3服务器读取了邮件，POP3服务器就把该邮件删除。</li>
+</ol>
+<p>另一个读取邮件的协议是网际报文存取协议IMAP。</p>
+<ol>
+<li>用户在自己的计算机上就可以操纵邮件服务器的邮箱，就像在本地操纵一样，因此IMAP是一个联机协议。</li>
+<li>在用户未发出删除邮件的命令之前，IMAP服务器邮箱中的邮件一直保存着。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style=text-align:center>操作位置</th>
+<th style=text-align:center>操作内容</th>
+<th style=text-align:center>IMAP</th>
+<th style=text-align:center>POP3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style=text-align:center>收件箱</td>
+<td style=text-align:center>阅读、标记、移动、删除邮件等</td>
+<td style=text-align:center>客户端与邮箱更新同步</td>
+<td style=text-align:center>仅在客户端内</td>
+</tr>
+<tr>
+<td style=text-align:center>发件箱</td>
+<td style=text-align:center>保存到已发送</td>
+<td style=text-align:center>客户端与邮箱更新同步</td>
+<td style=text-align:center>仅在客户端内</td>
+</tr>
+<tr>
+<td style=text-align:center>创建文件夹</td>
+<td style=text-align:center>新建自定义的文件夹</td>
+<td style=text-align:center>客户端与邮箱更新同步</td>
+<td style=text-align:center>仅在客户端内</td>
+</tr>
+<tr>
+<td style=text-align:center>草稿</td>
+<td style=text-align:center>保存草稿</td>
+<td style=text-align:center>客户端与邮箱更新同步</td>
+<td style=text-align:center>仅在客户端内</td>
+</tr>
+<tr>
+<td style=text-align:center>垃圾文件夹</td>
+<td style=text-align:center>接收并移入垃圾文件夹的邮件</td>
+<td style=text-align:center>支持</td>
+<td style=text-align:center>不支持</td>
+</tr>
+<tr>
+<td style=text-align:center>广告邮件</td>
+<td style=text-align:center>接收并移入广告文件夹的邮件</td>
+<td style=text-align:center>支持</td>
+<td style=text-align:center>不支持</td>
+</tr>
+</tbody>
+</table>
+<h1 id=基于万维网的电子邮件>基于万维网的电子邮件</h1>
+<ol>
+<li>使用万维网电子邮件不需要在计算机中再安装用户代理软件。浏览器本身可以向用户提供非常友好的电子邮件界面。</li>
+<li>在浏览器和互联网上的邮件服务器之间传送邮件时，使用HTTP协议。但是在各邮件服务器之间传送邮件时，则仍然使用SMTP协议。</li>
+</ol>
+<h1 id=通用互联网邮件扩充mime>通用互联网邮件扩充MIME</h1>
+<h2 id=mime概述>MIME概述</h2>
+<p>SMTP的缺点：</p>
+<ol>
+<li>SMTP不能传送可执行文件或其他的二进制对象。</li>
+<li>SMTP限于传送7位的ASCII码。</li>
+<li>SMTP服务器会拒绝超过一定长度的邮件。</li>
+<li>SMTP的实现并没有按照SMTP的互联网标准。</li>
+</ol>
+<p>  在这种情况下就提出了通用互联网邮件扩充MIME。MIME并没有改动或取代SMTP。MIME的意图是继续使用原来的邮件格式，但增加了邮件主体结构，并定义了传送非ASCII码的编码规则。<br>
+MIME主要包括以下三部分内容：</p>
+<ol>
+<li>5个新的邮件首部字段，它们可包含在原来的邮件首部中。</li>
+<li>定义了许多邮件内容的格式，对多媒体电子邮件的表示方法进行了标准化。</li>
+<li>定义了传送编码，可对任何内容格式进行转换，而不会被邮件系统改变。</li>
+</ol>
+<h2 id=内容传送编码>内容传送编码</h2>
+<ol>
+<li>7为ASCII编码。MIME对这种由ASCII码构成的邮件主体不进行任何转换。</li>
+<li>qutoed-printable。这种编码方式适用于所传送的数据中只有少量的非ASCII码，用“=”加两个十六进制数字来表示非ASCII码数据。</li>
+<li>对于任意的二进制文件，可用base64编码。这种编码方法先把二进制代码划分为一个个24位长的单位，然后把每一个24位单位划分为4个6位组。每一个6位组先转换为base64码，再用ASCII编码发送。</li>
+</ol>
+<h2 id=内容类型>内容类型</h2>
+<p>  MIME标准规定Content-Type说明必须含有两个标识符，即内容类型(type)和子类型(subtype)，中间用“/”分开。</p>
+<table>
+<thead>
+<tr>
+<th>内容类型</th>
+<th>子类型举例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text（文本）</td>
+<td>plain,html,xml,css</td>
+<td>不同格式的文本</td>
+</tr>
+<tr>
+<td>image（图像）</td>
+<td>gif,jpeg,tiff</td>
+<td>不同格式的静止图像</td>
+</tr>
+<tr>
+<td>audio（音频）</td>
+<td>basic,mpeg,mp4</td>
+<td>可听见的声音</td>
+</tr>
+<tr>
+<td>video（视频）</td>
+<td>mpeg,mp4,quicktime</td>
+<td>不同格式的影片</td>
+</tr>
+<tr>
+<td>model（模型）</td>
+<td>vrml</td>
+<td>3D模型</td>
+</tr>
+<tr>
+<td>application（应用）</td>
+<td>octet-stream,pdf,javascript,zip</td>
+<td>不同应用程序产生的数据</td>
+</tr>
+<tr>
+<td>message（报文）</td>
+<td>http,rfc822</td>
+<td>封装的报文</td>
+</tr>
+<tr>
+<td>multipart（多部分）</td>
+<td>mixed,alternative,parallel,,digest</td>
+<td>多种类型的组合</td>
+</tr>
+</tbody>
+</table>
+<p>MIME的内容类型的multipart很有用，因为它使邮件增加了相当大的灵活性。</p>
+<ol>
+<li>mixed子类型允许单个报文含有多个相互独立的子报文，每个子报文可有自己的类型和编码。</li>
+<li>alternative子类型报文含有同一数据的多种表示。</li>
+<li>parallel子类型允许单个报文含有可同时显示的各个子部分（如图像和声音子部分必须一起播放）。</li>
+<li>digest子类型允许单个报文含有一组其他报文（如从讨论中收集电子邮件报文）。</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-15-www/>万维网WWW</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-14-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipv6/>IPv6</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

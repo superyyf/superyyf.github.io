@@ -1,0 +1,211 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>RANSAC算法 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="图像匹配/经典算法/RANSAC算法">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="RANSAC算法">
+<meta property="og:description" content="图像匹配/经典算法/RANSAC算法">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-3-11-ransac/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-03-11T09:27:43+00:00">
+<meta property="article:modified_time" content="2021-03-11T09:27:43+00:00">
+<meta itemprop=name content="RANSAC算法">
+<meta itemprop=description content="图像匹配/经典算法/RANSAC算法"><meta itemprop=datePublished content="2021-03-11T09:27:43+00:00">
+<meta itemprop=dateModified content="2021-03-11T09:27:43+00:00">
+<meta itemprop=wordCount content="409">
+<meta itemprop=keywords content="算法学习,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="RANSAC算法">
+<meta name=twitter:description content="图像匹配/经典算法/RANSAC算法">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">RANSAC算法</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-03-11T09:27:43Z>March 11, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>图像匹配/经典算法/RANSAC算法</p>
+<h1 id=概念>概念</h1>
+<p>随机采样一致性算法(RANdom SAmple Consensus,RANSAC)是从一组含有“外点”(outliers)的数据中正确估计数学模型参数的迭代算法。“外点”一般指的的数据中的噪声，比如说匹配中的误匹配和估计曲线中的离群点。所以，RANSAC也是一种“外点”检测算法。RANSAC是一个非确定性算法，在某种意义上说，它会产生一个在一定概率下合理的结果，其允许使用更多次的迭代来使其概率增加。</p>
+<h1 id=算法内容>算法内容</h1>
+<p>给定涉及参数$\vec x$的模型拟合问题。</p>
+<h2 id=假设>假设：</h2>
+<ol>
+<li>模型可以通过$N$个数据项完成拟合。</li>
+<li>总共有$M$个数据项。</li>
+<li>随机选择的数据项成为良好模型的一部分的概率为$p_g$。</li>
+<li>如果存在一个良好的拟合结果，但是算法没有找到就退出了的概率是$p_{fail}$。</li>
+</ol>
+<h2 id=算法>算法：</h2>
+<ol>
+<li>随机选择$N$个数据项。</li>
+<li>估计参数$\vec x$。</li>
+<li>找出在用户给定的容错范围内，有多少数据项符合参数向量$\vec x$的模型，记为$K$。</li>
+<li>如果$K$足够大，接收拟合结果并退出。</li>
+<li>重复步骤1~4$L$次。</li>
+<li>如果你到了这里就失败了。</li>
+</ol>
+<p>$K$的大小取决于你认为属于适合的模型结构的数据的百分比以及图像中有多少个模型结构。如果存在多个模型结构，那么在成功拟合之后，删除匹配数据并重新RANSAC。</p>
+<p>$L$的计算方法如下：</p>
+<p>$$L=\frac {log(p_{fail})}{log(1-(p_g)^N)}$$</p>
+<p>参考文献：
+M. A. Fischler, R. C. Bolles. Random Sample Consensus: A Paradigm for Model Fitting with Applications to Image Analysis and Automated Cartography. Comm. of the ACM, Vol 24, pp 381-395, 1981.</p>
+<h1 id=代码实现>代码实现</h1>
+<p>利用opencv实现简单的直线拟合</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;opencv2/opencv.hpp&gt;</span><span style=color:#75715e>
+</span><span style=color:#75715e></span>
+<span style=color:#75715e>/*利用RANSAC算法进行直线拟合*/</span>
+<span style=color:#66d9ef>void</span> <span style=color:#a6e22e>fitLineUseRANSAC</span>(<span style=color:#66d9ef>const</span> std<span style=color:#f92672>::</span>vector<span style=color:#f92672>&lt;</span>cv<span style=color:#f92672>::</span>Point2f<span style=color:#f92672>&gt;&amp;</span> points, cv<span style=color:#f92672>::</span>Vec4f<span style=color:#f92672>&amp;</span> line, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> iteration, <span style=color:#66d9ef>double</span> sigma) {
+
+	<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> n <span style=color:#f92672>=</span> points.size();
+	<span style=color:#66d9ef>if</span> (n <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>2</span>) {
+		<span style=color:#66d9ef>return</span>;
+	}
+
+	cv<span style=color:#f92672>::</span>RNG rng;
+	<span style=color:#66d9ef>double</span> bestScore <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1.</span>;
+	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> iteration; i<span style=color:#f92672>++</span>) {
+		<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> a <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, b <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+		<span style=color:#66d9ef>while</span> (a <span style=color:#f92672>==</span> b) {
+			a <span style=color:#f92672>=</span> rng(n);
+			b <span style=color:#f92672>=</span> rng(n);
+		}
+		cv<span style=color:#f92672>::</span>Point2f p1 <span style=color:#f92672>=</span> points[a];
+		cv<span style=color:#f92672>::</span>Point2f p2 <span style=color:#f92672>=</span> points[b];
+		cv<span style=color:#f92672>::</span>Point2f dv <span style=color:#f92672>=</span> p2 <span style=color:#f92672>-</span> p1;<span style=color:#75715e>//方向向量
+</span><span style=color:#75715e></span>		dv <span style=color:#f92672>*=</span> <span style=color:#66d9ef>double</span>(<span style=color:#ae81ff>1</span>) <span style=color:#f92672>/</span> cv<span style=color:#f92672>::</span>norm(dv);<span style=color:#75715e>//标准化
+</span><span style=color:#75715e></span>
+		<span style=color:#66d9ef>double</span> score <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+		<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> n; i<span style=color:#f92672>++</span>)
+		{
+			cv<span style=color:#f92672>::</span>Point2f v <span style=color:#f92672>=</span> points[i] <span style=color:#f92672>-</span> p1;
+			<span style=color:#66d9ef>double</span> d <span style=color:#f92672>=</span> v.y <span style=color:#f92672>*</span> dv.x <span style=color:#f92672>-</span> v.x <span style=color:#f92672>*</span> dv.y;<span style=color:#75715e>//向量a与b叉乘,共线为0
+</span><span style=color:#75715e></span>			<span style=color:#66d9ef>if</span> (fabs(d) <span style=color:#f92672>&lt;</span> sigma)
+				score <span style=color:#f92672>+=</span> <span style=color:#ae81ff>1</span>;
+		}
+
+		<span style=color:#66d9ef>if</span> (score <span style=color:#f92672>&gt;</span> bestScore)
+		{
+			line <span style=color:#f92672>=</span> cv<span style=color:#f92672>::</span>Vec4f(dv.x, dv.y, p1.x, p1.y);
+			bestScore <span style=color:#f92672>=</span> score;
+		}
+	}
+
+}
+
+<span style=color:#75715e>/*生成测试数据集*/</span>
+<span style=color:#66d9ef>void</span> <span style=color:#a6e22e>generateRandPointSet</span>(<span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> row, <span style=color:#66d9ef>unsigned</span> <span style=color:#66d9ef>int</span> col, std<span style=color:#f92672>::</span>vector<span style=color:#f92672>&lt;</span>cv<span style=color:#f92672>::</span>Point2f<span style=color:#f92672>&gt;&amp;</span> points) {
+	
+	<span style=color:#66d9ef>int</span> k <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>;
+	<span style=color:#66d9ef>int</span> b <span style=color:#f92672>=</span> <span style=color:#ae81ff>100</span>;
+
+	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>500</span>; i <span style=color:#f92672>+=</span> <span style=color:#ae81ff>10</span>)
+	{
+		cv<span style=color:#f92672>::</span>Point2f point(<span style=color:#66d9ef>int</span>((i <span style=color:#f92672>-</span> b) <span style=color:#f92672>/</span> k), i);
+		points.emplace_back(point);
+	}
+
+	<span style=color:#75715e>//加入直线的随机噪声
+</span><span style=color:#75715e></span>	cv<span style=color:#f92672>::</span>RNG rng((<span style=color:#66d9ef>unsigned</span>)time(NULL));
+	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>500</span>; i <span style=color:#f92672>+=</span> <span style=color:#ae81ff>10</span>)
+	{
+		<span style=color:#66d9ef>int</span> x <span style=color:#f92672>=</span> <span style=color:#66d9ef>int</span>((i <span style=color:#f92672>-</span> b) <span style=color:#f92672>/</span> k);
+		x <span style=color:#f92672>=</span> rng.uniform(x <span style=color:#f92672>-</span> <span style=color:#ae81ff>10</span>, x <span style=color:#f92672>+</span> <span style=color:#ae81ff>10</span>);
+		<span style=color:#66d9ef>int</span> y <span style=color:#f92672>=</span> i;
+		y <span style=color:#f92672>=</span> rng.uniform(y <span style=color:#f92672>-</span> <span style=color:#ae81ff>30</span>, y <span style=color:#f92672>+</span> <span style=color:#ae81ff>30</span>);
+		cv<span style=color:#f92672>::</span>Point2f point(x, y);
+		points.emplace_back(point);
+	}
+
+	<span style=color:#75715e>//加入噪声
+</span><span style=color:#75715e></span>	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; i <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>800</span>; i <span style=color:#f92672>+=</span> <span style=color:#ae81ff>20</span>)
+	{
+		<span style=color:#66d9ef>int</span> x <span style=color:#f92672>=</span> rng.uniform(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>600</span>);
+		<span style=color:#66d9ef>int</span> y <span style=color:#f92672>=</span> rng.uniform(<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>800</span>);
+
+		cv<span style=color:#f92672>::</span>Point2f point(x, y);
+		points.emplace_back(point);
+	}
+	
+}
+
+<span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>()
+{
+	cv<span style=color:#f92672>::</span>Mat image(<span style=color:#ae81ff>600</span>, <span style=color:#ae81ff>800</span>, CV_8UC3, cv<span style=color:#f92672>::</span>Scalar(<span style=color:#ae81ff>125</span>, <span style=color:#ae81ff>125</span>, <span style=color:#ae81ff>125</span>));
+	cv<span style=color:#f92672>::</span>Vec4f lineParam;
+	std<span style=color:#f92672>::</span>vector<span style=color:#f92672>&lt;</span>cv<span style=color:#f92672>::</span>Point2f<span style=color:#f92672>&gt;</span> points;
+	generateRandPointSet(<span style=color:#ae81ff>600</span>, <span style=color:#ae81ff>800</span>, points);
+	fitLineUseRANSAC(points, lineParam, <span style=color:#ae81ff>1000</span>, <span style=color:#ae81ff>10</span>);
+	<span style=color:#66d9ef>double</span> k <span style=color:#f92672>=</span> lineParam[<span style=color:#ae81ff>1</span>] <span style=color:#f92672>/</span> lineParam[<span style=color:#ae81ff>0</span>];
+	<span style=color:#66d9ef>double</span> b <span style=color:#f92672>=</span> lineParam[<span style=color:#ae81ff>3</span>] <span style=color:#f92672>-</span> k <span style=color:#f92672>*</span> lineParam[<span style=color:#ae81ff>2</span>];
+
+	cv<span style=color:#f92672>::</span>Point p1, p2;
+	p1.y <span style=color:#f92672>=</span> <span style=color:#ae81ff>600</span>;
+	p1.x <span style=color:#f92672>=</span> (p1.y <span style=color:#f92672>-</span> b) <span style=color:#f92672>/</span> k;
+
+	p2.y <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
+	p2.x <span style=color:#f92672>=</span> (p2.y <span style=color:#f92672>-</span> b) <span style=color:#f92672>/</span> k;
+
+	cv<span style=color:#f92672>::</span>line(image, p1, p2, cv<span style=color:#f92672>::</span>Scalar(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>255</span>, <span style=color:#ae81ff>0</span>), <span style=color:#ae81ff>2</span>);
+	<span style=color:#66d9ef>int</span> n <span style=color:#f92672>=</span> points.size();
+	<span style=color:#66d9ef>for</span> (<span style=color:#66d9ef>int</span> j <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>; j <span style=color:#f92672>&lt;</span> n; <span style=color:#f92672>++</span>j)
+	{
+		cv<span style=color:#f92672>::</span>circle(image, points[j], <span style=color:#ae81ff>5</span>, cv<span style=color:#f92672>::</span>Scalar(<span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0</span>), <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>);
+	}
+	cv<span style=color:#f92672>::</span>imshow(<span style=color:#e6db74>&#34;image&#34;</span>, image);
+	cv<span style=color:#f92672>::</span>waitKey(<span style=color:#ae81ff>0</span>);
+
+	<span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>;
+
+	
+}
+</code></pre></div><p>参考：
+<a href=https://blog.csdn.net/leonardohaig/article/details/104570965>RANSAC算法(附RANSAC直线拟合C++与Python版本)</a></p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">算法学习</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

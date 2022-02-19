@@ -1,0 +1,252 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>操作系统面经(Part 2) | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="操作系统(Part 2)">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="操作系统面经(Part 2)">
+<meta property="og:description" content="操作系统(Part 2)">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-6-30-ospart2/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-06-30T16:24:15+00:00">
+<meta property="article:modified_time" content="2021-06-30T16:24:15+00:00">
+<meta itemprop=name content="操作系统面经(Part 2)">
+<meta itemprop=description content="操作系统(Part 2)"><meta itemprop=datePublished content="2021-06-30T16:24:15+00:00">
+<meta itemprop=dateModified content="2021-06-30T16:24:15+00:00">
+<meta itemprop=wordCount content="65">
+<meta itemprop=keywords content="笔记,面经,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="操作系统面经(Part 2)">
+<meta name=twitter:description content="操作系统(Part 2)">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">操作系统面经(Part 2)</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-06-30T16:24:15Z>June 30, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=操作系统part-2>操作系统(Part 2)</h1>
+<h2 id=什么是线程同步线程同步的方式有哪些>什么是线程同步，线程同步的方式有哪些？</h2>
+<ol>
+<li>
+<p>线程同步就是线程有序的访问共享资源。</p>
+</li>
+<li>
+<p>互斥锁：<br>
+(1) 每个线程在对资源操作前都尝试先加锁，成功加锁才能操作，操作结束解锁。</p>
+</li>
+<li>
+<p>读写锁：<br>
+(1) <strong>写独占，读共享。</strong><br>
+(2) 读锁、写锁并行阻塞，<strong>写锁优先级高</strong>。 <br>
+读写锁非常适合于对数据结构读的次数远大于写的情况。</p>
+</li>
+<li>
+<p>信号量(semaphore)：<br>
+(1) 信号量本质上是一个非负的整数计数器，它被用来控制对公共资源的访问。<br>
+(2) 当信号量值大于0时，则可以访问，否则将阻塞。PV原语是对信号量的操作，一次P操作使信号量减１，一次V操作使信号量加１。</p>
+</li>
+<li>
+<p>条件变量<br>
+(1) 条件变量用来自动阻塞一个线程，直到某特殊情况发生为止。通常条件变量和互斥锁同时使用。<br>
+(2) 保证在任何时候都只有一个线程在等待条件满足，并且当条件满足后等待的线程会收到通知，而不必轮询，同时释放锁。条件变量就是减少竞争，在条件满足后就去唤醒等待的线程</p>
+</li>
+</ol>
+<h2 id=什么是死锁死锁产生的条件如何处理死锁>什么是死锁？死锁产生的条件？如何处理死锁？</h2>
+<ol>
+<li>
+<p>两个或多个进程无限期的阻塞、相互等待的一种状态。</p>
+</li>
+<li>
+<p>死锁产生的条件：</p>
+<ol>
+<li>互斥条件：一个资源一次只能被一个进程使用。</li>
+<li>占用并等待条件：一个进程因请求资源而阻塞时，对已获得资源保持不放。</li>
+<li>不可抢占条件：进程获得的资源，在未完全使用完之前，不能强行剥夺。</li>
+<li>环路等待条件：若干进程之间形成一种头尾相接的环形等待资源关系。</li>
+</ol>
+</li>
+<li>
+<p>处理死锁的方法：</p>
+<ol>
+<li>
+<p>忽略死锁。（鸵鸟算法）</p>
+</li>
+<li>
+<p>检测死锁+恢复死锁：</p>
+<ol>
+<li>检测死锁的方法：
+<ul>
+<li>如果每种资源只有一个，那么可以构建资源分配图（有向图），检测其中是否有环。</li>
+<li>检测有向图环路的算法：对每个节点进行深度优先搜索，如果碰到已经遇到多的节点则有环。</li>
+<li>如何每种资源有多个，可以通过基于向量的比较进行死锁检测，通过比较每个进程的请求资源向量和可用资源向量来判断这个进程能否完成。</li>
+</ul>
+</li>
+<li>恢复死锁的方法：
+<ul>
+<li>利用抢占恢复</li>
+<li>利用回滚恢复：将死锁进程回滚到持有资源之间的时间点。</li>
+<li>通过杀死进程恢复</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>避免死锁</p>
+<ol>
+<li>安全状态的概念：
+<ul>
+<li>如果没有死锁发生，并且即使所有进程突然请求对资源的最大需求，也仍然存在某种调度次序能够使得每一个进程运行完毕，则称该状态是安全的。</li>
+</ul>
+</li>
+<li>避免死锁的调度算法：
+<ul>
+<li>银行家算法：算法要做的是判断对请求的满足是否会导致进入不安全状态。</li>
+<li>在运行前就要知道所需资源的最大值，而且现实中进程数也不是固定的，所以这种方法不实用。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>预防死锁</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>破坏条件</th>
+<th>处理方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>互斥</td>
+<td>一切都使用假脱机技术</td>
+</tr>
+<tr>
+<td>占有和等待</td>
+<td>在开始时就请求全部资源</td>
+</tr>
+<tr>
+<td>不可抢占</td>
+<td>利用虚拟化技术等，允许抢占资源</td>
+</tr>
+<tr>
+<td>环路等待</td>
+<td>对资源按序编号，按照编号的升序请求资源</td>
+</tr>
+</tbody>
+</table>
+<ol start=5>
+<li>一些专用方法：
+<ol>
+<li>数据库死锁：两阶段加锁。第一阶段，试图对所有所需的记录进行加锁，一次锁一个记录。如果第一阶段加锁成功，就开始第二阶段，完成更新后释放。</li>
+<li>通信死锁：超时策略。</li>
+</ol>
+</li>
+<li>活锁的概念：进程没有被阻塞，而是一直重复尝试，失败，尝试，失败&mldr;&mldr; 活锁有可能自行解开，死锁则不能。</li>
+<li>饥饿的概念：尽管没有被阻塞，但是由于优先级的问题，一直在等待。</li>
+</ol>
+</li>
+</ol>
+<p>参考：《现代操作系统》</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+<li class="list di">
+<a href=/tags/%E9%9D%A2%E7%BB%8F class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">面经</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ip/>网际协议IP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

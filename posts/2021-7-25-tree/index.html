@@ -1,0 +1,279 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>AVL树、红黑树、B树和B+树 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="AVL树、红黑树、B树和B+树">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="AVL树、红黑树、B树和B+树">
+<meta property="og:description" content="AVL树、红黑树、B树和B+树">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-7-25-tree/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-07-25T15:30:30+00:00">
+<meta property="article:modified_time" content="2021-07-25T15:30:30+00:00">
+<meta itemprop=name content="AVL树、红黑树、B树和B+树">
+<meta itemprop=description content="AVL树、红黑树、B树和B+树"><meta itemprop=datePublished content="2021-07-25T15:30:30+00:00">
+<meta itemprop=dateModified content="2021-07-25T15:30:30+00:00">
+<meta itemprop=wordCount content="93">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="AVL树、红黑树、B树和B+树">
+<meta name=twitter:description content="AVL树、红黑树、B树和B+树">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">AVL树、红黑树、B树和B+树</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-07-25T15:30:30Z>July 25, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=avl树红黑树b树和b树>AVL树、红黑树、B树和B+树</h1>
+<h2 id=基本概念>基本概念</h2>
+<ol>
+<li>二叉搜索树
+<ul>
+<li>左节点 &lt; 根节点 &lt; 右节点</li>
+<li>每一个子树都是二叉搜索树</li>
+</ul>
+</li>
+<li>平衡二叉树（AVL树）
+<ul>
+<li>左右子树的高度差 &lt;= 1</li>
+<li>每一个子树都是平衡二叉树</li>
+</ul>
+</li>
+<li>平衡二叉树的优势
+<ul>
+<li>快速查找(log(n))</li>
+</ul>
+</li>
+</ol>
+<h2 id=avl树平衡二叉树>AVL树（平衡二叉树）</h2>
+<h3 id=维持平衡的方法>维持平衡的方法</h3>
+<ol>
+<li>高度
+<ul>
+<li>每个节点引入<strong>高度</strong>属性，即左右子树的高度的最大值。</li>
+<li>在插入和删除节点时，沿插入和删除的路径更新节点的高度值。</li>
+</ul>
+</li>
+<li>平衡因子
+<ul>
+<li>左子树和右子树的高度差值。</li>
+<li>当高度差值>1时，会触发树的旋转。</li>
+</ul>
+</li>
+</ol>
+<h3 id=旋转再平衡操作>旋转（再平衡操作）</h3>
+<ol>
+<li>在插入和删除的路径上，从失去平衡的最小子树的根节点开始旋转。
+<ul>
+<li>左旋</li>
+<li>右旋</li>
+</ul>
+</li>
+</ol>
+<h3 id=总结>总结</h3>
+<ol>
+<li>树的高度<br>
+$$h = [log(n)]+1$$</li>
+<li>优缺点
+<ul>
+<li>严格的平衡二叉树（左右子树高度差不超过1），查找效率很高</li>
+<li>再平衡代价高，每个节点需要多保存一个数，旋转操作复杂，所以插入、删除效率一般。</li>
+</ul>
+</li>
+</ol>
+<h2 id=红黑树>红黑树</h2>
+<h3 id=维持平衡的方法-1>维持平衡的方法</h3>
+<ol>
+<li>每个节点要么是黑色，要么是红色。</li>
+<li>根节点是黑色。叶子节点(NULL)也是黑色。</li>
+<li>如果一个节点是红色，那么它的子节点必须是黑色。（没有连续的红节点）</li>
+<li>对于每个节点，从该节点到其子孙节点的所有路径上包含相同的黑节点数。</li>
+</ol>
+<h3 id=插入和删除再平衡操作>插入和删除（再平衡操作）</h3>
+<ol>
+<li>插入操作
+<ul>
+<li>若树为空，则将插入节点作为根节点，着黑色。</li>
+<li>若树不为空，插入节点总是红色，若其父节点是黑色，则不需要操作。否则并两种情况：
+<ul>
+<li>其父节点是红色，并且其父节点的兄弟节点也是红色，则将其父节点和其父节点的兄弟节点着黑色。并递归的操作其祖父节点。</li>
+<li>其父节点是红色，其父节点的兄弟节点是黑色，则做旋转并重新着色。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>黑色高度：节点到叶子节点(NULL)经过的黑色节点数。</li>
+</ol>
+<h3 id=总结-1>总结</h3>
+<ol>
+<li>树的高度<br>
+$$ h &lt;= 2log(n+1) $$</li>
+<li>优缺点
+<ul>
+<li>非严格的平衡二叉树，查找效率略低于AVL树。</li>
+<li>再平衡操作代价较低，每个节点只需要多保存一个bit，插入、删除效率高于AVL树。</li>
+</ul>
+</li>
+</ol>
+<h2 id=b树>B树</h2>
+<h3 id=特点>特点</h3>
+<ol>
+<li>B树是多路平衡查找树</li>
+<li>对于m阶B树
+<ul>
+<li>根节点的关键字（键值对）数量范围：$1&lt;=k&lt;=m-1$</li>
+<li>非根节点的关键字（键值对）数量范围：$m/2&lt;=k&lt;=m-1$</li>
+<li>每个节点的关键字升序排列，每个关键字的左子树中的所有关键字都小于它，右子树中的所有关键字都大于它。</li>
+<li>所有叶子节点都位于同一层，或者说根节点到每个叶子节点的长度都相同。</li>
+</ul>
+</li>
+</ol>
+<h3 id=插入和删除再平衡操作-1>插入和删除（再平衡操作）</h3>
+<ol>
+<li>插入
+<ul>
+<li>判断插入后，当前结点key的个数是否小于等于m-1，如果满足，直接插入即可，如果不满足，根据节点的中间的key将这个节点分为左右两部分，中间的节点放到父节点中即可。</li>
+</ul>
+</li>
+<li>删除
+<ul>
+<li>删除叶子节点，如果删除元素后元素个数少于（m/2），并且它的兄弟节点的元素大于（m/2），也就是说兄弟节点的元素比最少值m/2还多，将先将父节点的元素移到该节点，然后将兄弟节点的元素再移动到父节点。</li>
+<li>对于非叶子节点的删除，我们需要用后继key（元素）覆盖要删除的key，然后在后继key所在的子支中删除该后继key。</li>
+</ul>
+</li>
+</ol>
+<h3 id=总结-2>总结</h3>
+<ol>
+<li>B树/B+树是磁盘友好的数据结构
+<ul>
+<li>IO次数少</li>
+<li>查询效率稳定</li>
+<li>遍历方便</li>
+</ul>
+</li>
+<li>红黑树多用于内部排序</li>
+</ol>
+<h2 id=b树-1>B+树</h2>
+<h3 id=与b树的不同点>与B树的不同点</h3>
+<ol>
+<li>数据只存储在叶子节点，非叶子节点（内部节点）只负责索引。</li>
+<li>父节点存有右孩子的第一个元素的索引。</li>
+<li>每个叶子节点都存有相邻叶子节点的指针。</li>
+</ol>
+<h3 id=插入和删除再平衡操作-2>插入和删除（再平衡操作）</h3>
+<ol>
+<li>插入
+<ul>
+<li>当节点元素数量大于m-1的时候，按中间元素分裂成左右两部分，中间元素分裂到父节点当做索引存储，但是，本身中间元素还是分裂右边这一部分的。</li>
+</ul>
+</li>
+<li>删除
+<ul>
+<li>对于删除操作是比B树简单一些的，因为叶子节点有指针的存在，向兄弟节点借元素时，不需要通过父节点了，而是可以直接通过兄弟节移动即可（前提是兄弟节点的元素大于m/2），然后更新父节点的索引；如果兄弟节点的元素不大于m/2（兄弟节点也没有多余的元素），则将当前节点和兄弟节点合并，并且删除父节点中的key。</li>
+</ul>
+</li>
+</ol>
+<h3 id=与b树相比的优点>与B树相比的优点</h3>
+<ol>
+<li>单个节点存储的元素更多，查找效率更高。</li>
+<li>所有查找都要搜索到叶子节点，性能稳定。</li>
+<li>所有的叶子节点形成了一个有序链表，遍历效率高。</li>
+</ol><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-7-2-addressspace/>地址空间和交换技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-6-30-ospart2/>操作系统面经(Part 2)</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

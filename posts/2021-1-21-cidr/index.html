@@ -1,0 +1,163 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>划分子网和构造超网 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/网络层/划分子网和构造超网">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="划分子网和构造超网">
+<meta property="og:description" content="计算机网络/网络层/划分子网和构造超网">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-21-cidr/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-21T18:13:39+00:00">
+<meta property="article:modified_time" content="2021-01-21T18:13:39+00:00">
+<meta itemprop=name content="划分子网和构造超网">
+<meta itemprop=description content="计算机网络/网络层/划分子网和构造超网"><meta itemprop=datePublished content="2021-01-21T18:13:39+00:00">
+<meta itemprop=dateModified content="2021-01-21T18:13:39+00:00">
+<meta itemprop=wordCount content="32">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="划分子网和构造超网">
+<meta name=twitter:description content="计算机网络/网络层/划分子网和构造超网">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">划分子网和构造超网</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-21T18:13:39Z>January 21, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/网络层/划分子网和构造超网</p>
+<h1 id=划分子网>划分子网</h1>
+<h2 id=从二级地址到三级地址>从二级地址到三级地址</h2>
+<ol>
+<li>一个拥有许多物理网络的单位，可将所属的物理网络划分为若干个子网(subnet)。</li>
+<li>划分子网的方法是从网络的主机号借用若干位作为子网号(subnet-id)，当然主机号也就相应减少同样的位数。</li>
+</ol>
+<blockquote>
+<p>IP地址::={&lt;网络号>,&lt;子网号>,&lt;主机号>}</p>
+</blockquote>
+<ol start=3>
+<li>凡是从其他网络发送给本单位某台主机的IP数据报，仍然是根据IP数据报的目的网络号找到连接在本单位网络上的路由器。</li>
+</ol>
+<h2 id=子网掩码>子网掩码</h2>
+<p>  子网掩码中的1对应于IP地址中原来二级地址中16位网络号加上新增的子网号，而子网掩码中的0对应于现在的主机号。<br>
+  使用子网掩码的好处就是：不管网络有没有划分子网，<strong>只要把子网掩码和IP地址进行逐位的“与”运算</strong>(AND)，就立即得到网络地址来。<br>
+  现在互联网规定，所有的网络都必须使用子网掩码，同时在路由器的路由表中也必须有子网掩码这一栏。如果一个网络不划分子网，那么该网络的子网掩码就使用默认子网掩码。默认子网掩码中的1的位置和IP地址中的网络号字段net-id正好相对应。<br>
+  划分子网增加了灵活性，但却减少了能够连接在网络上的主机总数。</p>
+<h2 id=使用子网时分组的转发>使用子网时分组的转发</h2>
+<p>  使用子网划分后，路由表必须包含一下三项内容：<strong>目的网络地址</strong>、<strong>子网掩码</strong>和<strong>下一跳地址</strong>。</p>
+<h1 id=无分类编址cidr构造超网>无分类编址CIDR（构造超网）</h1>
+<h2 id=网络前缀>网络前缀</h2>
+<p><strong>无分类域间路由选择CIDR</strong>(Classless Inter-Domain Routing)的特点：</p>
+<ol>
+<li>CIDR消除了传统的A类、B类和C类地址以及划分子网的概念，因而能更加有效地分配IPv4的地址空间，并且在新的IPv6使用之前容许互联网的规模继续增长。CIDR把32位的IP地址划分为前后两个部分。前面部分是“<strong>网络前缀</strong>”(network-prefix)，用来指明网络，后面部分则用来指明主机。CIDR还可以用<strong>斜线记法</strong>，即在IP地址后面加上斜线“/”，然后写上网络前缀所占的位数。</li>
+</ol>
+<blockquote>
+<p>IP地址::={&lt;网络前缀>,&lt;主机号>}</p>
+</blockquote>
+<ol start=2>
+<li>CIDR把网络前缀都相同的连续的IP地址组成一个“<strong>CIDR地址块</strong>”。我们只知道CIDR地址块中任何一个地址，就可以知道这个地址块的起始地址（即最小地址）和最大地址，以及地址块中的地址数。<br>
+  由于一个CIDR地址块中有很多地址，所以在路由表中就利用CIDR地址块来查找目的网络。这种地址的聚合常称为<strong>路由聚合</strong>(route aggregation)。路由聚合也称为<strong>构成超网</strong>(supernetting)。路由聚合有利于减少路由器之间的路由选择信息的交换，从而提高了整个互联网的性能。</li>
+</ol>
+<h2 id=最长前缀匹配>最长前缀匹配</h2>
+<p>  在使用CIDR时，路由表中的项目也要有相应的改变。这时，每个项目由“<strong>网络前缀</strong>”和“<strong>下一跳地址</strong>”组成。但是在查找路由表时可能会得到不止一个匹配结果。应当从匹配结果中选择<strong>具有最长网络前缀的路由</strong>。这叫做<strong>最长前缀匹配</strong>(longest-prefix matching)</p>
+<h2 id=使用二叉线索查找路由表>使用二叉线索查找路由表</h2>
+<p>  使用CIDR后，由于要寻找最长前缀匹配，使路由表的查找过程变得更加复杂了。对于无分类编址的路由表的最简单的查找算法就是对所有可能的前缀进行循环查找。所找到的最长匹配就对应于要查找的路由。这种最简单的算法的明显缺点就是查找的次数太多。<br>
+  为了进行更加有效的查找，通常是把无分类编址的路由表存放在一种层次的数据结构中，然后自上而下地按层次进行查找。这里最常用的就是<strong>二叉线索</strong>(binary trie)，它是一种特殊结构的树。IP地中从左到右的比特值决定了从根节点逐层向下层延伸的路径，而二叉线索中的各个路径就代表路由表中存放的各个地址。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-21-icmp/>网际控制报文协议ICMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-route/>互联网的路由选择协议</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-p2p/>P2P应用</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-socket/>应用进程跨越网络的通信</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-snmp/>简单网络管理协议SNMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-dhcp/>动态主机配置协议DHCP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-email/>电子邮件</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-15-www/>万维网WWW</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-14-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-13-dns/>域名系统DNS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-12-connectionmanagement/>TCP的运输连接管理</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

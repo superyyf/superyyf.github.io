@@ -1,0 +1,181 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>二叉树的遍历-中序遍历 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="二叉树的遍历-中序遍历">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="二叉树的遍历-中序遍历">
+<meta property="og:description" content="二叉树的遍历-中序遍历">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-7-1-inodertraversal/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-07-01T13:43:08+00:00">
+<meta property="article:modified_time" content="2021-07-01T13:43:08+00:00">
+<meta itemprop=name content="二叉树的遍历-中序遍历">
+<meta itemprop=description content="二叉树的遍历-中序遍历"><meta itemprop=datePublished content="2021-07-01T13:43:08+00:00">
+<meta itemprop=dateModified content="2021-07-01T13:43:08+00:00">
+<meta itemprop=wordCount content="230">
+<meta itemprop=keywords content="算法学习,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="二叉树的遍历-中序遍历">
+<meta name=twitter:description content="二叉树的遍历-中序遍历">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">二叉树的遍历-中序遍历</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-07-01T13:43:08Z>July 1, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=二叉树的遍历-中序遍历>二叉树的遍历-中序遍历</h1>
+<h2 id=二叉树的结构>二叉树的结构</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=color:#75715e>/**
+</span><span style=color:#75715e> * Definition for a binary tree node.
+</span><span style=color:#75715e> * struct TreeNode {
+</span><span style=color:#75715e> *     int val;
+</span><span style=color:#75715e> *     TreeNode *left;
+</span><span style=color:#75715e> *     TreeNode *right;
+</span><span style=color:#75715e> *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+</span><span style=color:#75715e> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+</span><span style=color:#75715e> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+</span><span style=color:#75715e> * };
+</span><span style=color:#75715e> */</span>
+</code></pre></div><h2 id=递归方式>递归方式</h2>
+<p>递归方式比较简单：按左->中->右的顺序操作。<br>
+时间复杂度：$O(n)$，$n$为二叉树的结点的个数。二叉树中的每个结点都被访问了一次。<br>
+空间复杂度：$O(n)$，空间复杂度取决于树的深度，在最坏情况下树的深度等于结点个数。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Solution</span> {
+<span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+    <span style=color:#66d9ef>void</span> dfs(TreeNode<span style=color:#f92672>*</span> node, vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;&amp;</span> vint){
+        <span style=color:#66d9ef>if</span>(node <span style=color:#f92672>==</span> <span style=color:#66d9ef>nullptr</span>){
+            <span style=color:#66d9ef>return</span>;
+        }
+        <span style=color:#75715e>//左子树
+</span><span style=color:#75715e></span>        dfs(node<span style=color:#f92672>-&gt;</span>left, vint);
+        <span style=color:#75715e>//对根节点的操作
+</span><span style=color:#75715e></span>        vint.push_back(node<span style=color:#f92672>-&gt;</span>val);
+        <span style=color:#75715e>//右子树
+</span><span style=color:#75715e></span>        dfs(node<span style=color:#f92672>-&gt;</span>right, vint);
+    }
+    vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> inorderTraversal(TreeNode<span style=color:#f92672>*</span> root) {
+        vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> vint;
+        dfs(root, vint);
+        <span style=color:#66d9ef>return</span> vint;
+    }
+};
+</code></pre></div><h2 id=迭代方式>迭代方式</h2>
+<p>迭代的方法需要我们自己用栈来模拟递归。递归的调用过程是不断往左边走，当左边走不下去了，就打印节点，并转向右边，然后右边继续这个过程。<br>
+时间复杂度和空间复杂度都跟递归一样。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Solution</span> {
+<span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+    vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> inorderTraversal(TreeNode<span style=color:#f92672>*</span> root) {
+        vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> ret;
+        stack<span style=color:#f92672>&lt;</span>TreeNode<span style=color:#f92672>*&gt;</span> stk;
+        <span style=color:#66d9ef>while</span>(root<span style=color:#f92672>!=</span> <span style=color:#66d9ef>nullptr</span> <span style=color:#f92672>||</span> <span style=color:#f92672>!</span>stk.empty()){
+            <span style=color:#75715e>//不断往左子树方向走,并将结点推出栈中。
+</span><span style=color:#75715e></span>            <span style=color:#66d9ef>while</span>(root <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nullptr</span>){
+                stk.push(root);
+                root <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>left;
+            }
+            <span style=color:#75715e>//走不通了以后，保存结点数据，转向右子树。
+</span><span style=color:#75715e></span>            <span style=color:#75715e>//重复上述操作。
+</span><span style=color:#75715e></span>            root <span style=color:#f92672>=</span> stk.top();
+            stk.pop();
+            ret.push_back(root<span style=color:#f92672>-&gt;</span>val);
+            root <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>right;
+        }
+        <span style=color:#66d9ef>return</span> ret;
+    }
+};
+</code></pre></div><h2 id=莫里斯遍历>莫里斯遍历</h2>
+<p>将二叉树转换成链表，然后依次遍历。<br>
+优点：空间复杂度只有$O(1)$。 每个结点被访问两次，所以时间复杂度还是$O(n)$</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Solution</span> {
+<span style=color:#66d9ef>public</span><span style=color:#f92672>:</span>
+    vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> inorderTraversal(TreeNode<span style=color:#f92672>*</span> root) {
+        vector<span style=color:#f92672>&lt;</span><span style=color:#66d9ef>int</span><span style=color:#f92672>&gt;</span> res;
+        TreeNode <span style=color:#f92672>*</span>predecessor <span style=color:#f92672>=</span> <span style=color:#66d9ef>nullptr</span>;
+
+        <span style=color:#66d9ef>while</span> (root <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nullptr</span>) {
+            <span style=color:#66d9ef>if</span> (root<span style=color:#f92672>-&gt;</span>left <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nullptr</span>) {
+                <span style=color:#75715e>// predecessor 节点就是当前 root 节点向左走一步，然后一直向右走至无法走为止
+</span><span style=color:#75715e></span>                predecessor <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>left;
+                <span style=color:#66d9ef>while</span> (predecessor<span style=color:#f92672>-&gt;</span>right <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nullptr</span> <span style=color:#f92672>&amp;&amp;</span> predecessor<span style=color:#f92672>-&gt;</span>right <span style=color:#f92672>!=</span> root) {
+                    predecessor <span style=color:#f92672>=</span> predecessor<span style=color:#f92672>-&gt;</span>right;
+                }
+                
+                <span style=color:#75715e>// 让 predecessor 的右指针指向 root，继续遍历左子树
+</span><span style=color:#75715e></span>                <span style=color:#66d9ef>if</span> (predecessor<span style=color:#f92672>-&gt;</span>right <span style=color:#f92672>==</span> <span style=color:#66d9ef>nullptr</span>) {
+                    predecessor<span style=color:#f92672>-&gt;</span>right <span style=color:#f92672>=</span> root;
+                    root <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>left;
+                }
+                <span style=color:#75715e>// 说明左子树已经访问完了，我们需要断开链接
+</span><span style=color:#75715e></span>                <span style=color:#66d9ef>else</span> {
+                    res.push_back(root<span style=color:#f92672>-&gt;</span>val);
+                    predecessor<span style=color:#f92672>-&gt;</span>right <span style=color:#f92672>=</span> <span style=color:#66d9ef>nullptr</span>;
+                    root <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>right;
+                }
+            }
+            <span style=color:#75715e>// 如果没有左孩子，则直接访问右孩子
+</span><span style=color:#75715e></span>            <span style=color:#66d9ef>else</span> {
+                res.push_back(root<span style=color:#f92672>-&gt;</span>val);
+                root <span style=color:#f92672>=</span> root<span style=color:#f92672>-&gt;</span>right;
+            }
+        }
+        <span style=color:#66d9ef>return</span> res;
+    }
+};
+</code></pre></div><p>参考：<a href=https://leetcode-cn.com/problems/binary-tree-inorder-traversal/>leetcode 94题</a></p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">算法学习</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-3-11-ransac/>RANSAC算法</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

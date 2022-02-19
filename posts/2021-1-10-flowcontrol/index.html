@@ -1,0 +1,132 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>TCP的流量控制 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/运输层/TCP的流量控制">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="TCP的流量控制">
+<meta property="og:description" content="计算机网络/运输层/TCP的流量控制">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-10-flowcontrol/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-10T16:56:23+00:00">
+<meta property="article:modified_time" content="2021-01-10T16:56:23+00:00">
+<meta itemprop=name content="TCP的流量控制">
+<meta itemprop=description content="计算机网络/运输层/TCP的流量控制"><meta itemprop=datePublished content="2021-01-10T16:56:23+00:00">
+<meta itemprop=dateModified content="2021-01-10T16:56:23+00:00">
+<meta itemprop=wordCount content="24">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="TCP的流量控制">
+<meta name=twitter:description content="计算机网络/运输层/TCP的流量控制">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">TCP的流量控制</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-10T16:56:23Z>January 10, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/运输层/TCP的流量控制</p>
+<h1 id=利用滑动窗口实现流量控制适当的慢一点>利用滑动窗口实现流量控制（适当的慢一点）</h1>
+<p>所谓流量控制就是让发送方的发送速率不要太快，要让接收方来得及接收。<br>
+利用滑动窗口机制可以很方便地在TCP连接上实现对发送方的流量控制。</p>
+<ol>
+<li><strong>发送方的发送窗口不能超过接收方给出的接收窗口的数值</strong>。</li>
+<li>在零窗口报文发送后，若接收方发送的非零窗口的通知无法到达发送方就容易出现互相等待的<strong>死锁局面</strong>。</li>
+<li>TCP为每一个连接设有一个<strong>持续计时器</strong>。只要TCP连接的一方收到对方的零窗口通知，就启动计数器。若持续计时器设置的时间到期，就发送一个零窗口探测报文段。而对方在确认这个探测报文时给出了现在的窗口值。若窗口仍然为零，则重置持续计时器。若窗口不是零，那么<strong>死锁打破</strong>。</li>
+</ol>
+<h1 id=tcp的传输效率适当的快一点>TCP的传输效率（适当的快一点）</h1>
+<p>如何控制TCP发送报文段的时机？</p>
+<h2 id=机制>机制</h2>
+<ol>
+<li>只要缓存中存放的数据达到MSS字节时，就组装成一个TCP报文段发送出去。</li>
+<li>由应用程序指明要求发送报文段，即推送(push)操作。</li>
+<li>发送方的计时器期限到了，就把已有的缓存数据装入报文段（长度不能超过MSS）发送出去。</li>
+</ol>
+<h2 id=存在的问题及解决方法>存在的问题及解决方法</h2>
+<h3 id=问题一发送的数据少时效率过低发送的数据少>问题一：发送的数据少时，效率过低（发送的数据少）</h3>
+<p>  适当推迟发回确定报文，并尽量使用捎带确认的方法。<br>
+<strong>Nagle算法</strong>：<br>
+  若应用程序把数据逐个字节地送到TCP缓存。TCP就把第一个字节先发送出去，把后面的数据字节缓存起来。当第一个字节的确认收到后，把后面到达的数据组装成报文段发送出去（即<strong>不使用流水线传输</strong>）。</p>
+<h3 id=问题二糊涂窗口综合征可接收的数据少接收方的tcp缓存释放缓慢>问题二：糊涂窗口综合征（可接收的数据少，接收方的TCP缓存释放缓慢）</h3>
+<p>  让接收方等待一段时间，使得 1)接收缓存已有足够空间容纳一个最长的报文段；或者 2)接收缓存已有一半空闲的空间。只要出现这两种情况之一，接收方就发出确定报文，并向发送方通知当前的窗口大小。此外，发送方也不要发送太小的报文段，而是把数据累积成足够大的报文段，或达到接收方缓存空间的一半。<br>
+  上述两种方法可配合使用。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipv6/>IPv6</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

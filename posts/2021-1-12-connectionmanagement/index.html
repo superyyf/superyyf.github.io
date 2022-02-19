@@ -1,0 +1,150 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>TCP的运输连接管理 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/运输层/TCP的运输连接管理">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="TCP的运输连接管理">
+<meta property="og:description" content="计算机网络/运输层/TCP的运输连接管理">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-12-connectionmanagement/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-12T16:32:10+00:00">
+<meta property="article:modified_time" content="2021-01-12T16:32:10+00:00">
+<meta itemprop=name content="TCP的运输连接管理">
+<meta itemprop=description content="计算机网络/运输层/TCP的运输连接管理"><meta itemprop=datePublished content="2021-01-12T16:32:10+00:00">
+<meta itemprop=dateModified content="2021-01-12T16:32:10+00:00">
+<meta itemprop=wordCount content="29">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="TCP的运输连接管理">
+<meta name=twitter:description content="计算机网络/运输层/TCP的运输连接管理">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">TCP的运输连接管理</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-12T16:32:10Z>January 12, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/运输层/TCP的运输连接管理</p>
+<p>  TCP是面向连接的协议。运输连接有三个阶段：<strong>连接建立</strong>、<strong>数据传送</strong>和<strong>连接释放</strong>。<br>
+  TCP连接的建立采用客户服务器方式。主动发起连接建立的应用进程叫做客户(client)，被动等待连接建立的应用进程叫做服务器(server)。</p>
+<h1 id=tcp的连接建立>TCP的连接建立</h1>
+<p><img src=/image/%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B.png alt=连接建立></p>
+<h2 id=具体过程>具体过程：</h2>
+<ol>
+<li>客户进程A创建首先传输控制模块TCB，然后在打算建立TCP连接时，向服务器B发出连接请求报文段（首部中同步位SYN=1，初始序号seq=x）。这时，TCP客户进程进入SYN-SENT（同步已发送）状态。</li>
+<li>B收到连接请求报文段后，如果同意建立连接，则向A发送确认报文段（同部位SYN=1，确认位ACK=1，确认号ack=x+1，初始序号seq=y）。这时，TCP服务器进入SYN-RCVD（同步收到）状态。</li>
+<li>A收到B的确认后，还要向B发送确认报文段（确认位ACK=1，确认号ack=y+1，序号seq=x+1）。A进入ESTABLISHED（已建立连接）状态。</li>
+<li>B收到A的确认后，也进入ESTABLISHED状态。</li>
+</ol>
+<p>  总结：<strong>请求连接则置同步位SYN=1</strong>，<strong>确认连接就置确认位ACK=1</strong>（TCP规定，SYN报文段不能携带数据，但要消耗一个序号；ACK报文段可以携带数据，但如果不携带数据则不消耗序号）。</p>
+<h2 id=个人思考>个人思考：</h2>
+<p>  可以将三次握手看做四次，即建立连接的双方都要有发送请求和接收确认两个步骤才能最终建立连接。这样可以有效避免确认报文迟到造成的单方面的误认为连接，同时使连接程序适应性更强，<strong>每个TCP进程在连接建立过程中是平等的</strong>。</p>
+<h1 id=tcp的连接释放>TCP的连接释放</h1>
+<p><img src=/image/%E8%BF%9E%E6%8E%A5%E9%87%8A%E6%94%BE.png alt=连接释放></p>
+<h2 id=具体过程-1>具体过程</h2>
+<ol>
+<li>A的应用进程先向B发送连接释放报文段（终止控制位FIN=1，序号seq=u），并停止发送数据，进入FIN-WAIT-1（终止等待1）状态。</li>
+<li>B收到连接释放报文段后即发出确认报文段（确认位ACK=1，序号seq=v，确认号ack=u+1），然后B进入CLOSE-WAIT（关闭等待）状态。此时A到B方向的连接已经释放，B若要发送数据，A仍要接收。</li>
+<li>A收到来自B的确认后，就进入FIN-WAIT-2（终止等待2）状态，等待B发出的连接释放报文段。</li>
+<li>B若没有要向A发送的数据了，就发送连接释放报文段（终止位FIN=1，序号seq=w，确认号ack=u+1），然后B就进入LAST-ACK（最后确认）状态，等待A的确认。</li>
+<li>A收到B的连接释放报文段后，必须对此发出确认（ACK=1，ack=w+1，seq=u+1）。然后进入TIME-WAIT（时间等待）状态。此时，TCP连接还没有释放掉。必须经过2倍最长报文段寿命(MSL)时间后（通常MSL=2分钟），TCP连接结束。</li>
+</ol>
+<p>总结：<strong>请求释放连接则置FIN=1</strong>，<strong>确认释放则置ACK=1</strong>。</p>
+<p>为什么要等待2MSL时间？</p>
+<ol>
+<li>为了保证A发送的最后一个ACK报文段能够到达B。</li>
+<li>防止“已失效的连接请求报文段”出现在本连接中。</li>
+</ol>
+<p>保活计时器：<br>
+  客户端主机出现故障时，服务器会白白等待下去。为此需要设置保活计时器。<br>
+服务器每收到一次客户的数据，就重置计时器，时间通常是两小时。若两小时没有收到客户端的数据，服务器就发送一个探测报文段，以后每隔75秒发送一次。若一连发送10个探测报文段后仍无客户的响应，服务器就认为客户端出现了故障，接着的关闭这个连接。</p>
+<h1 id=tcp的有限状态机>TCP的有限状态机</h1>
+<p><img src=/image/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA.png alt=有限状态机></p>
+<p>  粗实线箭头表示对客户进程的正常变迁。粗虚线箭头表示对服务器进程的正常变迁。另一种细线箭头表示异常变迁。</p>
+<p>参考文献：《计算机网络（第7版）》谢希仁著</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-11-congestioncontrol/>TCP的拥塞控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-flowcontrol/>TCP的流量控制</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-10-reliabletransmission/>TCP可靠传输的实现</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipv6/>IPv6</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

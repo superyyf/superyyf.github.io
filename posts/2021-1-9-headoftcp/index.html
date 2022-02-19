@@ -1,0 +1,143 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>TCP报文段的首部格式 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/运输层/TCP报文段的首部格式">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="TCP报文段的首部格式">
+<meta property="og:description" content="计算机网络/运输层/TCP报文段的首部格式">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-9-headoftcp/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-09T11:49:10+00:00">
+<meta property="article:modified_time" content="2021-01-09T11:49:10+00:00">
+<meta itemprop=name content="TCP报文段的首部格式">
+<meta itemprop=description content="计算机网络/运输层/TCP报文段的首部格式"><meta itemprop=datePublished content="2021-01-09T11:49:10+00:00">
+<meta itemprop=dateModified content="2021-01-09T11:49:10+00:00">
+<meta itemprop=wordCount content="47">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="TCP报文段的首部格式">
+<meta name=twitter:description content="计算机网络/运输层/TCP报文段的首部格式">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">TCP报文段的首部格式</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-09T11:49:10Z>January 9, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/运输层/TCP报文段的首部格式</p>
+<h1 id=tcp报文段的首部格式>TCP报文段的首部格式</h1>
+<p>TCP报文段分为首部和数据部分。首部的前20个字节是固定的，后面根据需要可增加$4n$字节的选项。</p>
+<p><img src=/image/TCP%E6%8A%A5%E6%96%87%E6%AE%B5%E7%9A%84%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F.png alt=TCP报文段的首部格式></p>
+<p>字段意义如下：</p>
+<ol>
+<li><strong>源端口</strong>和<strong>目的端口</strong>  各占2个字节，分别写入源端口号和目的端口号。</li>
+<li><strong>序号</strong>  占4字节，指明本报文段所发送的数据的第一个字节的序号。TCP连接中传送的字节流中的每一个字节都按顺序编号。</li>
+<li><strong>确认号</strong>  占4字节，指明期望收到对方下一个报文段第一个数据字节的序号。</li>
+</ol>
+<blockquote>
+<p>若确认号$=N$，则表明：到序号$N-1$为止的所有数据都已正确收到。</p>
+</blockquote>
+<ol start=4>
+<li><strong>数据偏移</strong>  占4位，指明数据起始处距离报文段起始处有多远。实际上是指出TCP报文段的<strong>首部长度</strong>。</li>
+<li><strong>保留</strong>  保留为今后使用，但目前应置为0。</li>
+<li><strong>控制位</strong>  （置1有效，置0无效）
+<ol>
+<li><strong>紧急URG</strong>(URGent)  告诉系统此报文段有紧急数据，应尽快传送（相当于高优先级的数据）。与紧急指针字段匹配使用。</li>
+<li><strong>确认ACK</strong>(ACKnowledgment)  TCP规定，在连接建立后所有传送的报文段都必须把ACK置1。</li>
+<li><strong>推送PSH</strong>(PuSH)  指明本报文段希望尽快交付。用于交互式通信时，可直接创建报文并发送，不用等待缓存填满。</li>
+<li><strong>复位RST</strong>(ReSeT)  表明TCP连接中出现严重差错（如由于主机崩溃或其他原因），必须释放连接，然后重新建立运输连接。</li>
+<li><strong>同步SYN</strong>(YNchronization)emsp; 在连接建立时用来同步序号。对放若同意建立连接，则在报文段中使SYN=1和ACK=1。</li>
+<li><strong>终止FIN</strong>(FINis)  用来释放连接。</li>
+</ol>
+</li>
+<li><strong>窗口</strong>  占2字节。窗口指的是发送本报文段一方的接收窗口。之所有有这个限制，是因为接收方的数据缓存空间是有限的。本字段的值可以作为接收方设置其发送窗口的依据。</li>
+</ol>
+<blockquote>
+<p>窗口字段明确指出了现在允许对方发送的数据量。窗口值经常在动态变化着。</p>
+</blockquote>
+<ol start=8>
+<li><strong>检验和</strong>  占2字节。同UDP。</li>
+<li><strong>紧急指针</strong>  占2字节。紧急指针仅在URG=1时有意义，它指出了紧急数据末尾在报文段中的位置。</li>
+<li><strong>选项</strong>  长度可变，最长可达40字节。没有使用时，TCP的首部长度为20字节。
+<ul>
+<li><strong>最大报文段长度MSS</strong>(Maximum Segment Size)  MSS是每一个TCP报文段中的数据字段的最大长度。默认值为536字节长。</li>
+<li><strong>窗口扩大选项</strong>  占3个字节。其中有一个字节表示移位值S，新窗口值从16位扩大到$(16+S)$，用于获得高吞吐率的应用情形。</li>
+<li><strong>时间戳选项</strong>  占10个字节。其中最主要的字段是时间戳值字段（4字节）和时间戳回送回答字段（4字节）。此选项有两个功能：第一，用来计算往返时间RTT；第二，用来处理TCP序号超过$2^{32}$的情况。</li>
+</ul>
+</li>
+</ol>
+<p>参考文献：《计算机网络（第7版）》谢希仁著</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipv6/>IPv6</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>

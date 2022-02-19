@@ -1,0 +1,198 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<title>物理层的基本概念及涉及的基础知识 | Play With YYF</title>
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="计算机网络/物理层/物理层的基本概念及涉及的基础知识">
+<meta name=generator content="Hugo 0.92.2">
+<meta name=robots content="noindex, nofollow">
+<link rel=stylesheet href=/ananke/css/main.min.css>
+<meta property="og:title" content="物理层的基本概念及涉及的基础知识">
+<meta property="og:description" content="计算机网络/物理层/物理层的基本概念及涉及的基础知识">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://yyf.zone/posts/2021-1-31-physicallayer/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-01-31T10:06:18+00:00">
+<meta property="article:modified_time" content="2021-01-31T10:06:18+00:00">
+<meta itemprop=name content="物理层的基本概念及涉及的基础知识">
+<meta itemprop=description content="计算机网络/物理层/物理层的基本概念及涉及的基础知识"><meta itemprop=datePublished content="2021-01-31T10:06:18+00:00">
+<meta itemprop=dateModified content="2021-01-31T10:06:18+00:00">
+<meta itemprop=wordCount content="50">
+<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:title content="物理层的基本概念及涉及的基础知识">
+<meta name=twitter:description content="计算机网络/物理层/物理层的基本概念及涉及的基础知识">
+</head>
+<body class="ma0 avenir bg-near-white">
+<header>
+<div class=bg-black>
+<nav class="pv3 ph3 ph4-ns" role=navigation>
+<div class="flex-l justify-between items-center center">
+<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
+Play With YYF
+</a>
+<div class="flex-l items-center">
+<div class=ananke-socials>
+</div>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class=pb7 role=main>
+<article class="flex-l flex-wrap justify-between mw8 center ph3">
+<header class="mt4 w-100">
+<aside class="instapaper_ignoref b helvetica tracked">
+POSTS
+</aside>
+<div id=sharing class="mt3 ananke-socials">
+</div>
+<h1 class="f1 athelas mt3 mb1">物理层的基本概念及涉及的基础知识</h1>
+<time class="f6 mv4 dib tracked" datetime=2021-01-31T10:06:18Z>January 31, 2021</time>
+</header>
+<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/物理层/物理层的基本概念及涉及的基础知识</p>
+<h1 id=物理层的基本概念>物理层的基本概念</h1>
+<p>  物理层考虑的是怎样才能在连接各种计算机的传输媒体上传输数据比特流，而不是指具体的传输媒体。<br>
+物理层的主要任务</p>
+<ol>
+<li>
+<p>可以将物理层的主要任务描述为<strong>确定与传输媒体的接口有关的一些特性</strong>，即：</p>
+<ol>
+<li>机械特性。指明接口所用接线器的形状和尺寸、引脚数目和排列、固定和锁定装置等。</li>
+<li>电气特性。指明在接口电缆的各条线上出现的电压的范围。</li>
+<li>功能特性。指明某条线上出现某一电平的电压的意义。</li>
+<li>过程特性。指明对于不同功能的各种可能事件的出现顺序。</li>
+</ol>
+</li>
+<li>
+<p>物理层还要完成<strong>传输方式的转换</strong>：并行转串行。</p>
+</li>
+</ol>
+<h1 id=数据通信的基础知识>数据通信的基础知识</h1>
+<h2 id=数据通信系统模型>数据通信系统模型</h2>
+<p>  一个数据通信系统可以划分为三大部分，即<strong>源系统</strong>、<strong>传输系统</strong>和<strong>目的系统</strong>。<br>
+信号可以分为两大类：</p>
+<ol>
+<li>模拟信号</li>
+<li>数字信号</li>
+</ol>
+<h2 id=有关信道的几个基本概念>有关信道的几个基本概念</h2>
+<p>从通信的双方信息交互方式来看，可以有以下三种基本方式：</p>
+<ol>
+<li>单向通信，又称<strong>单工通信</strong>，即只能有一个方向的通信而没有反方向的交互。</li>
+<li>双向交替通信，又称<strong>半双工通信</strong>，即通信的双方都可以发送消息，但不能双方同时发送。</li>
+<li>双向同时通信，又称<strong>全双工通信</strong>，即通信的双方可以同时发送和接收信息。</li>
+</ol>
+<h3 id=编码与调制>编码与调制</h3>
+<p>  来自信源的信号常称为<strong>基带信号</strong>（即基本频带信号）。基带信号往往包含有较多的低频成分，甚至有直流成分，而许多信道并不能传输这种低频分量或直流分量。为了解决这一问题，就必须对基带信号进行调制(modulation)。</p>
+<ol>
+<li><strong>基带调制</strong>（编码）。仅仅对基带信号的波形进行变换，使它能够与信道特性向适应。变换后的信号仍然是基带信号。常用编码方式有：</li>
+</ol>
+<ul>
+<li><strong>不归零制</strong>。正电平代表１，负电平代表０。</li>
+<li><strong>归零制</strong>。正脉冲代表１，负脉冲代表０。</li>
+<li><strong>曼彻斯特编码</strong>。位周期中心的向上跳变代表０，位周期中心的向下跳变代表１。但也可反过来定义。</li>
+<li><strong>差分曼彻斯特编码</strong>。在每一位的中心处始终都有跳变。位开始边界有跳变代表０，而位开始边界没有跳变代表１。</li>
+</ul>
+<ol start=2>
+<li><strong>带通调制</strong>。使用载波(carrier)进行调制，把基带信号的频率范围搬移到较高的频段，并转换为模拟信号。基本的带通调制方法有：</li>
+</ol>
+<ul>
+<li><strong>调幅</strong>(AM)，即载波的振幅随基带数字信号而变化。</li>
+<li><strong>调频</strong>(FM)，即载波的频率随基带数字信号而变化。</li>
+<li><strong>调相</strong>(PM)，即载波的初始相位随基带数字信号而变化。</li>
+<li>为了达到更高的信息传输速率，必须采用技术上更为复杂的多元制的振幅相位混合调制方法。例如，<strong>正交振幅调制QAM</strong>(Quadrature Amplitude Modulation)。</li>
+</ul>
+<h3 id=信道的极限容量>信道的极限容量</h3>
+<p>从概念上讲，限制码元在信道上的传输速率的因素有以下两个：</p>
+<ol>
+<li>信道能够通过的频率范围</li>
+</ol>
+<ul>
+<li><strong>码间串扰</strong>。如果信号中的高频分量在传输时受到衰减，那么在接收端收到的波形前沿和后沿就变得不那么陡峭了，每一个码元所占的时间界限也不再是很明确的，而是前后都拖了“尾巴”。</li>
+<li><strong>奈氏准则</strong>表明，在任何信道中，码元传输的速率是有上限的，传输速率超过此上限，就会出现严重的码间串扰的问题，使接收端对码元的判决（即识别）成为不可能。</li>
+<li>如果信道的频带越宽，也就是能够通过的信号高频分量越多，那么就可以用更高的速率传送码元而不出现码间串扰。</li>
+</ul>
+<ol start=2>
+<li>信噪比</li>
+</ol>
+<ul>
+<li>信噪比就是信号的平均功率和噪声的平均功率之比，常记为$S/N$，并用分贝(dB)作为度量单位。
+$$ 信噪比(dB)=10lg(S/N) $$</li>
+<li>香农公式表明，信道的<strong>带宽</strong>或信道中的<strong>信噪比</strong>越大，信息的极限传输速率就越高。<br>
+$$C=Wlog_{2}(1+S/N)(bit/s)$$</li>
+<li>式中，C为信道的极限信息传输速率；W为信道的带宽（以Hz为单位）；S为信道内所传信号的平均功率；N为信道内部的高斯噪声功率。</li>
+</ul>
+<p>参考文献：《计算机网络（第7版）》谢希仁著。</p><ul class=pa0>
+<li class="list di">
+<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
+</li>
+</ul>
+<div class="mt6 instapaper_ignoref">
+</div>
+</div>
+<aside class="w-30-l mt6-l">
+<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
+<p class="f5 b mb3">Related</p>
+<ul class="pa0 list">
+<li class=mb2>
+<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-22-ip/>网际协议IP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-21-icmp/>网际控制报文协议ICMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-route/>互联网的路由选择协议</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-19-p2p/>P2P应用</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-socket/>应用进程跨越网络的通信</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-18-snmp/>简单网络管理协议SNMP</a>
+</li>
+<li class=mb2>
+<a href=/posts/2021-1-16-dhcp/>动态主机配置协议DHCP</a>
+</li>
+</ul>
+</div>
+</aside>
+</article>
+</main>
+<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
+<div class="flex justify-between">
+<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
+&copy; Play With YYF 2022
+</a>
+<div>
+<div class=ananke-socials>
+</div></div>
+</div>
+</footer>
+</body>
+</html>
