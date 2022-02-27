@@ -1,55 +1,62 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
 <title>文件 | Play With YYF</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=keywords content="笔记">
 <meta name=description content="文件">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=robots content="noindex, nofollow">
-<link rel=stylesheet href=/ananke/css/main.min.css>
-<meta property="og:title" content="文件">
+<meta name=author content>
+<link rel=canonical href=http://yyf.zone/posts/2021-8-3-file/>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5+kdJvBz5iKbt6B5PJI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=http://yyf.zone/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=http://yyf.zone/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=http://yyf.zone/favicon-32x32.png>
+<link rel=apple-touch-icon href=http://yyf.zone/apple-touch-icon.png>
+<link rel=mask-icon href=http://yyf.zone/safari-pinned-tab.svg>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+<style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style>
+</noscript><meta property="og:title" content="文件">
 <meta property="og:description" content="文件">
 <meta property="og:type" content="article">
 <meta property="og:url" content="http://yyf.zone/posts/2021-8-3-file/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2021-08-03T20:29:33+00:00">
 <meta property="article:modified_time" content="2021-08-03T20:29:33+00:00">
-<meta itemprop=name content="文件">
-<meta itemprop=description content="文件"><meta itemprop=datePublished content="2021-08-03T20:29:33+00:00">
-<meta itemprop=dateModified content="2021-08-03T20:29:33+00:00">
-<meta itemprop=wordCount content="81">
-<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:card content="summary">
 <meta name=twitter:title content="文件">
 <meta name=twitter:description content="文件">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://yyf.zone/posts/"},{"@type":"ListItem","position":2,"name":"文件","item":"http://yyf.zone/posts/2021-8-3-file/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"文件","name":"文件","description":"文件","keywords":["笔记"],"articleBody":"文件  为什么要有文件这种东西？   使用信息的进程终止时，信息仍旧存在； 能够使多个线程并发访问有关信息； 能够存储大量的信息。  什么是文件？   文件是进程创建的信息逻辑单元。  文件的命名   文件的具体命名规则在各个系统中是不同的。 UNIX系统中区分大小写字母，MS-DOS系统则不区分。 UNIX系统中文件拓展名只是一种约定，操作系统并不强迫采用它，Windows系统则关注拓展名并对其赋予了含义。  文件结构   把文件看成字节序列为操作系统提供了最大的灵活性。UNIX和WIndows都采用这种文件模型。   文件类型(UNIX为例)\n 普通文件：包含有用户信息的文件。   - ASCII文件：文本。 - 二进制文件：有一定的内部结构，如可执行文件、存档文件。  字符特殊文件：和输入输出有关，用于串行I/O设备，如终端、打印机、网络等。 块特殊文件：用于磁盘类设备。    目录：管理文件系统结构的系统文件。\n  文件访问\n   顺序访问：磁带。 随机访问：磁盘。  文件属性     属性 含义     保护 谁可以访问文件，以什么方式存取文件   口令 访问文件需要的口令   创建者 创建文件者的ID   所有者 当前所有者   只读标志 0表示读/写；1表示只读   隐藏标志 0表示正常；1表示不在列表中显示   系统标志 0表示普通文件；1表示系统文件   存档标志 0表示已经备份；1表示需要备份   ASCII/二进制标志 0表示ASCII码文件；1表示二进制文件   随机访问标志 0表示允许顺序访问；1表示随机访问   临时标志 0表示正常；1表示进程退出时删除该文件   加锁标志 0表示未加锁，非0表示加锁   记录长度 一个记录中的字节数   键的位置 每个记录中键的偏移量   键的长度 键字段的字节数   创建时间 创建文件的日期和时间   最后一次存取时间 上一次访问文件的时间   最后一次修改时间 上一次修改文件的时间   当前大小 文件的字节数   最大长度 文件可能增长的字节数    文件操作  create。创建不包含任何数据的文件。 delete。删除文件。 open。把文件属性和磁盘地址表装入内存。 close。关闭文件以释放内部表空间。 read。在文件中读取数据。 write。向文件写数据。 append。在文件末尾添加数据。 seek。把当前位置指针指向文件中特定的位置。 get_attributes。读取文件属性。 set_attribute。设置文件属性。 rename。重命名。    参考：《现代操作系统》\n","wordCount":"81","inLanguage":"en","datePublished":"2021-08-03T20:29:33Z","dateModified":"2021-08-03T20:29:33Z","mainEntityOfPage":{"@type":"WebPage","@id":"http://yyf.zone/posts/2021-8-3-file/"},"publisher":{"@type":"Organization","name":"Play With YYF","logo":{"@type":"ImageObject","url":"http://yyf.zone/favicon.ico"}}}</script>
 </head>
-<body class="ma0 avenir bg-near-white">
-<header>
-<div class=bg-black>
-<nav class="pv3 ph3 ph4-ns" role=navigation>
-<div class="flex-l justify-between items-center center">
-<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
-Play With YYF
-</a>
-<div class="flex-l items-center">
-<div class=ananke-socials>
+<body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add('dark'):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove('dark'):window.matchMedia('(prefers-color-scheme: dark)').matches&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=http://yyf.zone/ accesskey=h title="Play With YYF (Alt + H)">Play With YYF</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
 </div>
-</div>
-</div>
+<ul id=menu>
+</ul>
 </nav>
+</header>
+<main class=main>
+<article class=post-single>
+<header class=post-header>
+<h1 class=post-title>
+文件
+</h1>
+<div class=post-meta><span title="2021-08-03 20:29:33 +0000 UTC">August 3, 2021</span>
 </div>
 </header>
-<main class=pb7 role=main>
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-<header class="mt4 w-100">
-<aside class="instapaper_ignoref b helvetica tracked">
-POSTS
-</aside>
-<div id=sharing class="mt3 ananke-socials">
-</div>
-<h1 class="f1 athelas mt3 mb1">文件</h1>
-<time class="f6 mv4 dib tracked" datetime=2021-08-03T20:29:33Z>August 3, 2021</time>
-</header>
-<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=文件>文件</h1>
+<div class=post-content><h1 id=文件>文件<a hidden class=anchor aria-hidden=true href=#文件>#</a></h1>
 <ol>
 <li>为什么要有文件这种东西？</li>
 </ol>
@@ -213,77 +220,27 @@ POSTS
 </ol>
 </li>
 </ol>
-<p>参考：《现代操作系统》</p><ul class=pa0>
-<li class="list di">
-<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
-</li>
+<p>参考：《现代操作系统》</p>
+</div>
+<footer class=post-footer>
+<ul class=post-tags>
+<li><a href=http://yyf.zone/tags/%E7%AC%94%E8%AE%B0/>笔记</a></li>
 </ul>
-<div class="mt6 instapaper_ignoref">
-</div>
-</div>
-<aside class="w-30-l mt6-l">
-<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
-<p class="f5 b mb3">Related</p>
-<ul class="pa0 list">
-<li class=mb2>
-<a href=/posts/2021-8-3-binarysearch/>二分查找的简单总结</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-7-25-tree/>AVL树、红黑树、B树和B+树</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-7-2-addressspace/>地址空间和交换技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-6-30-ospart2/>操作系统面经(Part 2)</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
-</li>
-</ul>
-</div>
-</aside>
+</footer>
 </article>
 </main>
-<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
-<div class="flex justify-between">
-<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
-&copy; Play With YYF 2022
-</a>
-<div>
-<div class=ananke-socials>
-</div></div>
-</div>
+<footer class=footer>
+<span>&copy; 2022 <a href=http://yyf.zone/>Play With YYF</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
 </footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
 </body>
 </html>

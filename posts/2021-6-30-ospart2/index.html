@@ -1,56 +1,63 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
 <title>操作系统面经(Part 2) | Play With YYF</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=keywords content="笔记,面经">
 <meta name=description content="操作系统(Part 2)">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=robots content="noindex, nofollow">
-<link rel=stylesheet href=/ananke/css/main.min.css>
-<meta property="og:title" content="操作系统面经(Part 2)">
+<meta name=author content>
+<link rel=canonical href=http://yyf.zone/posts/2021-6-30-ospart2/>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5+kdJvBz5iKbt6B5PJI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=http://yyf.zone/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=http://yyf.zone/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=http://yyf.zone/favicon-32x32.png>
+<link rel=apple-touch-icon href=http://yyf.zone/apple-touch-icon.png>
+<link rel=mask-icon href=http://yyf.zone/safari-pinned-tab.svg>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+<style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style>
+</noscript><meta property="og:title" content="操作系统面经(Part 2)">
 <meta property="og:description" content="操作系统(Part 2)">
 <meta property="og:type" content="article">
 <meta property="og:url" content="http://yyf.zone/posts/2021-6-30-ospart2/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2021-06-30T16:24:15+00:00">
 <meta property="article:modified_time" content="2021-06-30T16:24:15+00:00">
-<meta itemprop=name content="操作系统面经(Part 2)">
-<meta itemprop=description content="操作系统(Part 2)"><meta itemprop=datePublished content="2021-06-30T16:24:15+00:00">
-<meta itemprop=dateModified content="2021-06-30T16:24:15+00:00">
-<meta itemprop=wordCount content="65">
-<meta itemprop=keywords content="笔记,面经,"><meta name=twitter:card content="summary">
+<meta name=twitter:card content="summary">
 <meta name=twitter:title content="操作系统面经(Part 2)">
 <meta name=twitter:description content="操作系统(Part 2)">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://yyf.zone/posts/"},{"@type":"ListItem","position":2,"name":"操作系统面经(Part 2)","item":"http://yyf.zone/posts/2021-6-30-ospart2/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"操作系统面经(Part 2)","name":"操作系统面经(Part 2)","description":"操作系统(Part 2)","keywords":["笔记","面经"],"articleBody":"操作系统(Part 2) 什么是线程同步，线程同步的方式有哪些？   线程同步就是线程有序的访问共享资源。\n  互斥锁：\n(1) 每个线程在对资源操作前都尝试先加锁，成功加锁才能操作，操作结束解锁。\n  读写锁：\n(1) 写独占，读共享。\n(2) 读锁、写锁并行阻塞，写锁优先级高。 读写锁非常适合于对数据结构读的次数远大于写的情况。\n  信号量(semaphore)：\n(1) 信号量本质上是一个非负的整数计数器，它被用来控制对公共资源的访问。\n(2) 当信号量值大于0时，则可以访问，否则将阻塞。PV原语是对信号量的操作，一次P操作使信号量减１，一次V操作使信号量加１。\n  条件变量\n(1) 条件变量用来自动阻塞一个线程，直到某特殊情况发生为止。通常条件变量和互斥锁同时使用。\n(2) 保证在任何时候都只有一个线程在等待条件满足，并且当条件满足后等待的线程会收到通知，而不必轮询，同时释放锁。条件变量就是减少竞争，在条件满足后就去唤醒等待的线程\n  什么是死锁？死锁产生的条件？如何处理死锁？   两个或多个进程无限期的阻塞、相互等待的一种状态。\n  死锁产生的条件：\n 互斥条件：一个资源一次只能被一个进程使用。 占用并等待条件：一个进程因请求资源而阻塞时，对已获得资源保持不放。 不可抢占条件：进程获得的资源，在未完全使用完之前，不能强行剥夺。 环路等待条件：若干进程之间形成一种头尾相接的环形等待资源关系。    处理死锁的方法：\n  忽略死锁。（鸵鸟算法）\n  检测死锁+恢复死锁：\n 检测死锁的方法：  如果每种资源只有一个，那么可以构建资源分配图（有向图），检测其中是否有环。 检测有向图环路的算法：对每个节点进行深度优先搜索，如果碰到已经遇到多的节点则有环。 如何每种资源有多个，可以通过基于向量的比较进行死锁检测，通过比较每个进程的请求资源向量和可用资源向量来判断这个进程能否完成。   恢复死锁的方法：  利用抢占恢复 利用回滚恢复：将死锁进程回滚到持有资源之间的时间点。 通过杀死进程恢复      避免死锁\n 安全状态的概念：  如果没有死锁发生，并且即使所有进程突然请求对资源的最大需求，也仍然存在某种调度次序能够使得每一个进程运行完毕，则称该状态是安全的。   避免死锁的调度算法：  银行家算法：算法要做的是判断对请求的满足是否会导致进入不安全状态。 在运行前就要知道所需资源的最大值，而且现实中进程数也不是固定的，所以这种方法不实用。      预防死锁\n     破坏条件 处理方法     互斥 一切都使用假脱机技术   占有和等待 在开始时就请求全部资源   不可抢占 利用虚拟化技术等，允许抢占资源   环路等待 对资源按序编号，按照编号的升序请求资源    一些专用方法：  数据库死锁：两阶段加锁。第一阶段，试图对所有所需的记录进行加锁，一次锁一个记录。如果第一阶段加锁成功，就开始第二阶段，完成更新后释放。 通信死锁：超时策略。   活锁的概念：进程没有被阻塞，而是一直重复尝试，失败，尝试，失败…… 活锁有可能自行解开，死锁则不能。 饥饿的概念：尽管没有被阻塞，但是由于优先级的问题，一直在等待。    参考：《现代操作系统》\n","wordCount":"65","inLanguage":"en","datePublished":"2021-06-30T16:24:15Z","dateModified":"2021-06-30T16:24:15Z","mainEntityOfPage":{"@type":"WebPage","@id":"http://yyf.zone/posts/2021-6-30-ospart2/"},"publisher":{"@type":"Organization","name":"Play With YYF","logo":{"@type":"ImageObject","url":"http://yyf.zone/favicon.ico"}}}</script>
 </head>
-<body class="ma0 avenir bg-near-white">
-<header>
-<div class=bg-black>
-<nav class="pv3 ph3 ph4-ns" role=navigation>
-<div class="flex-l justify-between items-center center">
-<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
-Play With YYF
-</a>
-<div class="flex-l items-center">
-<div class=ananke-socials>
+<body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add('dark'):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove('dark'):window.matchMedia('(prefers-color-scheme: dark)').matches&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=http://yyf.zone/ accesskey=h title="Play With YYF (Alt + H)">Play With YYF</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
 </div>
-</div>
-</div>
+<ul id=menu>
+</ul>
 </nav>
+</header>
+<main class=main>
+<article class=post-single>
+<header class=post-header>
+<h1 class=post-title>
+操作系统面经(Part 2)
+</h1>
+<div class=post-meta><span title="2021-06-30 16:24:15 +0000 UTC">June 30, 2021</span>
 </div>
 </header>
-<main class=pb7 role=main>
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-<header class="mt4 w-100">
-<aside class="instapaper_ignoref b helvetica tracked">
-POSTS
-</aside>
-<div id=sharing class="mt3 ananke-socials">
-</div>
-<h1 class="f1 athelas mt3 mb1">操作系统面经(Part 2)</h1>
-<time class="f6 mv4 dib tracked" datetime=2021-06-30T16:24:15Z>June 30, 2021</time>
-</header>
-<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=操作系统part-2>操作系统(Part 2)</h1>
-<h2 id=什么是线程同步线程同步的方式有哪些>什么是线程同步，线程同步的方式有哪些？</h2>
+<div class=post-content><h1 id=操作系统part-2>操作系统(Part 2)<a hidden class=anchor aria-hidden=true href=#操作系统part-2>#</a></h1>
+<h2 id=什么是线程同步线程同步的方式有哪些>什么是线程同步，线程同步的方式有哪些？<a hidden class=anchor aria-hidden=true href=#什么是线程同步线程同步的方式有哪些>#</a></h2>
 <ol>
 <li>
 <p>线程同步就是线程有序的访问共享资源。</p>
@@ -76,7 +83,7 @@ POSTS
 (2) 保证在任何时候都只有一个线程在等待条件满足，并且当条件满足后等待的线程会收到通知，而不必轮询，同时释放锁。条件变量就是减少竞争，在条件满足后就去唤醒等待的线程</p>
 </li>
 </ol>
-<h2 id=什么是死锁死锁产生的条件如何处理死锁>什么是死锁？死锁产生的条件？如何处理死锁？</h2>
+<h2 id=什么是死锁死锁产生的条件如何处理死锁>什么是死锁？死锁产生的条件？如何处理死锁？<a hidden class=anchor aria-hidden=true href=#什么是死锁死锁产生的条件如何处理死锁>#</a></h2>
 <ol>
 <li>
 <p>两个或多个进程无限期的阻塞、相互等待的一种状态。</p>
@@ -173,80 +180,28 @@ POSTS
 </ol>
 </li>
 </ol>
-<p>参考：《现代操作系统》</p><ul class=pa0>
-<li class="list di">
-<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
-</li>
-<li class="list di">
-<a href=/tags/%E9%9D%A2%E7%BB%8F class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">面经</a>
-</li>
+<p>参考：《现代操作系统》</p>
+</div>
+<footer class=post-footer>
+<ul class=post-tags>
+<li><a href=http://yyf.zone/tags/%E7%AC%94%E8%AE%B0/>笔记</a></li>
+<li><a href=http://yyf.zone/tags/%E9%9D%A2%E7%BB%8F/>面经</a></li>
 </ul>
-<div class="mt6 instapaper_ignoref">
-</div>
-</div>
-<aside class="w-30-l mt6-l">
-<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
-<p class="f5 b mb3">Related</p>
-<ul class="pa0 list">
-<li class=mb2>
-<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-22-ip/>网际协议IP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-21-cidr/>划分子网和构造超网</a>
-</li>
-</ul>
-</div>
-</aside>
+</footer>
 </article>
 </main>
-<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
-<div class="flex justify-between">
-<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
-&copy; Play With YYF 2022
-</a>
-<div>
-<div class=ananke-socials>
-</div></div>
-</div>
+<footer class=footer>
+<span>&copy; 2022 <a href=http://yyf.zone/>Play With YYF</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
 </footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
 </body>
 </html>

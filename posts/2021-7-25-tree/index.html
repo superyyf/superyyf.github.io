@@ -1,56 +1,63 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
 <title>AVL树、红黑树、B树和B+树 | Play With YYF</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=keywords content="笔记">
 <meta name=description content="AVL树、红黑树、B树和B+树">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=robots content="noindex, nofollow">
-<link rel=stylesheet href=/ananke/css/main.min.css>
-<meta property="og:title" content="AVL树、红黑树、B树和B+树">
+<meta name=author content>
+<link rel=canonical href=http://yyf.zone/posts/2021-7-25-tree/>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5+kdJvBz5iKbt6B5PJI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=http://yyf.zone/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=http://yyf.zone/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=http://yyf.zone/favicon-32x32.png>
+<link rel=apple-touch-icon href=http://yyf.zone/apple-touch-icon.png>
+<link rel=mask-icon href=http://yyf.zone/safari-pinned-tab.svg>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+<style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style>
+</noscript><meta property="og:title" content="AVL树、红黑树、B树和B+树">
 <meta property="og:description" content="AVL树、红黑树、B树和B+树">
 <meta property="og:type" content="article">
 <meta property="og:url" content="http://yyf.zone/posts/2021-7-25-tree/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2021-07-25T15:30:30+00:00">
 <meta property="article:modified_time" content="2021-07-25T15:30:30+00:00">
-<meta itemprop=name content="AVL树、红黑树、B树和B+树">
-<meta itemprop=description content="AVL树、红黑树、B树和B+树"><meta itemprop=datePublished content="2021-07-25T15:30:30+00:00">
-<meta itemprop=dateModified content="2021-07-25T15:30:30+00:00">
-<meta itemprop=wordCount content="93">
-<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:card content="summary">
 <meta name=twitter:title content="AVL树、红黑树、B树和B+树">
 <meta name=twitter:description content="AVL树、红黑树、B树和B+树">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://yyf.zone/posts/"},{"@type":"ListItem","position":2,"name":"AVL树、红黑树、B树和B+树","item":"http://yyf.zone/posts/2021-7-25-tree/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"AVL树、红黑树、B树和B+树","name":"AVL树、红黑树、B树和B\u002b树","description":"AVL树、红黑树、B树和B+树","keywords":["笔记"],"articleBody":"AVL树、红黑树、B树和B+树 基本概念  二叉搜索树  左节点 每一个子树都是二叉搜索树   平衡二叉树（AVL树）  左右子树的高度差 每一个子树都是平衡二叉树   平衡二叉树的优势  快速查找(log(n))    AVL树（平衡二叉树） 维持平衡的方法  高度  每个节点引入高度属性，即左右子树的高度的最大值。 在插入和删除节点时，沿插入和删除的路径更新节点的高度值。   平衡因子  左子树和右子树的高度差值。 当高度差值1时，会触发树的旋转。    旋转（再平衡操作）  在插入和删除的路径上，从失去平衡的最小子树的根节点开始旋转。  左旋 右旋    总结  树的高度\n$$h = [log(n)]+1$$ 优缺点  严格的平衡二叉树（左右子树高度差不超过1），查找效率很高 再平衡代价高，每个节点需要多保存一个数，旋转操作复杂，所以插入、删除效率一般。    红黑树 维持平衡的方法  每个节点要么是黑色，要么是红色。 根节点是黑色。叶子节点(NULL)也是黑色。 如果一个节点是红色，那么它的子节点必须是黑色。（没有连续的红节点） 对于每个节点，从该节点到其子孙节点的所有路径上包含相同的黑节点数。  插入和删除（再平衡操作）  插入操作  若树为空，则将插入节点作为根节点，着黑色。 若树不为空，插入节点总是红色，若其父节点是黑色，则不需要操作。否则并两种情况：  其父节点是红色，并且其父节点的兄弟节点也是红色，则将其父节点和其父节点的兄弟节点着黑色。并递归的操作其祖父节点。 其父节点是红色，其父节点的兄弟节点是黑色，则做旋转并重新着色。     黑色高度：节点到叶子节点(NULL)经过的黑色节点数。  总结  树的高度\n$$ h 优缺点  非严格的平衡二叉树，查找效率略低于AVL树。 再平衡操作代价较低，每个节点只需要多保存一个bit，插入、删除效率高于AVL树。    B树 特点  B树是多路平衡查找树 对于m阶B树  根节点的关键字（键值对）数量范围：$1 非根节点的关键字（键值对）数量范围：$m/2 每个节点的关键字升序排列，每个关键字的左子树中的所有关键字都小于它，右子树中的所有关键字都大于它。 所有叶子节点都位于同一层，或者说根节点到每个叶子节点的长度都相同。    插入和删除（再平衡操作）  插入  判断插入后，当前结点key的个数是否小于等于m-1，如果满足，直接插入即可，如果不满足，根据节点的中间的key将这个节点分为左右两部分，中间的节点放到父节点中即可。   删除  删除叶子节点，如果删除元素后元素个数少于（m/2），并且它的兄弟节点的元素大于（m/2），也就是说兄弟节点的元素比最少值m/2还多，将先将父节点的元素移到该节点，然后将兄弟节点的元素再移动到父节点。 对于非叶子节点的删除，我们需要用后继key（元素）覆盖要删除的key，然后在后继key所在的子支中删除该后继key。    总结  B树/B+树是磁盘友好的数据结构  IO次数少 查询效率稳定 遍历方便   红黑树多用于内部排序  B+树 与B树的不同点  数据只存储在叶子节点，非叶子节点（内部节点）只负责索引。 父节点存有右孩子的第一个元素的索引。 每个叶子节点都存有相邻叶子节点的指针。  插入和删除（再平衡操作）  插入  当节点元素数量大于m-1的时候，按中间元素分裂成左右两部分，中间元素分裂到父节点当做索引存储，但是，本身中间元素还是分裂右边这一部分的。   删除  对于删除操作是比B树简单一些的，因为叶子节点有指针的存在，向兄弟节点借元素时，不需要通过父节点了，而是可以直接通过兄弟节移动即可（前提是兄弟节点的元素大于m/2），然后更新父节点的索引；如果兄弟节点的元素不大于m/2（兄弟节点也没有多余的元素），则将当前节点和兄弟节点合并，并且删除父节点中的key。    与B树相比的优点  单个节点存储的元素更多，查找效率更高。 所有查找都要搜索到叶子节点，性能稳定。 所有的叶子节点形成了一个有序链表，遍历效率高。 ","wordCount":"93","inLanguage":"en","datePublished":"2021-07-25T15:30:30Z","dateModified":"2021-07-25T15:30:30Z","mainEntityOfPage":{"@type":"WebPage","@id":"http://yyf.zone/posts/2021-7-25-tree/"},"publisher":{"@type":"Organization","name":"Play With YYF","logo":{"@type":"ImageObject","url":"http://yyf.zone/favicon.ico"}}}</script>
 </head>
-<body class="ma0 avenir bg-near-white">
-<header>
-<div class=bg-black>
-<nav class="pv3 ph3 ph4-ns" role=navigation>
-<div class="flex-l justify-between items-center center">
-<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
-Play With YYF
-</a>
-<div class="flex-l items-center">
-<div class=ananke-socials>
+<body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add('dark'):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove('dark'):window.matchMedia('(prefers-color-scheme: dark)').matches&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=http://yyf.zone/ accesskey=h title="Play With YYF (Alt + H)">Play With YYF</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
 </div>
-</div>
-</div>
+<ul id=menu>
+</ul>
 </nav>
+</header>
+<main class=main>
+<article class=post-single>
+<header class=post-header>
+<h1 class=post-title>
+AVL树、红黑树、B树和B+树
+</h1>
+<div class=post-meta><span title="2021-07-25 15:30:30 +0000 UTC">July 25, 2021</span>
 </div>
 </header>
-<main class=pb7 role=main>
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-<header class="mt4 w-100">
-<aside class="instapaper_ignoref b helvetica tracked">
-POSTS
-</aside>
-<div id=sharing class="mt3 ananke-socials">
-</div>
-<h1 class="f1 athelas mt3 mb1">AVL树、红黑树、B树和B+树</h1>
-<time class="f6 mv4 dib tracked" datetime=2021-07-25T15:30:30Z>July 25, 2021</time>
-</header>
-<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id=avl树红黑树b树和b树>AVL树、红黑树、B树和B+树</h1>
-<h2 id=基本概念>基本概念</h2>
+<div class=post-content><h1 id=avl树红黑树b树和b树>AVL树、红黑树、B树和B+树<a hidden class=anchor aria-hidden=true href=#avl树红黑树b树和b树>#</a></h1>
+<h2 id=基本概念>基本概念<a hidden class=anchor aria-hidden=true href=#基本概念>#</a></h2>
 <ol>
 <li>二叉搜索树
 <ul>
@@ -70,8 +77,8 @@ POSTS
 </ul>
 </li>
 </ol>
-<h2 id=avl树平衡二叉树>AVL树（平衡二叉树）</h2>
-<h3 id=维持平衡的方法>维持平衡的方法</h3>
+<h2 id=avl树平衡二叉树>AVL树（平衡二叉树）<a hidden class=anchor aria-hidden=true href=#avl树平衡二叉树>#</a></h2>
+<h3 id=维持平衡的方法>维持平衡的方法<a hidden class=anchor aria-hidden=true href=#维持平衡的方法>#</a></h3>
 <ol>
 <li>高度
 <ul>
@@ -86,7 +93,7 @@ POSTS
 </ul>
 </li>
 </ol>
-<h3 id=旋转再平衡操作>旋转（再平衡操作）</h3>
+<h3 id=旋转再平衡操作>旋转（再平衡操作）<a hidden class=anchor aria-hidden=true href=#旋转再平衡操作>#</a></h3>
 <ol>
 <li>在插入和删除的路径上，从失去平衡的最小子树的根节点开始旋转。
 <ul>
@@ -95,7 +102,7 @@ POSTS
 </ul>
 </li>
 </ol>
-<h3 id=总结>总结</h3>
+<h3 id=总结>总结<a hidden class=anchor aria-hidden=true href=#总结>#</a></h3>
 <ol>
 <li>树的高度<br>
 $$h = [log(n)]+1$$</li>
@@ -106,15 +113,15 @@ $$h = [log(n)]+1$$</li>
 </ul>
 </li>
 </ol>
-<h2 id=红黑树>红黑树</h2>
-<h3 id=维持平衡的方法-1>维持平衡的方法</h3>
+<h2 id=红黑树>红黑树<a hidden class=anchor aria-hidden=true href=#红黑树>#</a></h2>
+<h3 id=维持平衡的方法-1>维持平衡的方法<a hidden class=anchor aria-hidden=true href=#维持平衡的方法-1>#</a></h3>
 <ol>
 <li>每个节点要么是黑色，要么是红色。</li>
 <li>根节点是黑色。叶子节点(NULL)也是黑色。</li>
 <li>如果一个节点是红色，那么它的子节点必须是黑色。（没有连续的红节点）</li>
 <li>对于每个节点，从该节点到其子孙节点的所有路径上包含相同的黑节点数。</li>
 </ol>
-<h3 id=插入和删除再平衡操作>插入和删除（再平衡操作）</h3>
+<h3 id=插入和删除再平衡操作>插入和删除（再平衡操作）<a hidden class=anchor aria-hidden=true href=#插入和删除再平衡操作>#</a></h3>
 <ol>
 <li>插入操作
 <ul>
@@ -129,7 +136,7 @@ $$h = [log(n)]+1$$</li>
 </li>
 <li>黑色高度：节点到叶子节点(NULL)经过的黑色节点数。</li>
 </ol>
-<h3 id=总结-1>总结</h3>
+<h3 id=总结-1>总结<a hidden class=anchor aria-hidden=true href=#总结-1>#</a></h3>
 <ol>
 <li>树的高度<br>
 $$ h &lt;= 2log(n+1) $$</li>
@@ -140,8 +147,8 @@ $$ h &lt;= 2log(n+1) $$</li>
 </ul>
 </li>
 </ol>
-<h2 id=b树>B树</h2>
-<h3 id=特点>特点</h3>
+<h2 id=b树>B树<a hidden class=anchor aria-hidden=true href=#b树>#</a></h2>
+<h3 id=特点>特点<a hidden class=anchor aria-hidden=true href=#特点>#</a></h3>
 <ol>
 <li>B树是多路平衡查找树</li>
 <li>对于m阶B树
@@ -153,7 +160,7 @@ $$ h &lt;= 2log(n+1) $$</li>
 </ul>
 </li>
 </ol>
-<h3 id=插入和删除再平衡操作-1>插入和删除（再平衡操作）</h3>
+<h3 id=插入和删除再平衡操作-1>插入和删除（再平衡操作）<a hidden class=anchor aria-hidden=true href=#插入和删除再平衡操作-1>#</a></h3>
 <ol>
 <li>插入
 <ul>
@@ -167,7 +174,7 @@ $$ h &lt;= 2log(n+1) $$</li>
 </ul>
 </li>
 </ol>
-<h3 id=总结-2>总结</h3>
+<h3 id=总结-2>总结<a hidden class=anchor aria-hidden=true href=#总结-2>#</a></h3>
 <ol>
 <li>B树/B+树是磁盘友好的数据结构
 <ul>
@@ -178,14 +185,14 @@ $$ h &lt;= 2log(n+1) $$</li>
 </li>
 <li>红黑树多用于内部排序</li>
 </ol>
-<h2 id=b树-1>B+树</h2>
-<h3 id=与b树的不同点>与B树的不同点</h3>
+<h2 id=b树-1>B+树<a hidden class=anchor aria-hidden=true href=#b树-1>#</a></h2>
+<h3 id=与b树的不同点>与B树的不同点<a hidden class=anchor aria-hidden=true href=#与b树的不同点>#</a></h3>
 <ol>
 <li>数据只存储在叶子节点，非叶子节点（内部节点）只负责索引。</li>
 <li>父节点存有右孩子的第一个元素的索引。</li>
 <li>每个叶子节点都存有相邻叶子节点的指针。</li>
 </ol>
-<h3 id=插入和删除再平衡操作-2>插入和删除（再平衡操作）</h3>
+<h3 id=插入和删除再平衡操作-2>插入和删除（再平衡操作）<a hidden class=anchor aria-hidden=true href=#插入和删除再平衡操作-2>#</a></h3>
 <ol>
 <li>插入
 <ul>
@@ -198,82 +205,32 @@ $$ h &lt;= 2log(n+1) $$</li>
 </ul>
 </li>
 </ol>
-<h3 id=与b树相比的优点>与B树相比的优点</h3>
+<h3 id=与b树相比的优点>与B树相比的优点<a hidden class=anchor aria-hidden=true href=#与b树相比的优点>#</a></h3>
 <ol>
 <li>单个节点存储的元素更多，查找效率更高。</li>
 <li>所有查找都要搜索到叶子节点，性能稳定。</li>
 <li>所有的叶子节点形成了一个有序链表，遍历效率高。</li>
-</ol><ul class=pa0>
-<li class="list di">
-<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
-</li>
+</ol>
+</div>
+<footer class=post-footer>
+<ul class=post-tags>
+<li><a href=http://yyf.zone/tags/%E7%AC%94%E8%AE%B0/>笔记</a></li>
 </ul>
-<div class="mt6 instapaper_ignoref">
-</div>
-</div>
-<aside class="w-30-l mt6-l">
-<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
-<p class="f5 b mb3">Related</p>
-<ul class="pa0 list">
-<li class=mb2>
-<a href=/posts/2021-7-2-addressspace/>地址空间和交换技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-6-30-ospart2/>操作系统面经(Part 2)</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-6-28-ospart1/>操作系统面经(Part 1)</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-fttx/>宽带接入技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-digitaltransmission/>数字传输系统</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-2-1-channelmultiplex/>信道复用技术</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-transmissionmedium/>物理层下面的传输媒体</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-31-physicallayer/>物理层的基本概念及涉及的基础知识</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-fastethernet/>高速以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-extendedethernet/>扩展的以太网</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-29-broadcast/>使用广播信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-datalinklayer/>使用点对点信道的数据链路层</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-25-ppp/>点对点协议PPP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-22-ftp/>文件传送协议FTP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-22-telnet/>远程终端协议TELNET</a>
-</li>
-</ul>
-</div>
-</aside>
+</footer>
 </article>
 </main>
-<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
-<div class="flex justify-between">
-<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
-&copy; Play With YYF 2022
-</a>
-<div>
-<div class=ananke-socials>
-</div></div>
-</div>
+<footer class=footer>
+<span>&copy; 2022 <a href=http://yyf.zone/>Play With YYF</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
 </footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
 </body>
 </html>

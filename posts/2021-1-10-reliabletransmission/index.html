@@ -1,56 +1,63 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<!doctype html><html lang=en dir=auto>
+<head><meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=robots content="index, follow">
 <title>TCP可靠传输的实现 | Play With YYF</title>
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=keywords content="笔记">
 <meta name=description content="计算机网络/运输层/TCP可靠传输的实现">
-<meta name=generator content="Hugo 0.92.2">
-<meta name=robots content="noindex, nofollow">
-<link rel=stylesheet href=/ananke/css/main.min.css>
-<meta property="og:title" content="TCP可靠传输的实现">
+<meta name=author content>
+<link rel=canonical href=http://yyf.zone/posts/2021-1-10-reliabletransmission/>
+<link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style>
+<script defer crossorigin=anonymous src=/assets/js/highlight.min.7680afc38aa6b15ddf158a4f3780b7b1f7dde7e91d26f073e6229bb7a0793c92.js integrity="sha256-doCvw4qmsV3fFYpPN4C3sffd5+kdJvBz5iKbt6B5PJI=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=http://yyf.zone/favicon.ico>
+<link rel=icon type=image/png sizes=16x16 href=http://yyf.zone/favicon-16x16.png>
+<link rel=icon type=image/png sizes=32x32 href=http://yyf.zone/favicon-32x32.png>
+<link rel=apple-touch-icon href=http://yyf.zone/apple-touch-icon.png>
+<link rel=mask-icon href=http://yyf.zone/safari-pinned-tab.svg>
+<meta name=theme-color content="#2e2e33">
+<meta name=msapplication-TileColor content="#2e2e33">
+<noscript>
+<style>#theme-toggle,.top-link{display:none}</style>
+<style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style>
+</noscript><meta property="og:title" content="TCP可靠传输的实现">
 <meta property="og:description" content="计算机网络/运输层/TCP可靠传输的实现">
 <meta property="og:type" content="article">
 <meta property="og:url" content="http://yyf.zone/posts/2021-1-10-reliabletransmission/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2021-01-10T15:58:40+00:00">
 <meta property="article:modified_time" content="2021-01-10T15:58:40+00:00">
-<meta itemprop=name content="TCP可靠传输的实现">
-<meta itemprop=description content="计算机网络/运输层/TCP可靠传输的实现"><meta itemprop=datePublished content="2021-01-10T15:58:40+00:00">
-<meta itemprop=dateModified content="2021-01-10T15:58:40+00:00">
-<meta itemprop=wordCount content="85">
-<meta itemprop=keywords content="笔记,"><meta name=twitter:card content="summary">
+<meta name=twitter:card content="summary">
 <meta name=twitter:title content="TCP可靠传输的实现">
 <meta name=twitter:description content="计算机网络/运输层/TCP可靠传输的实现">
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"http://yyf.zone/posts/"},{"@type":"ListItem","position":2,"name":"TCP可靠传输的实现","item":"http://yyf.zone/posts/2021-1-10-reliabletransmission/"}]}</script>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"TCP可靠传输的实现","name":"TCP可靠传输的实现","description":"计算机网络/运输层/TCP可靠传输的实现\n","keywords":["笔记"],"articleBody":"计算机网络/运输层/TCP可靠传输的实现\n可靠传输的工作原理  在理想的传输条件下，不需要采取任何措施就能够实现可靠传输。\n理想的传输条件有一下两个特点：\n 传输信道不产生差错。 不管发送方以多快的速度发送数据，接收方总是来得及处理收到的数据。   然而这是不可能的。我们可以使用一些可靠传输协议，当出现差错时让发送方重传出现差错的数据，同时在接收方来不及处理接收到的数据时，及时告诉发送方适当降低发送数据的速度。下面介绍一些简单的可靠传输协议。\n停止等待协议  “停止等待”就是每发送完一个分组就停止发送，等待对方的确认。在收到确认后再发送下一个分组。\n1. 无差错情况：略 2. 出现差错:  设A为发送方，B为接收方。B接收报文$M_{1}$时检测出差错，就丢弃$M_{1}$，其他什么也不做。A只要超过了一段时间仍然没有收到确认，就认为刚才发送的分组丢失了，因而重传前面发送的分组。这就叫做超时重传。重传时间的设置很有讲究，下回详解。\n3. 确认丢失和确认迟到  B收到了分组$M_{1}$，并发送确认。但A没有接收到确认（由于网络原因丢失或迟到），于是A在重传时间到了之后重传分组。假定B又收到了重传的分组$M_{2}$，协议规定，B的应对行为如下：\n 丢弃这个重复的分组$M_{2}$，不向上层交付。 再次向A发送确认。   A如果收到迟到的确认，则直接丢弃。\n使用上述的确认和重传机制，我们就可以在不可靠的传输网络上实现可靠的通信。这类协议常称为自动重传请求ARQ(Automatic Repeat reQuest)停止等待协议优点是简单，但是缺点是信道利用率太低。\n为了提高传输效率，发送方可以不使用低效率的停止等待协议，而是采用流水线传输。流水线传输方式就是发送方可以连续发送多个分组，不必每发送一个分组就停顿下来等待对方的确认。\n当使用流水线传输方式时，就要使用下面介绍的连续ARQ协议和滑动窗口协议。\n连续ARQ协议  滑动窗口协议比较复杂，是TCP协议的精髓所在。这里给出连续ARQ协议最基本的概念。\n 发送方每收到一个确认，就把发送窗口向前滑动一个分组的位置。\n接收方采用累积确认的方式。这就是说，接收方不必对收到的分组逐个发送确认，而是在收到几个分组后，对按序到达的最后一个分组发送确认，这就表示：到这个分组为止的所有分组都已经正确收到。\nTCP可靠传输的实现 滑动窗口 TCP的滑动窗口是以字节为单位的。\n发送方A的发送窗口：  发送窗口表示：在没有收到B的确认的情况下，A可以连续把窗口内的数据都发送出去。凡是已经发送过的数据，在未收到确认之前都必须暂时保留，以便在超时重传时使用。 发送窗口里面的序号表示允许发送的序号。A的发送窗口一定不能超过B的接收窗口数值。 发送窗口后沿的后面部分表示已经发送且已经收到了确认。发送窗口的前沿前面部分表示不允许发送的，因为接收方都没有为这部分数据保留临时存放的缓存空间。 发送窗口的位置由前沿和后沿的位置共同确定。发送窗口后沿的变化情况有两种可能，即不动（没有收到新的确认）和前移（收到了新的确认）。发送窗口的后沿不可能向后移动，因为不能撤销已收到的确定。发送窗口前沿通常是不断向前移动。 在接收方通知的窗口缩小时，发送方的前沿有可能向后收缩。但TCP标准强烈不赞成这样做。  接收方B的接收窗口：\n B只能对按序收到的数据中的最高序号给出确认。  窗口和缓存的关系： 发送缓存用来暂时存放：\n 发送应用程序传送给发送方TCP准备发送的数据； TCP已发送出但尚未收到确认的数据。  发送窗口通常只是发送缓存的一部分。已确认的数据应当从发送缓存中删除，因此发送缓存和发送窗口的后沿是重合的。\n接收缓存用来暂时存放：\n 按序到达的、但尚未被接收应用程序读取的数据； 未按序到达的数据。  如果收到的分组被检测出有差错，则要丢弃。如果接收的应用程序来不及读取收到的数据，接收缓存最终就会被填满，使接收窗口减小到零。\n超时重传时间的选择  TCP的发送方在规定的时间内没有收到确认就要重传已发送的报文段。这种重传的概念很简单，但是重传时间的选择却是TCP最复杂的问题之一。\n如果重传时间设置得太短，就会引起不必要的重传，使网络负荷增大。但若把重传时间设置得太长，则又使网络的空闲时间增大，降低传输效率。\n报文段的往返时间RTT：报文段发出的时间和收到相应的确认的时间之差。\n加权平均往返时间$RTT_{s}$:\n第一次测量到RTT样本时，\n $RTT_{s}=RTT$\n 此后每测量到一个新的RTT样本：\n $new RTT_{S}=(1-\\alpha)\\times oldRTT_{S}+\\alpha \\times new RTT$\n 超时重传时间RTO(Retransmission Timee-Out)应略大于上面得出的加权平均时间$RTT_{S}$\n $RTO=RTT_{S}+4\\times RTT_{D}$\n $RTT_{D}$是RTT的偏差的加权平均值，它与$RTT_{s}$和新的RTT赝本之差有关。\n当第一次测量时\n $RTT_{D}=\\frac{1}{2}RTT$\n 此后\n $newRTT_{D}=(1-\\beta)\\times oldRTT_{D}+\\beta \\times \\vert RTT_{s}-newRTT \\vert$\n  如何判定此确定报文段是先发送的报文段的确定，还是对后来重传的报文段的确定？\nKarm算法：\n 在计算加权平均RTTS时，只要报文段重传了，就不采用其往返时间样本。 报文段每重传一次，就把重传时间RTO增大一些。  选择确认SACK  若收到的报文段无差错，只是未按序号，中间还缺少一些序号的数据，那么能否设法只传送缺少的数据？答案是可以的。选择确认就是一种可行的处理方法。\n如果要使用选择确认SACK，那么在建立TCP连接时，就要在TCP首部的选项中加上“允许SACK”的选项，而双方必须都事先商定好。\n参考文献：《计算机网络（第7版）》谢希仁著\n","wordCount":"85","inLanguage":"en","datePublished":"2021-01-10T15:58:40Z","dateModified":"2021-01-10T15:58:40Z","mainEntityOfPage":{"@type":"WebPage","@id":"http://yyf.zone/posts/2021-1-10-reliabletransmission/"},"publisher":{"@type":"Organization","name":"Play With YYF","logo":{"@type":"ImageObject","url":"http://yyf.zone/favicon.ico"}}}</script>
 </head>
-<body class="ma0 avenir bg-near-white">
-<header>
-<div class=bg-black>
-<nav class="pv3 ph3 ph4-ns" role=navigation>
-<div class="flex-l justify-between items-center center">
-<a href=/ class="f3 fw2 hover-white no-underline white-90 dib">
-Play With YYF
-</a>
-<div class="flex-l items-center">
-<div class=ananke-socials>
+<body id=top>
+<script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add('dark'):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove('dark'):window.matchMedia('(prefers-color-scheme: dark)').matches&&document.body.classList.add('dark')</script>
+<header class=header>
+<nav class=nav>
+<div class=logo>
+<a href=http://yyf.zone/ accesskey=h title="Play With YYF (Alt + H)">Play With YYF</a>
+<span class=logo-switches>
+<button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+</button>
+</span>
 </div>
-</div>
-</div>
+<ul id=menu>
+</ul>
 </nav>
+</header>
+<main class=main>
+<article class=post-single>
+<header class=post-header>
+<h1 class=post-title>
+TCP可靠传输的实现
+</h1>
+<div class=post-meta><span title="2021-01-10 15:58:40 +0000 UTC">January 10, 2021</span>
 </div>
 </header>
-<main class=pb7 role=main>
-<article class="flex-l flex-wrap justify-between mw8 center ph3">
-<header class="mt4 w-100">
-<aside class="instapaper_ignoref b helvetica tracked">
-POSTS
-</aside>
-<div id=sharing class="mt3 ananke-socials">
-</div>
-<h1 class="f1 athelas mt3 mb1">TCP可靠传输的实现</h1>
-<time class="f6 mv4 dib tracked" datetime=2021-01-10T15:58:40Z>January 10, 2021</time>
-</header>
-<div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>计算机网络/运输层/TCP可靠传输的实现</p>
-<h1 id=可靠传输的工作原理>可靠传输的工作原理</h1>
+<div class=post-content><p>计算机网络/运输层/TCP可靠传输的实现</p>
+<h1 id=可靠传输的工作原理>可靠传输的工作原理<a hidden class=anchor aria-hidden=true href=#可靠传输的工作原理>#</a></h1>
 <p>  在理想的传输条件下，不需要采取任何措施就能够实现可靠传输。<br>
 理想的传输条件有一下两个特点：</p>
 <ol>
@@ -58,12 +65,12 @@ POSTS
 <li>不管发送方以多快的速度发送数据，接收方总是来得及处理收到的数据。</li>
 </ol>
 <p>  然而这是不可能的。我们可以使用一些可靠传输协议，<strong>当出现差错时让发送方重传出现差错的数据，同时在接收方来不及处理接收到的数据时，及时告诉发送方适当降低发送数据的速度</strong>。下面介绍一些简单的可靠传输协议。</p>
-<h2 id=停止等待协议>停止等待协议</h2>
+<h2 id=停止等待协议>停止等待协议<a hidden class=anchor aria-hidden=true href=#停止等待协议>#</a></h2>
 <p>  “停止等待”就是每发送完一个分组就停止发送，等待对方的确认。在收到确认后再发送下一个分组。</p>
-<h3 id=emspemsp1-无差错情况略>  1. 无差错情况：略</h3>
-<h3 id=emspemsp2-出现差错>  2. 出现差错:</h3>
+<h3 id=emspemsp1-无差错情况略>  1. 无差错情况：略<a hidden class=anchor aria-hidden=true href=#emspemsp1-无差错情况略>#</a></h3>
+<h3 id=emspemsp2-出现差错>  2. 出现差错:<a hidden class=anchor aria-hidden=true href=#emspemsp2-出现差错>#</a></h3>
 <p>  设A为发送方，B为接收方。B接收报文$M_{1}$时检测出差错，就丢弃$M_{1}$，其他什么也不做。A只要超过了一段时间仍然没有收到确认，就认为刚才发送的分组丢失了，因而重传前面发送的分组。这就叫做<strong>超时重传</strong>。重传时间的设置很有讲究，下回详解。</p>
-<h3 id=emspemsp3-确认丢失和确认迟到>  3. 确认丢失和确认迟到</h3>
+<h3 id=emspemsp3-确认丢失和确认迟到>  3. 确认丢失和确认迟到<a hidden class=anchor aria-hidden=true href=#emspemsp3-确认丢失和确认迟到>#</a></h3>
 <p>  B收到了分组$M_{1}$，并发送确认。但A没有接收到确认（由于网络原因丢失或迟到），于是A在重传时间到了之后重传分组。假定B又收到了重传的分组$M_{2}$，协议规定，B的应对行为如下：</p>
 <ol>
 <li>丢弃这个重复的分组$M_{2}$，不向上层交付。</li>
@@ -73,16 +80,18 @@ POSTS
   使用上述的确认和重传机制，我们就可以在不可靠的传输网络上实现可靠的通信。这类协议常称为<strong>自动重传请求ARQ</strong>(Automatic Repeat reQuest)停止等待协议优点是简单，但是缺点是<strong>信道利用率太低</strong>。<br>
   为了提高传输效率，发送方可以不使用低效率的停止等待协议，而是采用<strong>流水线传输</strong>。流水线传输方式就是发送方可以连续发送多个分组，不必每发送一个分组就停顿下来等待对方的确认。<br>
   当使用流水线传输方式时，就要使用下面介绍的<strong>连续ARQ协议</strong>和<strong>滑动窗口协议</strong>。</p>
-<h2 id=连续arq协议>连续ARQ协议</h2>
+<h2 id=连续arq协议>连续ARQ协议<a hidden class=anchor aria-hidden=true href=#连续arq协议>#</a></h2>
 <p>  滑动窗口协议比较复杂，是TCP协议的精髓所在。这里给出连续ARQ协议最基本的概念。</p>
-<p><img src=/image/%E8%BF%9E%E7%BB%ADARQ%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png alt=连续ARQ协议的工作原理></p>
+<p><img loading=lazy src=/image/%e8%bf%9e%e7%bb%adARQ%e5%8d%8f%e8%ae%ae%e7%9a%84%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86.png alt=连续ARQ协议的工作原理>
+</p>
 <p>  发送方每收到一个确认，就把发送窗口向前滑动一个分组的位置。<br>
   接收方采用<strong>累积确认</strong>的方式。这就是说，接收方不必对收到的分组逐个发送确认，而是在收到几个分组后，<strong>对按序到达的最后一个分组发送确认</strong>，这就表示：到这个分组为止的所有分组都已经正确收到。</p>
-<h1 id=tcp可靠传输的实现>TCP可靠传输的实现</h1>
-<h2 id=滑动窗口>滑动窗口</h2>
+<h1 id=tcp可靠传输的实现>TCP可靠传输的实现<a hidden class=anchor aria-hidden=true href=#tcp可靠传输的实现>#</a></h1>
+<h2 id=滑动窗口>滑动窗口<a hidden class=anchor aria-hidden=true href=#滑动窗口>#</a></h2>
 <p>TCP的滑动窗口是以字节为单位的。</p>
-<p><img src=/image/%E5%8F%91%E9%80%81%E7%AA%97%E5%8F%A3.png alt=发送窗口></p>
-<h3 id=发送方a的发送窗口>发送方A的发送窗口：</h3>
+<p><img loading=lazy src=/image/%e5%8f%91%e9%80%81%e7%aa%97%e5%8f%a3.png alt=发送窗口>
+</p>
+<h3 id=发送方a的发送窗口>发送方A的发送窗口：<a hidden class=anchor aria-hidden=true href=#发送方a的发送窗口>#</a></h3>
 <ol>
 <li>发送窗口表示：在没有收到B的确认的情况下，A可以连续把窗口内的数据都发送出去。凡是已经发送过的数据，在未收到确认之前都必须暂时保留，以便在超时重传时使用。</li>
 <li>发送窗口里面的<strong>序号</strong>表示允许发送的序号。A的发送窗口一定不能超过B的接收窗口数值。</li>
@@ -94,8 +103,9 @@ POSTS
 <ol>
 <li>B只能对<strong>按序收到</strong>的数据中的最高序号给出确认。</li>
 </ol>
-<h3 id=窗口和缓存的关系>窗口和缓存的关系：</h3>
-<p><img src=/image/%E7%BC%93%E5%AD%98%E5%92%8C%E7%AA%97%E5%8F%A3%E7%9A%84%E5%85%B3%E7%B3%BB.png alt=缓存和窗口的关系></p>
+<h3 id=窗口和缓存的关系>窗口和缓存的关系：<a hidden class=anchor aria-hidden=true href=#窗口和缓存的关系>#</a></h3>
+<p><img loading=lazy src=/image/%e7%bc%93%e5%ad%98%e5%92%8c%e7%aa%97%e5%8f%a3%e7%9a%84%e5%85%b3%e7%b3%bb.png alt=缓存和窗口的关系>
+</p>
 <p>发送缓存用来暂时存放：</p>
 <ol>
 <li>发送应用程序传送给发送方TCP准备发送的数据；</li>
@@ -108,7 +118,7 @@ POSTS
 <li>未按序到达的数据。</li>
 </ol>
 <p>如果收到的分组被检测出有差错，则要丢弃。如果接收的应用程序来不及读取收到的数据，接收缓存最终就会被填满，使接收窗口减小到零。</p>
-<h3 id=超时重传时间的选择>超时重传时间的选择</h3>
+<h3 id=超时重传时间的选择>超时重传时间的选择<a hidden class=anchor aria-hidden=true href=#超时重传时间的选择>#</a></h3>
 <p>  TCP的发送方在规定的时间内没有收到确认就要重传已发送的报文段。这种重传的概念很简单，但是重传时间的选择却是TCP最复杂的问题之一。<br>
   如果重传时间设置得太短，就会引起不必要的重传，使网络负荷增大。但若把重传时间设置得太长，则又使网络的空闲时间增大，降低传输效率。<br>
 <strong>报文段的往返时间RTT</strong>：报文段发出的时间和收到相应的确认的时间之差。<br>
@@ -140,59 +150,30 @@ Karm算法：</p>
 <li>在计算加权平均RTTS时，只要报文段重传了，就不采用其往返时间样本。</li>
 <li>报文段每重传一次，就把重传时间RTO增大一些。</li>
 </ol>
-<h3 id=选择确认sack>选择确认SACK</h3>
+<h3 id=选择确认sack>选择确认SACK<a hidden class=anchor aria-hidden=true href=#选择确认sack>#</a></h3>
 <p>  若收到的报文段无差错，只是未按序号，中间还缺少一些序号的数据，那么能否设法<strong>只传送缺少的数据</strong>？答案是可以的。选择确认就是一种可行的处理方法。<br>
   如果要使用选择确认SACK，那么在建立TCP连接时，就要在<strong>TCP首部的选项</strong>中加上“允许SACK”的选项，而双方必须都事先商定好。</p>
-<p>参考文献：《计算机网络（第7版）》谢希仁著</p><ul class=pa0>
-<li class="list di">
-<a href=/tags/%E7%AC%94%E8%AE%B0 class="link f5 grow no-underline br-pill ba ph3 pv2 mb2 dib black sans-serif">笔记</a>
-</li>
+<p>参考文献：《计算机网络（第7版）》谢希仁著</p>
+</div>
+<footer class=post-footer>
+<ul class=post-tags>
+<li><a href=http://yyf.zone/tags/%E7%AC%94%E8%AE%B0/>笔记</a></li>
 </ul>
-<div class="mt6 instapaper_ignoref">
-</div>
-</div>
-<aside class="w-30-l mt6-l">
-<div class="bg-light-gray pa3 nested-list-reset nested-copy-line-height nested-links">
-<p class="f5 b mb3">Related</p>
-<ul class="pa0 list">
-<li class=mb2>
-<a href=/posts/2021-1-9-headoftcp/>TCP报文段的首部格式</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-8-overviewoftcp/>传输控制协议TCP概述</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-8-udp/>用户数据报协议UDP</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-7-overviewoftransportlayer/>运输层协议概述</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-6-mpls/>多协议标签交换MPLS</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-2-ipv6/>IPv6</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-2-ipmulticast/>IP多播</a>
-</li>
-<li class=mb2>
-<a href=/posts/2021-1-5-vpnandnat/>虚拟专用网络VPN和网络地址转换NAT</a>
-</li>
-</ul>
-</div>
-</aside>
+</footer>
 </article>
 </main>
-<footer class="bg-black bottom-0 w-100 pa3" role=contentinfo>
-<div class="flex justify-between">
-<a class="f4 fw4 hover-white no-underline white-70 dn dib-ns pv2 ph3" href=http://yyf.zone/>
-&copy; Play With YYF 2022
-</a>
-<div>
-<div class=ananke-socials>
-</div></div>
-</div>
+<footer class=footer>
+<span>&copy; 2022 <a href=http://yyf.zone/>Play With YYF</a></span>
+<span>
+Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a>
+</span>
 </footer>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a>
+<script>let menu=document.getElementById('menu');menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener("click",function(b){b.preventDefault();var a=this.getAttribute("href").substr(1);window.matchMedia('(prefers-reduced-motion: reduce)').matches?document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(a)}']`).scrollIntoView({behavior:"smooth"}),a==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${a}`)})})</script>
+<script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script>
+<script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove('dark'),localStorage.setItem("pref-theme",'light')):(document.body.classList.add('dark'),localStorage.setItem("pref-theme",'dark'))})</script>
 </body>
 </html>
