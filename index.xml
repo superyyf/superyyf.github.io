@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>YYF&#39;s Site</title>
+    <title>Play With YYF</title>
     <link>https://yyf.zone/</link>
-    <description>Recent content on YYF&#39;s Site</description>
+    <description>Recent content on Play With YYF</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 19 Feb 2022 20:44:23 +0800</lastBuildDate><atom:link href="https://yyf.zone/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Hello World</title>
-      <link>https://yyf.zone/notes/hello-world/</link>
-      <pubDate>Sat, 19 Feb 2022 20:44:23 +0800</pubDate>
-      
-      <guid>https://yyf.zone/notes/hello-world/</guid>
-      <description>Hello world！</description>
-    </item>
-    
+    <lastBuildDate>Thu, 05 Aug 2021 20:57:04 +0000</lastBuildDate><atom:link href="https://yyf.zone/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>强制类型转换</title>
       <link>https://yyf.zone/notes/2021-8-5-typecast/</link>

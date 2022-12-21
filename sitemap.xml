@@ -2,19 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://yyf.zone/notes/hello-world/</loc>
-    <lastmod>2022-02-19T20:44:23+08:00</lastmod>
-  </url><url>
-    <loc>https://yyf.zone/notes/</loc>
-    <lastmod>2022-02-19T20:44:23+08:00</lastmod>
-  </url><url>
-    <loc>https://yyf.zone/</loc>
-    <lastmod>2022-02-19T20:44:23+08:00</lastmod>
-  </url><url>
     <loc>https://yyf.zone/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2021-08-05T20:57:04+00:00</lastmod>
   </url><url>
     <loc>https://yyf.zone/categories/</loc>
+    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/notes/</loc>
+    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/</loc>
     <lastmod>2021-08-05T20:57:04+00:00</lastmod>
   </url><url>
     <loc>https://yyf.zone/tags/</loc>
@@ -212,7 +209,7 @@
     <loc>https://yyf.zone/notes/2021-1-2-ipmulticast/</loc>
     <lastmod>2021-01-02T18:03:36+00:00</lastmod>
   </url><url>
-    <loc>https://yyf.zone/archives/archives/</loc>
+    <loc>https://yyf.zone/archives/</loc>
   </url><url>
     <loc>https://yyf.zone/archives/</loc>
   </url><url>
