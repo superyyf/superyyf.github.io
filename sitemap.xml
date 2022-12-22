@@ -2,19 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://yyf.zone/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+    <loc>https://yyf.zone/blogs/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+    <priority>0</priority>
   </url><url>
     <loc>https://yyf.zone/categories/</loc>
-    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/categories/rawsocket/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/tags/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/tags/%E5%8D%9A%E5%AE%A2/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2022-12-21T21:11:50+08:00</lastmod>
   </url><url>
     <loc>https://yyf.zone/notes/</loc>
     <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+    <priority>0</priority>
   </url><url>
-    <loc>https://yyf.zone/</loc>
-    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
-  </url><url>
-    <loc>https://yyf.zone/tags/</loc>
+    <loc>https://yyf.zone/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2021-08-05T20:57:04+00:00</lastmod>
   </url><url>
     <loc>https://yyf.zone/categories/%E5%85%B3%E9%94%AE%E5%AD%97/</loc>

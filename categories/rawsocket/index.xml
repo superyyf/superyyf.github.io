@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>rawsocket on Play With YYF</title>
+    <link>https://yyf.zone/categories/rawsocket/</link>
+    <description>Recent content in rawsocket on Play With YYF</description>
+    <image>
+      <url>https://yyf.zone/papermod-cover.png</url>
+      <link>https://yyf.zone/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 21 Dec 2022 21:11:50 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/rawsocket/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>绑定RawSocket与Interface</title>
+      <link>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</link>
+      <pubDate>Wed, 21 Dec 2022 21:11:50 +0800</pubDate>
+      
+      <guid>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</guid>
+      <description>在做以太网的回环测试时，需要实现指定MAC发送RawSocket报文，然后指定MAC接收回环过来的RawSocket报文。这就需要将socket绑定到网络接口（eth0,eth1），rawsocket的绑定方式与其他socket还不一样，研究了一下发现可以通过下面的方式实现。
+从特定网络接口接收raw socket报文 如果是 AF_INET sockets 可以用 setsockopt() 来实现:
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen); /* SO_BINDTODEVICE Bind this socket to a particular device like &amp;#34;eth0&amp;#34;, as specified in the passed interface name. If the name is an empty string or the option length is zero, the socket device binding is removed. The passed option is a variable-length null-terminated interface name string with the maximum size of IFNAMSIZ.</description>
+    </item>
+    
+  </channel>
+</rss>
