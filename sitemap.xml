@@ -4,7 +4,6 @@
   <url>
     <loc>https://yyf.zone/blogs/</loc>
     <lastmod>2022-12-21T21:11:50+08:00</lastmod>
-    <priority>0</priority>
   </url><url>
     <loc>https://yyf.zone/categories/</loc>
     <lastmod>2022-12-21T21:11:50+08:00</lastmod>
@@ -27,11 +26,10 @@
     <loc>https://yyf.zone/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/</loc>
     <lastmod>2022-12-21T21:11:50+08:00</lastmod>
   </url><url>
-    <loc>https://yyf.zone/notes/</loc>
-    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
-    <priority>0</priority>
-  </url><url>
     <loc>https://yyf.zone/categories/c&#43;&#43;%E5%9F%BA%E7%A1%80/</loc>
+    <lastmod>2021-08-05T20:57:04+00:00</lastmod>
+  </url><url>
+    <loc>https://yyf.zone/notes/</loc>
     <lastmod>2021-08-05T20:57:04+00:00</lastmod>
   </url><url>
     <loc>https://yyf.zone/categories/%E5%85%B3%E9%94%AE%E5%AD%97/</loc>
@@ -226,12 +224,12 @@
     <loc>https://yyf.zone/notes/2021-1-2-ipmulticast/</loc>
     <lastmod>2021-01-02T18:03:36+00:00</lastmod>
   </url><url>
-    <loc>https://yyf.zone/archives/</loc>
+    <loc>https://yyf.zone/categories/</loc>
+    <priority>0</priority>
   </url><url>
     <loc>https://yyf.zone/archives/</loc>
   </url><url>
     <loc>https://yyf.zone/search/</loc>
-    <priority>0.1</priority>
   </url><url>
     <loc>https://yyf.zone/series/</loc>
   </url><url>
