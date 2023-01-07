@@ -9,7 +9,25 @@
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 21 Dec 2022 21:11:50 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Jan 2023 21:02:47 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux内核模块</title>
+      <link>https://yyf.zone/categories/linux%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/</link>
+      <pubDate>Sat, 07 Jan 2023 21:02:47 +0800</pubDate>
+      
+      <guid>https://yyf.zone/categories/linux%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux设备驱动开发详解</title>
+      <link>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/</link>
+      <pubDate>Sat, 07 Jan 2023 21:02:47 +0800</pubDate>
+      
+      <guid>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>rawsocket</title>
       <link>https://yyf.zone/categories/rawsocket/</link>
