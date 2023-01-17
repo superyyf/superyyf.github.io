@@ -1,0 +1,346 @@
+<!doctype html><html lang=cn dir=auto><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>sysfs文件系统与Linux设备模型 | Play With YYF</title><meta name=keywords content="笔记"><meta name=description content="sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。
+sysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。"><meta name=author content="Ye Yunfei"><link rel=canonical href=https://yyf.zone/notes/2023-1-17-linux-sysfs/><link crossorigin=anonymous href=/assets/css/stylesheet.min.c88963fe2d79462000fd0fb1b3737783c32855d340583e4523343f8735c787f0.css integrity="sha256-yIlj/i15RiAA/Q+xs3N3g8MoVdNAWD5FIzQ/hzXHh/A=" rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.min.b95bacdc39e37a332a9f883b1e78be4abc1fdca2bc1f2641f55e3cd3dabd4d61.js integrity="sha256-uVus3DnjejMqn4g7Hni+Srwf3KK8HyZB9V4809q9TWE=" onload=hljs.initHighlightingOnLoad()></script>
+<link rel=icon href=https://yyf.zone/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://yyf.zone/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://yyf.zone/favicon-32x32.png><link rel=apple-touch-icon href=https://yyf.zone/apple-touch-icon.png><link rel=mask-icon href=https://yyf.zone/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:title" content="sysfs文件系统与Linux设备模型"><meta property="og:description" content="sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。
+sysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。"><meta property="og:type" content="article"><meta property="og:url" content="https://yyf.zone/notes/2023-1-17-linux-sysfs/"><meta property="og:image" content="https://yyf.zone/papermod-cover.png"><meta property="article:section" content="notes"><meta property="article:published_time" content="2023-01-17T22:03:55+08:00"><meta property="article:modified_time" content="2023-01-17T22:03:55+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://yyf.zone/papermod-cover.png"><meta name=twitter:title content="sysfs文件系统与Linux设备模型"><meta name=twitter:description content="sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。
+sysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Notes","item":"https://yyf.zone/notes/"},{"@type":"ListItem","position":2,"name":"sysfs文件系统与Linux设备模型","item":"https://yyf.zone/notes/2023-1-17-linux-sysfs/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"sysfs文件系统与Linux设备模型","name":"sysfs文件系统与Linux设备模型","description":"sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。\nsysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。\n","keywords":["笔记"],"articleBody":"sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。\nsysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。\n../sys ├── block\t├── bus\t├── class ├── dev\t├── devices ├── firmware ├── fs ├── hypervisor ├── kernel ├── module └── power Linux2.6以后的内核开发了上述全新的设备、总线、类和驱动环环相扣的设备模型，内核中的总线和其他内核子系统会完成与设备模型的交互。在linux内核中，分别使用bus_type、device_driver和device结构体来描述总线、驱动和设备。\n/** * struct bus_type - The bus type of the device * * @name:\tThe name of the bus. * @dev_name:\tUsed for subsystems to enumerate devices like (\"foo%u\", dev-\u003eid). * @dev_root:\tDefault device to use as the parent. * @bus_groups:\tDefault attributes of the bus. * @dev_groups:\tDefault attributes of the devices on the bus. * @drv_groups: Default attributes of the device drivers on the bus. * @match:\tCalled, perhaps multiple times, whenever a new device or driver *\tis added for this bus. It should return a positive value if the *\tgiven device can be handled by the given driver and zero *\totherwise. It may also return error code if determining that *\tthe driver supports the device is not possible. In case of *\t-EPROBE_DEFER it will queue the device for deferred probing. * @uevent:\tCalled when a device is added, removed, or a few other things *\tthat generate uevents to add the environment variables. * @probe:\tCalled when a new device or driver add to this bus, and callback *\tthe specific driver's probe to initial the matched device. * @remove:\tCalled when a device removed from this bus. * @shutdown:\tCalled at shut-down time to quiesce the device. * * @online:\tCalled to put the device back online (after offlining it). * @offline:\tCalled to put the device offline for hot-removal. May fail. * * @suspend:\tCalled when a device on this bus wants to go to sleep mode. * @resume:\tCalled to bring a device on this bus out of sleep mode. * @num_vf:\tCalled to find out how many virtual functions a device on this *\tbus supports. * @dma_configure:\tCalled to setup DMA configuration on a device on *\tthis bus. * @pm:\tPower management operations of this bus, callback the specific *\tdevice driver's pm-ops. * @iommu_ops: IOMMU specific operations for this bus, used to attach IOMMU * driver implementations to a bus and allow the driver to do * bus-specific setup * @p:\tThe private data of the driver core, only the driver core can *\ttouch this. * @lock_key:\tLock class key for use by the lock validator * @need_parent_lock:\tWhen probing or removing a device on this bus, the *\tdevice core should lock the device's parent. * * A bus is a channel between the processor and one or more devices. For the * purposes of the device model, all devices are connected via a bus, even if * it is an internal, virtual, \"platform\" bus. Buses can plug into each other. * A USB controller is usually a PCI device, for example. The device model * represents the actual connections between buses and the devices they control. * A bus is represented by the bus_type structure. It contains the name, the * default attributes, the bus' methods, PM operations, and the driver core's * private data. */ struct bus_type { const char\t*name; const char\t*dev_name; struct device\t*dev_root; const struct attribute_group **bus_groups; const struct attribute_group **dev_groups; const struct attribute_group **drv_groups; int (*match)(struct device *dev, struct device_driver *drv); int (*uevent)(struct device *dev, struct kobj_uevent_env *env); int (*probe)(struct device *dev); int (*remove)(struct device *dev); void (*shutdown)(struct device *dev); int (*online)(struct device *dev); int (*offline)(struct device *dev); int (*suspend)(struct device *dev, pm_message_t state); int (*resume)(struct device *dev); int (*num_vf)(struct device *dev); int (*dma_configure)(struct device *dev); const struct dev_pm_ops *pm; const struct iommu_ops *iommu_ops; struct subsys_private *p; struct lock_class_key lock_key; bool need_parent_lock; }; /** * struct device_driver - The basic device driver structure * @name:\tName of the device driver. * @bus:\tThe bus which the device of this driver belongs to. * @owner:\tThe module owner. * @mod_name:\tUsed for built-in modules. * @suppress_bind_attrs: Disables bind/unbind via sysfs. * @probe_type:\tType of the probe (synchronous or asynchronous) to use. * @of_match_table: The open firmware table. * @acpi_match_table: The ACPI match table. * @probe:\tCalled to query the existence of a specific device, *\twhether this driver can work with it, and bind the driver *\tto a specific device. * @remove:\tCalled when the device is removed from the system to *\tunbind a device from this driver. * @shutdown:\tCalled at shut-down time to quiesce the device. * @suspend:\tCalled to put the device to sleep mode. Usually to a *\tlow power state. * @resume:\tCalled to bring a device from sleep mode. * @groups:\tDefault attributes that get created by the driver core *\tautomatically. * @dev_groups:\tAdditional attributes attached to device instance once the *\tit is bound to the driver. * @pm:\tPower management operations of the device which matched *\tthis driver. * @coredump:\tCalled when sysfs entry is written to. The device driver *\tis expected to call the dev_coredump API resulting in a *\tuevent. * @p:\tDriver core's private data, no one other than the driver *\tcore can touch this. * * The device driver-model tracks all of the drivers known to the system. * The main reason for this tracking is to enable the driver core to match * up drivers with new devices. Once drivers are known objects within the * system, however, a number of other things become possible. Device drivers * can export information and configuration variables that are independent * of any specific device. */ struct device_driver { const char\t*name; struct bus_type\t*bus; struct module\t*owner; const char\t*mod_name;\t/* used for built-in modules */ bool suppress_bind_attrs;\t/* disables bind/unbind via sysfs */ enum probe_type probe_type; const struct of_device_id\t*of_match_table; const struct acpi_device_id\t*acpi_match_table; int (*probe) (struct device *dev); int (*remove) (struct device *dev); void (*shutdown) (struct device *dev); int (*suspend) (struct device *dev, pm_message_t state); int (*resume) (struct device *dev); const struct attribute_group **groups; const struct attribute_group **dev_groups; const struct dev_pm_ops *pm; void (*coredump) (struct device *dev); struct driver_private *p; }; /** * struct device - The basic device structure * @parent:\tThe device's \"parent\" device, the device to which it is attached. * In most cases, a parent device is some sort of bus or host * controller. If parent is NULL, the device, is a top-level device, * which is not usually what you want. * @p:\tHolds the private data of the driver core portions of the device. * See the comment of the struct device_private for detail. * @kobj:\tA top-level, abstract class from which other classes are derived. * @init_name:\tInitial name of the device. * @type:\tThe type of device. * This identifies the device type and carries type-specific * information. * @mutex:\tMutex to synchronize calls to its driver. * @lockdep_mutex: An optional debug lock that a subsystem can use as a * peer lock to gain localized lockdep coverage of the device_lock. * @bus:\tType of bus device is on. * @driver:\tWhich driver has allocated this * @platform_data: Platform data specific to the device. * Example: For devices on custom boards, as typical of embedded * and SOC based hardware, Linux often uses platform_data to point * to board-specific structures describing devices and how they * are wired. That can include what ports are available, chip * variants, which GPIO pins act in what additional roles, and so * on. This shrinks the \"Board Support Packages\" (BSPs) and * minimizes board-specific #ifdefs in drivers. * @driver_data: Private pointer for driver specific info. * @links:\tLinks to suppliers and consumers of this device. * @power:\tFor device power management. *\tSee Documentation/driver-api/pm/devices.rst for details. * @pm_domain:\tProvide callbacks that are executed during system suspend, * hibernation, system resume and during runtime PM transitions * along with subsystem-level and driver-level callbacks. * @pins:\tFor device pin management. *\tSee Documentation/driver-api/pinctl.rst for details. * @msi_list:\tHosts MSI descriptors * @msi_domain: The generic MSI domain this device is using. * @numa_node:\tNUMA node this device is close to. * @dma_ops: DMA mapping operations for this device. * @dma_mask:\tDma mask (if dma'ble device). * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all * hardware supports 64-bit addresses for consistent allocations * such descriptors. * @bus_dma_mask: Mask of an upstream bridge or bus which imposes a smaller DMA *\tlimit than the device itself supports. * @dma_pfn_offset: offset of DMA memory range relatively of RAM * @dma_parms:\tA low level driver may set these to teach IOMMU code about * segment limitations. * @dma_pools:\tDma pools (if dma'ble device). * @dma_mem:\tInternal for coherent mem override. * @cma_area:\tContiguous memory area for dma allocations * @archdata:\tFor arch-specific additions. * @of_node:\tAssociated device tree node. * @fwnode:\tAssociated device node supplied by platform firmware. * @devt:\tFor creating the sysfs \"dev\". * @id:\tdevice instance * @devres_lock: Spinlock to protect the resource of the device. * @devres_head: The resources list of the device. * @knode_class: The node used to add the device to the class list. * @class:\tThe class of the device. * @groups:\tOptional attribute groups. * @release:\tCallback to free the device after all references have * gone away. This should be set by the allocator of the * device (i.e. the bus driver that discovered the device). * @iommu_group: IOMMU group the device belongs to. * @iommu_fwspec: IOMMU-specific properties supplied by firmware. * @iommu_param: Per device generic IOMMU runtime data * * @offline_disabled: If set, the device is permanently online. * @offline:\tSet after successful invocation of bus type's .offline(). * @of_node_reused: Set if the device-tree node is shared with an ancestor * device. * @dma_coherent: this particular device is dma coherent, even if the *\tarchitecture supports non-coherent devices. * * At the lowest level, every device in a Linux system is represented by an * instance of struct device. The device structure contains the information * that the device model core needs to model the system. Most subsystems, * however, track additional information about the devices they host. As a * result, it is rare for devices to be represented by bare device structures; * instead, that structure, like kobject structures, is usually embedded within * a higher-level representation of the device. */ struct device { struct kobject kobj; struct device\t*parent; struct device_private\t*p; const char\t*init_name; /* initial name of the device */ const struct device_type *type; struct bus_type\t*bus;\t/* type of bus device is on */ struct device_driver *driver;\t/* which driver has allocated this device */ void\t*platform_data;\t/* Platform specific data, device core doesn't touch it */ void\t*driver_data;\t/* Driver data, set and get with dev_set_drvdata/dev_get_drvdata */ #ifdef CONFIG_PROVE_LOCKING struct mutex\tlockdep_mutex; #endif struct mutex\tmutex;\t/* mutex to synchronize calls to * its driver. */ struct dev_links_info\tlinks; struct dev_pm_info\tpower; struct dev_pm_domain\t*pm_domain; #ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN struct irq_domain\t*msi_domain; #endif #ifdef CONFIG_PINCTRL struct dev_pin_info\t*pins; #endif #ifdef CONFIG_GENERIC_MSI_IRQ raw_spinlock_t\tmsi_lock; struct list_head\tmsi_list; #endif const struct dma_map_ops *dma_ops; u64\t*dma_mask;\t/* dma mask (if dma'able device) */ u64\tcoherent_dma_mask;/* Like dma_mask, but for alloc_coherent mappings as not all hardware supports 64 bit addresses for consistent allocations such descriptors. */ u64\tbus_dma_mask;\t/* upstream dma_mask constraint */ unsigned long\tdma_pfn_offset; struct device_dma_parameters *dma_parms; struct list_head\tdma_pools;\t/* dma pools (if dma'ble) */ #ifdef CONFIG_DMA_DECLARE_COHERENT struct dma_coherent_mem\t*dma_mem; /* internal for coherent mem override */ #endif #ifdef CONFIG_DMA_CMA struct cma *cma_area;\t/* contiguous memory area for dma allocations */ #endif /* arch specific additions */ struct dev_archdata\tarchdata; struct device_node\t*of_node; /* associated device tree node */ struct fwnode_handle\t*fwnode; /* firmware device node */ #ifdef CONFIG_NUMA int\tnuma_node;\t/* NUMA node this device is close to */ #endif dev_t\tdevt;\t/* dev_t, creates the sysfs \"dev\" */ u32\tid;\t/* device instance */ spinlock_t\tdevres_lock; struct list_head\tdevres_head; struct class\t*class; const struct attribute_group **groups;\t/* optional groups */ void\t(*release)(struct device *dev); struct iommu_group\t*iommu_group; struct iommu_fwspec\t*iommu_fwspec; struct iommu_param\t*iommu_param; bool\toffline_disabled:1; bool\toffline:1; bool\tof_node_reused:1; #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \\ defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \\ defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) bool\tdma_coherent:1; #endif }; device_driver和device必须依附于一种总线，因此都包含struct bus_type指针。在linux内核中，设备和驱动是分开注册的，注册设备时不需要驱动存在，反之亦然。而每个设备和驱动涌入内核的时候，都会去寻找自己的另一半，而正是bus_type的match()成员函数将两者捆绑在一起。\n总线、驱动和设备最终都会落实为sysfs中的一个目录，它们实际上都可以认为是kobject的派生类。总线、驱动和设备中的attribute则落实为sysfs中的一个文件。\n参考：《Linux设备驱动开发详解》\n","wordCount":"2011","inLanguage":"cn","datePublished":"2023-01-17T22:03:55+08:00","dateModified":"2023-01-17T22:03:55+08:00","author":{"@type":"Person","name":"Ye Yunfei"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://yyf.zone/notes/2023-1-17-linux-sysfs/"},"publisher":{"@type":"Organization","name":"Play With YYF","logo":{"@type":"ImageObject","url":"https://yyf.zone/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://yyf.zone/ accesskey=h title="Play With YYF (Alt + H)">Play With YYF</a>
+<span class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></span></div><ul id=menu><li><a href=https://yyf.zone/search/ title=搜索><span>搜索</span></a></li><li><a href=https://yyf.zone/archives/ title=归档><span>归档</span></a></li><li><a href=https://yyf.zone/categories/ title=分类><span>分类</span></a></li><li><a href=https://yyf.zone/tags/ title=标签><span>标签</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://yyf.zone/>Home</a>&nbsp;»&nbsp;<a href=https://yyf.zone/notes/>Notes</a></div><h1 class=post-title>sysfs文件系统与Linux设备模型</h1><div class=post-meta><span title='2023-01-17 22:03:55 +0800 +0800'>January 17, 2023</span>&nbsp;·&nbsp;10 min&nbsp;·&nbsp;Ye Yunfei</div></header><div class=post-content><p>sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。<br>sysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>../sys
+</span></span><span class=line><span class=cl>├── block	
+</span></span><span class=line><span class=cl>├── bus		
+</span></span><span class=line><span class=cl>├── class
+</span></span><span class=line><span class=cl>├── dev		
+</span></span><span class=line><span class=cl>├── devices
+</span></span><span class=line><span class=cl>├── firmware
+</span></span><span class=line><span class=cl>├── fs
+</span></span><span class=line><span class=cl>├── hypervisor
+</span></span><span class=line><span class=cl>├── kernel
+</span></span><span class=line><span class=cl>├── module
+</span></span><span class=line><span class=cl>└── power
+</span></span></code></pre></div><p>Linux2.6以后的内核开发了上述全新的设备、总线、类和驱动环环相扣的设备模型，内核中的总线和其他内核子系统会完成与设备模型的交互。在linux内核中，分别使用bus_type、device_driver和device结构体来描述总线、驱动和设备。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * struct bus_type - The bus type of the device
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * @name:	The name of the bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dev_name:	Used for subsystems to enumerate devices like (&#34;foo%u&#34;, dev-&gt;id).
+</span></span></span><span class=line><span class=cl><span class=cm> * @dev_root:	Default device to use as the parent.
+</span></span></span><span class=line><span class=cl><span class=cm> * @bus_groups:	Default attributes of the bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dev_groups:	Default attributes of the devices on the bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @drv_groups: Default attributes of the device drivers on the bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @match:	Called, perhaps multiple times, whenever a new device or driver
+</span></span></span><span class=line><span class=cl><span class=cm> *		is added for this bus. It should return a positive value if the
+</span></span></span><span class=line><span class=cl><span class=cm> *		given device can be handled by the given driver and zero
+</span></span></span><span class=line><span class=cl><span class=cm> *		otherwise. It may also return error code if determining that
+</span></span></span><span class=line><span class=cl><span class=cm> *		the driver supports the device is not possible. In case of
+</span></span></span><span class=line><span class=cl><span class=cm> *		-EPROBE_DEFER it will queue the device for deferred probing.
+</span></span></span><span class=line><span class=cl><span class=cm> * @uevent:	Called when a device is added, removed, or a few other things
+</span></span></span><span class=line><span class=cl><span class=cm> *		that generate uevents to add the environment variables.
+</span></span></span><span class=line><span class=cl><span class=cm> * @probe:	Called when a new device or driver add to this bus, and callback
+</span></span></span><span class=line><span class=cl><span class=cm> *		the specific driver&#39;s probe to initial the matched device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @remove:	Called when a device removed from this bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @shutdown:	Called at shut-down time to quiesce the device.
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * @online:	Called to put the device back online (after offlining it).
+</span></span></span><span class=line><span class=cl><span class=cm> * @offline:	Called to put the device offline for hot-removal. May fail.
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * @suspend:	Called when a device on this bus wants to go to sleep mode.
+</span></span></span><span class=line><span class=cl><span class=cm> * @resume:	Called to bring a device on this bus out of sleep mode.
+</span></span></span><span class=line><span class=cl><span class=cm> * @num_vf:	Called to find out how many virtual functions a device on this
+</span></span></span><span class=line><span class=cl><span class=cm> *		bus supports.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_configure:	Called to setup DMA configuration on a device on
+</span></span></span><span class=line><span class=cl><span class=cm> *			this bus.
+</span></span></span><span class=line><span class=cl><span class=cm> * @pm:		Power management operations of this bus, callback the specific
+</span></span></span><span class=line><span class=cl><span class=cm> *		device driver&#39;s pm-ops.
+</span></span></span><span class=line><span class=cl><span class=cm> * @iommu_ops:  IOMMU specific operations for this bus, used to attach IOMMU
+</span></span></span><span class=line><span class=cl><span class=cm> *              driver implementations to a bus and allow the driver to do
+</span></span></span><span class=line><span class=cl><span class=cm> *              bus-specific setup
+</span></span></span><span class=line><span class=cl><span class=cm> * @p:		The private data of the driver core, only the driver core can
+</span></span></span><span class=line><span class=cl><span class=cm> *		touch this.
+</span></span></span><span class=line><span class=cl><span class=cm> * @lock_key:	Lock class key for use by the lock validator
+</span></span></span><span class=line><span class=cl><span class=cm> * @need_parent_lock:	When probing or removing a device on this bus, the
+</span></span></span><span class=line><span class=cl><span class=cm> *			device core should lock the device&#39;s parent.
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * A bus is a channel between the processor and one or more devices. For the
+</span></span></span><span class=line><span class=cl><span class=cm> * purposes of the device model, all devices are connected via a bus, even if
+</span></span></span><span class=line><span class=cl><span class=cm> * it is an internal, virtual, &#34;platform&#34; bus. Buses can plug into each other.
+</span></span></span><span class=line><span class=cl><span class=cm> * A USB controller is usually a PCI device, for example. The device model
+</span></span></span><span class=line><span class=cl><span class=cm> * represents the actual connections between buses and the devices they control.
+</span></span></span><span class=line><span class=cl><span class=cm> * A bus is represented by the bus_type structure. It contains the name, the
+</span></span></span><span class=line><span class=cl><span class=cm> * default attributes, the bus&#39; methods, PM operations, and the driver core&#39;s
+</span></span></span><span class=line><span class=cl><span class=cm> * private data.
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=n>bus_type</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=kt>char</span>		<span class=o>*</span><span class=n>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=kt>char</span>		<span class=o>*</span><span class=n>dev_name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device</span>		<span class=o>*</span><span class=n>dev_root</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>bus_groups</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>dev_groups</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>drv_groups</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>match</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>,</span> <span class=k>struct</span> <span class=n>device_driver</span> <span class=o>*</span><span class=n>drv</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>uevent</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>,</span> <span class=k>struct</span> <span class=n>kobj_uevent_env</span> <span class=o>*</span><span class=n>env</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>probe</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>remove</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>shutdown</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>online</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>offline</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>suspend</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>,</span> <span class=kt>pm_message_t</span> <span class=n>state</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>resume</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>num_vf</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>dma_configure</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>dev_pm_ops</span> <span class=o>*</span><span class=n>pm</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>iommu_ops</span> <span class=o>*</span><span class=n>iommu_ops</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>subsys_private</span> <span class=o>*</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>lock_class_key</span> <span class=n>lock_key</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span> <span class=n>need_parent_lock</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * struct device_driver - The basic device driver structure
+</span></span></span><span class=line><span class=cl><span class=cm> * @name:	Name of the device driver.
+</span></span></span><span class=line><span class=cl><span class=cm> * @bus:	The bus which the device of this driver belongs to.
+</span></span></span><span class=line><span class=cl><span class=cm> * @owner:	The module owner.
+</span></span></span><span class=line><span class=cl><span class=cm> * @mod_name:	Used for built-in modules.
+</span></span></span><span class=line><span class=cl><span class=cm> * @suppress_bind_attrs: Disables bind/unbind via sysfs.
+</span></span></span><span class=line><span class=cl><span class=cm> * @probe_type:	Type of the probe (synchronous or asynchronous) to use.
+</span></span></span><span class=line><span class=cl><span class=cm> * @of_match_table: The open firmware table.
+</span></span></span><span class=line><span class=cl><span class=cm> * @acpi_match_table: The ACPI match table.
+</span></span></span><span class=line><span class=cl><span class=cm> * @probe:	Called to query the existence of a specific device,
+</span></span></span><span class=line><span class=cl><span class=cm> *		whether this driver can work with it, and bind the driver
+</span></span></span><span class=line><span class=cl><span class=cm> *		to a specific device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @remove:	Called when the device is removed from the system to
+</span></span></span><span class=line><span class=cl><span class=cm> *		unbind a device from this driver.
+</span></span></span><span class=line><span class=cl><span class=cm> * @shutdown:	Called at shut-down time to quiesce the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @suspend:	Called to put the device to sleep mode. Usually to a
+</span></span></span><span class=line><span class=cl><span class=cm> *		low power state.
+</span></span></span><span class=line><span class=cl><span class=cm> * @resume:	Called to bring a device from sleep mode.
+</span></span></span><span class=line><span class=cl><span class=cm> * @groups:	Default attributes that get created by the driver core
+</span></span></span><span class=line><span class=cl><span class=cm> *		automatically.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dev_groups:	Additional attributes attached to device instance once the
+</span></span></span><span class=line><span class=cl><span class=cm> *		it is bound to the driver.
+</span></span></span><span class=line><span class=cl><span class=cm> * @pm:		Power management operations of the device which matched
+</span></span></span><span class=line><span class=cl><span class=cm> *		this driver.
+</span></span></span><span class=line><span class=cl><span class=cm> * @coredump:	Called when sysfs entry is written to. The device driver
+</span></span></span><span class=line><span class=cl><span class=cm> *		is expected to call the dev_coredump API resulting in a
+</span></span></span><span class=line><span class=cl><span class=cm> *		uevent.
+</span></span></span><span class=line><span class=cl><span class=cm> * @p:		Driver core&#39;s private data, no one other than the driver
+</span></span></span><span class=line><span class=cl><span class=cm> *		core can touch this.
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * The device driver-model tracks all of the drivers known to the system.
+</span></span></span><span class=line><span class=cl><span class=cm> * The main reason for this tracking is to enable the driver core to match
+</span></span></span><span class=line><span class=cl><span class=cm> * up drivers with new devices. Once drivers are known objects within the
+</span></span></span><span class=line><span class=cl><span class=cm> * system, however, a number of other things become possible. Device drivers
+</span></span></span><span class=line><span class=cl><span class=cm> * can export information and configuration variables that are independent
+</span></span></span><span class=line><span class=cl><span class=cm> * of any specific device.
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=n>device_driver</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=kt>char</span>		<span class=o>*</span><span class=n>name</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>bus_type</span>		<span class=o>*</span><span class=n>bus</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>module</span>		<span class=o>*</span><span class=n>owner</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=kt>char</span>		<span class=o>*</span><span class=n>mod_name</span><span class=p>;</span>	<span class=cm>/* used for built-in modules */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span> <span class=n>suppress_bind_attrs</span><span class=p>;</span>	<span class=cm>/* disables bind/unbind via sysfs */</span>
+</span></span><span class=line><span class=cl>	<span class=k>enum</span> <span class=n>probe_type</span> <span class=n>probe_type</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>of_device_id</span>	<span class=o>*</span><span class=n>of_match_table</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>acpi_device_id</span>	<span class=o>*</span><span class=n>acpi_match_table</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>probe</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>remove</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>shutdown</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>suspend</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>,</span> <span class=kt>pm_message_t</span> <span class=n>state</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=kt>int</span> <span class=p>(</span><span class=o>*</span><span class=n>resume</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>groups</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>dev_groups</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>dev_pm_ops</span> <span class=o>*</span><span class=n>pm</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>coredump</span><span class=p>)</span> <span class=p>(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>driver_private</span> <span class=o>*</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * struct device - The basic device structure
+</span></span></span><span class=line><span class=cl><span class=cm> * @parent:	The device&#39;s &#34;parent&#34; device, the device to which it is attached.
+</span></span></span><span class=line><span class=cl><span class=cm> * 		In most cases, a parent device is some sort of bus or host
+</span></span></span><span class=line><span class=cl><span class=cm> * 		controller. If parent is NULL, the device, is a top-level device,
+</span></span></span><span class=line><span class=cl><span class=cm> * 		which is not usually what you want.
+</span></span></span><span class=line><span class=cl><span class=cm> * @p:		Holds the private data of the driver core portions of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * 		See the comment of the struct device_private for detail.
+</span></span></span><span class=line><span class=cl><span class=cm> * @kobj:	A top-level, abstract class from which other classes are derived.
+</span></span></span><span class=line><span class=cl><span class=cm> * @init_name:	Initial name of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @type:	The type of device.
+</span></span></span><span class=line><span class=cl><span class=cm> * 		This identifies the device type and carries type-specific
+</span></span></span><span class=line><span class=cl><span class=cm> * 		information.
+</span></span></span><span class=line><span class=cl><span class=cm> * @mutex:	Mutex to synchronize calls to its driver.
+</span></span></span><span class=line><span class=cl><span class=cm> * @lockdep_mutex: An optional debug lock that a subsystem can use as a
+</span></span></span><span class=line><span class=cl><span class=cm> * 		peer lock to gain localized lockdep coverage of the device_lock.
+</span></span></span><span class=line><span class=cl><span class=cm> * @bus:	Type of bus device is on.
+</span></span></span><span class=line><span class=cl><span class=cm> * @driver:	Which driver has allocated this
+</span></span></span><span class=line><span class=cl><span class=cm> * @platform_data: Platform data specific to the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * 		Example: For devices on custom boards, as typical of embedded
+</span></span></span><span class=line><span class=cl><span class=cm> * 		and SOC based hardware, Linux often uses platform_data to point
+</span></span></span><span class=line><span class=cl><span class=cm> * 		to board-specific structures describing devices and how they
+</span></span></span><span class=line><span class=cl><span class=cm> * 		are wired.  That can include what ports are available, chip
+</span></span></span><span class=line><span class=cl><span class=cm> * 		variants, which GPIO pins act in what additional roles, and so
+</span></span></span><span class=line><span class=cl><span class=cm> * 		on.  This shrinks the &#34;Board Support Packages&#34; (BSPs) and
+</span></span></span><span class=line><span class=cl><span class=cm> * 		minimizes board-specific #ifdefs in drivers.
+</span></span></span><span class=line><span class=cl><span class=cm> * @driver_data: Private pointer for driver specific info.
+</span></span></span><span class=line><span class=cl><span class=cm> * @links:	Links to suppliers and consumers of this device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @power:	For device power management.
+</span></span></span><span class=line><span class=cl><span class=cm> *		See Documentation/driver-api/pm/devices.rst for details.
+</span></span></span><span class=line><span class=cl><span class=cm> * @pm_domain:	Provide callbacks that are executed during system suspend,
+</span></span></span><span class=line><span class=cl><span class=cm> * 		hibernation, system resume and during runtime PM transitions
+</span></span></span><span class=line><span class=cl><span class=cm> * 		along with subsystem-level and driver-level callbacks.
+</span></span></span><span class=line><span class=cl><span class=cm> * @pins:	For device pin management.
+</span></span></span><span class=line><span class=cl><span class=cm> *		See Documentation/driver-api/pinctl.rst for details.
+</span></span></span><span class=line><span class=cl><span class=cm> * @msi_list:	Hosts MSI descriptors
+</span></span></span><span class=line><span class=cl><span class=cm> * @msi_domain: The generic MSI domain this device is using.
+</span></span></span><span class=line><span class=cl><span class=cm> * @numa_node:	NUMA node this device is close to.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_ops:    DMA mapping operations for this device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_mask:	Dma mask (if dma&#39;ble device).
+</span></span></span><span class=line><span class=cl><span class=cm> * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
+</span></span></span><span class=line><span class=cl><span class=cm> * 		hardware supports 64-bit addresses for consistent allocations
+</span></span></span><span class=line><span class=cl><span class=cm> * 		such descriptors.
+</span></span></span><span class=line><span class=cl><span class=cm> * @bus_dma_mask: Mask of an upstream bridge or bus which imposes a smaller DMA
+</span></span></span><span class=line><span class=cl><span class=cm> *		limit than the device itself supports.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_pfn_offset: offset of DMA memory range relatively of RAM
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_parms:	A low level driver may set these to teach IOMMU code about
+</span></span></span><span class=line><span class=cl><span class=cm> * 		segment limitations.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_pools:	Dma pools (if dma&#39;ble device).
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_mem:	Internal for coherent mem override.
+</span></span></span><span class=line><span class=cl><span class=cm> * @cma_area:	Contiguous memory area for dma allocations
+</span></span></span><span class=line><span class=cl><span class=cm> * @archdata:	For arch-specific additions.
+</span></span></span><span class=line><span class=cl><span class=cm> * @of_node:	Associated device tree node.
+</span></span></span><span class=line><span class=cl><span class=cm> * @fwnode:	Associated device node supplied by platform firmware.
+</span></span></span><span class=line><span class=cl><span class=cm> * @devt:	For creating the sysfs &#34;dev&#34;.
+</span></span></span><span class=line><span class=cl><span class=cm> * @id:		device instance
+</span></span></span><span class=line><span class=cl><span class=cm> * @devres_lock: Spinlock to protect the resource of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @devres_head: The resources list of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @knode_class: The node used to add the device to the class list.
+</span></span></span><span class=line><span class=cl><span class=cm> * @class:	The class of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @groups:	Optional attribute groups.
+</span></span></span><span class=line><span class=cl><span class=cm> * @release:	Callback to free the device after all references have
+</span></span></span><span class=line><span class=cl><span class=cm> * 		gone away. This should be set by the allocator of the
+</span></span></span><span class=line><span class=cl><span class=cm> * 		device (i.e. the bus driver that discovered the device).
+</span></span></span><span class=line><span class=cl><span class=cm> * @iommu_group: IOMMU group the device belongs to.
+</span></span></span><span class=line><span class=cl><span class=cm> * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
+</span></span></span><span class=line><span class=cl><span class=cm> * @iommu_param: Per device generic IOMMU runtime data
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * @offline_disabled: If set, the device is permanently online.
+</span></span></span><span class=line><span class=cl><span class=cm> * @offline:	Set after successful invocation of bus type&#39;s .offline().
+</span></span></span><span class=line><span class=cl><span class=cm> * @of_node_reused: Set if the device-tree node is shared with an ancestor
+</span></span></span><span class=line><span class=cl><span class=cm> *              device.
+</span></span></span><span class=line><span class=cl><span class=cm> * @dma_coherent: this particular device is dma coherent, even if the
+</span></span></span><span class=line><span class=cl><span class=cm> *		architecture supports non-coherent devices.
+</span></span></span><span class=line><span class=cl><span class=cm> *
+</span></span></span><span class=line><span class=cl><span class=cm> * At the lowest level, every device in a Linux system is represented by an
+</span></span></span><span class=line><span class=cl><span class=cm> * instance of struct device. The device structure contains the information
+</span></span></span><span class=line><span class=cl><span class=cm> * that the device model core needs to model the system. Most subsystems,
+</span></span></span><span class=line><span class=cl><span class=cm> * however, track additional information about the devices they host. As a
+</span></span></span><span class=line><span class=cl><span class=cm> * result, it is rare for devices to be represented by bare device structures;
+</span></span></span><span class=line><span class=cl><span class=cm> * instead, that structure, like kobject structures, is usually embedded within
+</span></span></span><span class=line><span class=cl><span class=cm> * a higher-level representation of the device.
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=n>device</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>kobject</span> <span class=n>kobj</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device</span>		<span class=o>*</span><span class=n>parent</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device_private</span>	<span class=o>*</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=kt>char</span>		<span class=o>*</span><span class=n>init_name</span><span class=p>;</span> <span class=cm>/* initial name of the device */</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>device_type</span> <span class=o>*</span><span class=n>type</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>bus_type</span>	<span class=o>*</span><span class=n>bus</span><span class=p>;</span>		<span class=cm>/* type of bus device is on */</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device_driver</span> <span class=o>*</span><span class=n>driver</span><span class=p>;</span>	<span class=cm>/* which driver has allocated this
+</span></span></span><span class=line><span class=cl><span class=cm>					   device */</span>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span>		<span class=o>*</span><span class=n>platform_data</span><span class=p>;</span>	<span class=cm>/* Platform specific data, device
+</span></span></span><span class=line><span class=cl><span class=cm>					   core doesn&#39;t touch it */</span>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span>		<span class=o>*</span><span class=n>driver_data</span><span class=p>;</span>	<span class=cm>/* Driver data, set and get with
+</span></span></span><span class=line><span class=cl><span class=cm>					   dev_set_drvdata/dev_get_drvdata */</span>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_PROVE_LOCKING
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>mutex</span>		<span class=n>lockdep_mutex</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>mutex</span>		<span class=n>mutex</span><span class=p>;</span>	<span class=cm>/* mutex to synchronize calls to
+</span></span></span><span class=line><span class=cl><span class=cm>					 * its driver.
+</span></span></span><span class=line><span class=cl><span class=cm>					 */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>dev_links_info</span>	<span class=n>links</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>dev_pm_info</span>	<span class=n>power</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>dev_pm_domain</span>	<span class=o>*</span><span class=n>pm_domain</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_GENERIC_MSI_IRQ_DOMAIN
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>irq_domain</span>	<span class=o>*</span><span class=n>msi_domain</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_PINCTRL
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>dev_pin_info</span>	<span class=o>*</span><span class=n>pins</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_GENERIC_MSI_IRQ
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=kt>raw_spinlock_t</span>		<span class=n>msi_lock</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>list_head</span>	<span class=n>msi_list</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>dma_map_ops</span> <span class=o>*</span><span class=n>dma_ops</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>u64</span>		<span class=o>*</span><span class=n>dma_mask</span><span class=p>;</span>	<span class=cm>/* dma mask (if dma&#39;able device) */</span>
+</span></span><span class=line><span class=cl>	<span class=n>u64</span>		<span class=n>coherent_dma_mask</span><span class=p>;</span><span class=cm>/* Like dma_mask, but for
+</span></span></span><span class=line><span class=cl><span class=cm>					     alloc_coherent mappings as
+</span></span></span><span class=line><span class=cl><span class=cm>					     not all hardware supports
+</span></span></span><span class=line><span class=cl><span class=cm>					     64 bit addresses for consistent
+</span></span></span><span class=line><span class=cl><span class=cm>					     allocations such descriptors. */</span>
+</span></span><span class=line><span class=cl>	<span class=n>u64</span>		<span class=n>bus_dma_mask</span><span class=p>;</span>	<span class=cm>/* upstream dma_mask constraint */</span>
+</span></span><span class=line><span class=cl>	<span class=kt>unsigned</span> <span class=kt>long</span>	<span class=n>dma_pfn_offset</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device_dma_parameters</span> <span class=o>*</span><span class=n>dma_parms</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>list_head</span>	<span class=n>dma_pools</span><span class=p>;</span>	<span class=cm>/* dma pools (if dma&#39;ble) */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_DMA_DECLARE_COHERENT
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>dma_coherent_mem</span>	<span class=o>*</span><span class=n>dma_mem</span><span class=p>;</span> <span class=cm>/* internal for coherent mem
+</span></span></span><span class=line><span class=cl><span class=cm>					     override */</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_DMA_CMA
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=k>struct</span> <span class=n>cma</span> <span class=o>*</span><span class=n>cma_area</span><span class=p>;</span>		<span class=cm>/* contiguous memory area for dma
+</span></span></span><span class=line><span class=cl><span class=cm>					   allocations */</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=cm>/* arch specific additions */</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>dev_archdata</span>	<span class=n>archdata</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>device_node</span>	<span class=o>*</span><span class=n>of_node</span><span class=p>;</span> <span class=cm>/* associated device tree node */</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>fwnode_handle</span>	<span class=o>*</span><span class=n>fwnode</span><span class=p>;</span> <span class=cm>/* firmware device node */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cp>#ifdef CONFIG_NUMA
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=kt>int</span>		<span class=n>numa_node</span><span class=p>;</span>	<span class=cm>/* NUMA node this device is close to */</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=kt>dev_t</span>			<span class=n>devt</span><span class=p>;</span>	<span class=cm>/* dev_t, creates the sysfs &#34;dev&#34; */</span>
+</span></span><span class=line><span class=cl>	<span class=n>u32</span>			<span class=n>id</span><span class=p>;</span>	<span class=cm>/* device instance */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>spinlock_t</span>		<span class=n>devres_lock</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>list_head</span>	<span class=n>devres_head</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>class</span>		<span class=o>*</span><span class=n>class</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>const</span> <span class=k>struct</span> <span class=n>attribute_group</span> <span class=o>**</span><span class=n>groups</span><span class=p>;</span>	<span class=cm>/* optional groups */</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>void</span>	<span class=p>(</span><span class=o>*</span><span class=n>release</span><span class=p>)(</span><span class=k>struct</span> <span class=n>device</span> <span class=o>*</span><span class=n>dev</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>iommu_group</span>	<span class=o>*</span><span class=n>iommu_group</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>iommu_fwspec</span>	<span class=o>*</span><span class=n>iommu_fwspec</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=k>struct</span> <span class=n>iommu_param</span>	<span class=o>*</span><span class=n>iommu_param</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span>			<span class=nl>offline_disabled</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span>			<span class=nl>offline</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=kt>bool</span>			<span class=nl>of_node_reused</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
+</span></span></span><span class=line><span class=cl><span class=cp>    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
+</span></span></span><span class=line><span class=cl><span class=cp>    defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
+</span></span></span><span class=line><span class=cl><span class=cp></span>	<span class=kt>bool</span>			<span class=nl>dma_coherent</span><span class=p>:</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=p>};</span>
+</span></span></code></pre></div><p><code>device_driver</code>和<code>device</code>必须依附于一种总线，因此都包含<code>struct bus_type</code>指针。在linux内核中，设备和驱动是分开注册的，注册设备时不需要驱动存在，反之亦然。而每个设备和驱动涌入内核的时候，都会去寻找自己的另一半，而正是<code>bus_type</code>的<code>match()</code>成员函数将两者捆绑在一起。<br>总线、驱动和设备最终都会落实为<code>sysfs</code>中的一个目录，它们实际上都可以认为是<code>kobject</code>的派生类。总线、驱动和设备中的<code>attribute</code>则落实为<code>sysfs</code>中的一个文件。</p><p>参考：《Linux设备驱动开发详解》</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://yyf.zone/tags/%E7%AC%94%E8%AE%B0/>笔记</a></li></ul><nav class=paginav><a class=next href=https://yyf.zone/notes/2023-1-17-linux-udev/><span class=title>»</span><br><span>Linux udev</span></a></nav></footer></article></main><footer class=footer><span>&copy; 2023 <a href=https://yyf.zone/>Play With YYF</a></span>
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://git.io/hugopapermod rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg></a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerText="copy";function s(){t.innerText="copied!",setTimeout(()=>{t.innerText="copy"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
