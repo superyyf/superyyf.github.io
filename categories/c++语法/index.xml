@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Blogs on Play With YYF</title>
-    <link>https://yyf.zone/blogs/</link>
-    <description>Recent content in Blogs on Play With YYF</description>
+    <title>C&#43;&#43;语法 on Play With YYF</title>
+    <link>https://yyf.zone/categories/c&#43;&#43;%E8%AF%AD%E6%B3%95/</link>
+    <description>Recent content in C&#43;&#43;语法 on Play With YYF</description>
     <image>
       <url>https://yyf.zone/papermod-cover.png</url>
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 06 Feb 2023 21:18:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/blogs/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Feb 2023 21:18:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/c++%E8%AF%AD%E6%B3%95/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C&#43;&#43; range-based for loop与临时对象</title>
       <link>https://yyf.zone/blogs/2023-2-6-rangefor/</link>
@@ -20,15 +20,6 @@
 range-based for loop 语法 attr(optional) for ( init-statement(optional) range-declaration : range-expression ) loop-statement range-declaration是序列元素的声明，range-expression是表示某一个序列的表达式，这个序列可以是数组，有begin()、end()成员函数的可迭代对象，或者初始化队列。 上述的语法可以等效成下面的一组语句：
 { auto &amp;amp;&amp;amp; __range = range-expression ; for (auto __begin = begin-expr, __end = end-expr; __begin != __end; ++__begin) { range-declaration = *__begin; loop-statement } } range-expression 与临时变量 尝试编译运行下面的代码
 #include &amp;lt;iostream&amp;gt; #include &amp;lt;memory&amp;gt; #include &amp;lt;string&amp;gt; #include &amp;lt;vector&amp;gt; struct xxx { std::vector&amp;lt;std::string&amp;gt; vec; }; std::shared_ptr&amp;lt;struct xxx&amp;gt; f() { auto p = std::make_shared&amp;lt;struct xxx&amp;gt;(); p-&amp;gt;vec.</description>
-    </item>
-    
-    <item>
-      <title>绑定RawSocket与Interface</title>
-      <link>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</link>
-      <pubDate>Wed, 21 Dec 2022 21:11:50 +0800</pubDate>
-      
-      <guid>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</guid>
-      <description>&lt;p&gt;在做以太网的回环测试时，需要实现指定MAC发送RawSocket报文，然后指定MAC接收回环过来的RawSocket报文。这就需要将socket绑定到网络接口（eth0,eth1），rawsocket的绑定方式与其他socket还不一样，研究了一下发现可以通过下面的方式实现。&lt;/p&gt;</description>
     </item>
     
   </channel>

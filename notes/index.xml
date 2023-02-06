@@ -9,7 +9,21 @@
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 17 Jan 2023 22:03:55 +0800</lastBuildDate><atom:link href="https://yyf.zone/notes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Jan 2023 11:14:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/notes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux字符设备驱动结构</title>
+      <link>https://yyf.zone/notes/2023-1-18-cdev-struct/</link>
+      <pubDate>Wed, 18 Jan 2023 11:14:12 +0800</pubDate>
+      
+      <guid>https://yyf.zone/notes/2023-1-18-cdev-struct/</guid>
+      <description>cdev结构体 在linux内核中，使用cdev结构体描述一个字符设备。
+struct cdev { struct kobject kobj; /* 内嵌的kobject对象 */ struct module *owner; /* 所属模块 */ const struct file_operations *ops; /* 文件操作结构体 */ struct list_head list; dev_t dev; /* 设备号 */ unsigned int count; } __randomize_layout; cdev结构体的dev_t成员定义了设备号，为32位，其中12位为主设备号，20位为次设备号。使用下列宏可以从dev_t获取主次设备号，也可以从主次设备号生成dev_t。
+MAJOR(dev_t dev) MINOR(dev_t dev) MKDEV(int major, int minor) file_operations定义了字符设备驱动提供给虚拟文件系统的接口函数。linux内核提供了一组函数来操作cdev结构体：cdev_init()用来初始化cdev的成员，并建立cdev和file_operations之间的连接。cdev_alloc()用来动态申请cdev内存。cdev_add()和cdev_del()分别向系统添加和删除一个cdev，完成字符设备的注册和注销。
+分配和释放设备号 在调用cdev_add()向系统注册字符设备之前，应首先调用register_chrdev_region()或者alloc_chrdev_region()向系统申请设备号，前者用于已知设备号的情况，后者用于未知。相应的在调用cdev_del()注销字符设备之后，unregister_chrdev_region()应该被调用以释放原先申请的设备号。
+file_operations结构体 file_operations结构体中的成员函数会在应用程序进行open()、write()、read()、close等系统调用时被内核调用。
+struct file_operations { struct module *owner; loff_t (*llseek) (struct file *, loff_t, int); ssize_t (*read) (struct file *, char __user *, size_t, loff_t *); ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *); ssize_t (*read_iter) (struct kiocb *, struct iov_iter *); ssize_t (*write_iter) (struct kiocb *, struct iov_iter *); int (*iopoll)(struct kiocb *kiocb, bool spin); int (*iterate) (struct file *, struct dir_context *); int (*iterate_shared) (struct file *, struct dir_context *); __poll_t (*poll) (struct file *, struct poll_table_struct *); long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long); long (*compat_ioctl) (struct file *, unsigned int, unsigned long); int (*mmap) (struct file *, struct vm_area_struct *); unsigned long mmap_supported_flags; int (*open) (struct inode *, struct file *); int (*flush) (struct file *, fl_owner_t id); int (*release) (struct inode *, struct file *); int (*fsync) (struct file *, loff_t, loff_t, int datasync); int (*fasync) (int, struct file *, int); int (*lock) (struct file *, int, struct file_lock *); ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int); unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long); int (*check_flags)(int); int (*flock) (struct file *, int, struct file_lock *); ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int); ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int); int (*setlease)(struct file *, long, struct file_lock **, void **); long (*fallocate)(struct file *file, int mode, loff_t offset, loff_t len); void (*show_fdinfo)(struct seq_file *m, struct file *f); #ifndef CONFIG_MMU unsigned (*mmap_capabilities)(struct file *); #endif ssize_t (*copy_file_range)(struct file *, loff_t, struct file *, loff_t, size_t, unsigned int); loff_t (*remap_file_range)(struct file *file_in, loff_t pos_in, struct file *file_out, loff_t pos_out, loff_t len, unsigned int remap_flags); int (*fadvise)(struct file *, loff_t, loff_t, int); bool may_pollfree; } __randomize_layout; Linux字符设备驱动的组成 字符设备驱动模块加载与卸载函数 在字符设备驱动模块加载函数中应该实现设备号的申请和cdev的注册，而在卸载函数中应该实现设备号的释放和cdev的注销。</description>
+    </item>
+    
     <item>
       <title>sysfs文件系统与Linux设备模型</title>
       <link>https://yyf.zone/notes/2023-1-17-linux-sysfs/</link>

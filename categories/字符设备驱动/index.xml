@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Linux设备驱动开发详解 on Play With YYF</title>
-    <link>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/</link>
-    <description>Recent content in Linux设备驱动开发详解 on Play With YYF</description>
+    <title>字符设备驱动 on Play With YYF</title>
+    <link>https://yyf.zone/categories/%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/</link>
+    <description>Recent content in 字符设备驱动 on Play With YYF</description>
     <image>
       <url>https://yyf.zone/papermod-cover.png</url>
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 18 Jan 2023 11:14:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Jan 2023 11:14:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/%E5%AD%97%E7%AC%A6%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux字符设备驱动结构</title>
       <link>https://yyf.zone/notes/2023-1-18-cdev-struct/</link>
@@ -22,63 +22,6 @@ MAJOR(dev_t dev) MINOR(dev_t dev) MKDEV(int major, int minor) file_operations定
 分配和释放设备号 在调用cdev_add()向系统注册字符设备之前，应首先调用register_chrdev_region()或者alloc_chrdev_region()向系统申请设备号，前者用于已知设备号的情况，后者用于未知。相应的在调用cdev_del()注销字符设备之后，unregister_chrdev_region()应该被调用以释放原先申请的设备号。
 file_operations结构体 file_operations结构体中的成员函数会在应用程序进行open()、write()、read()、close等系统调用时被内核调用。
 struct file_operations { struct module *owner; loff_t (*llseek) (struct file *, loff_t, int); ssize_t (*read) (struct file *, char __user *, size_t, loff_t *); ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *); ssize_t (*read_iter) (struct kiocb *, struct iov_iter *); ssize_t (*write_iter) (struct kiocb *, struct iov_iter *); int (*iopoll)(struct kiocb *kiocb, bool spin); int (*iterate) (struct file *, struct dir_context *); int (*iterate_shared) (struct file *, struct dir_context *); __poll_t (*poll) (struct file *, struct poll_table_struct *); long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long); long (*compat_ioctl) (struct file *, unsigned int, unsigned long); int (*mmap) (struct file *, struct vm_area_struct *); unsigned long mmap_supported_flags; int (*open) (struct inode *, struct file *); int (*flush) (struct file *, fl_owner_t id); int (*release) (struct inode *, struct file *); int (*fsync) (struct file *, loff_t, loff_t, int datasync); int (*fasync) (int, struct file *, int); int (*lock) (struct file *, int, struct file_lock *); ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int); unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long); int (*check_flags)(int); int (*flock) (struct file *, int, struct file_lock *); ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int); ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int); int (*setlease)(struct file *, long, struct file_lock **, void **); long (*fallocate)(struct file *file, int mode, loff_t offset, loff_t len); void (*show_fdinfo)(struct seq_file *m, struct file *f); #ifndef CONFIG_MMU unsigned (*mmap_capabilities)(struct file *); #endif ssize_t (*copy_file_range)(struct file *, loff_t, struct file *, loff_t, size_t, unsigned int); loff_t (*remap_file_range)(struct file *file_in, loff_t pos_in, struct file *file_out, loff_t pos_out, loff_t len, unsigned int remap_flags); int (*fadvise)(struct file *, loff_t, loff_t, int); bool may_pollfree; } __randomize_layout; Linux字符设备驱动的组成 字符设备驱动模块加载与卸载函数 在字符设备驱动模块加载函数中应该实现设备号的申请和cdev的注册，而在卸载函数中应该实现设备号的释放和cdev的注销。</description>
-    </item>
-    
-    <item>
-      <title>sysfs文件系统与Linux设备模型</title>
-      <link>https://yyf.zone/notes/2023-1-17-linux-sysfs/</link>
-      <pubDate>Tue, 17 Jan 2023 22:03:55 +0800</pubDate>
-      
-      <guid>https://yyf.zone/notes/2023-1-17-linux-sysfs/</guid>
-      <description>&lt;p&gt;sysfs是一个虚拟的文件系统，它可以产生一个包括所有系统硬件的层级视图，与提供进程和状态信息的proc文件系统十分类似。&lt;br&gt;
-sysfs把连接在系统上的设备和总线组织成一个分级的文件，向用户空间导出内核数据结构已经它们的属性。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Linux udev</title>
-      <link>https://yyf.zone/notes/2023-1-17-linux-udev/</link>
-      <pubDate>Tue, 17 Jan 2023 22:03:46 +0800</pubDate>
-      
-      <guid>https://yyf.zone/notes/2023-1-17-linux-udev/</guid>
-      <description>&lt;h2 id=&#34;devfs&#34;&gt;devfs&lt;/h2&gt;
-&lt;p&gt;devfs的出现使得设备驱动程序能自主地管理自己的设备文件，其具有以下优点：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;可以通过程序在设备初始化时在/dev目录下创建设备文件，卸载设备时将它删除。&lt;/li&gt;
-&lt;li&gt;设备驱动程序可以指定设备名、所有者和权限位，用户空间程序仍可以修改这些信息。&lt;/li&gt;
-&lt;li&gt;不再需要为设备驱动程序分配主设备号以及处理次设备号。&lt;/li&gt;
-&lt;/ol&gt;</description>
-    </item>
-    
-    <item>
-      <title>Linux文件系统</title>
-      <link>https://yyf.zone/notes/2023-1-14-linuxfile/</link>
-      <pubDate>Sat, 14 Jan 2023 19:19:41 +0800</pubDate>
-      
-      <guid>https://yyf.zone/notes/2023-1-14-linuxfile/</guid>
-      <description>&lt;h2 id=&#34;linux文件系统目录结构&#34;&gt;linux文件系统目录结构&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;/bin&lt;/strong&gt; 包含基本命令&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/sbin&lt;/strong&gt; 包含系统命令&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/dev&lt;/strong&gt; 设备文件存储目录&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/etc&lt;/strong&gt; 系统配置文件存储目录&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/lib&lt;/strong&gt; 系统库文件存放目录&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/mnt&lt;/strong&gt; 一般用于存放挂载存储设备的挂载目录&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/opt&lt;/strong&gt; 有些软件包会被安装在这里&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/proc&lt;/strong&gt; 操作系统运行时，进程及内核信息存放在这里，伪文件系统proc的挂载目录，proc并不是真正的文件系统，它存在于内存之中。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/tmp&lt;/strong&gt; 存放临时文件&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/usr&lt;/strong&gt; 系统存放程序的目录&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/var&lt;/strong&gt; 这个目录的内容经常变动，如系统日志&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;/sys&lt;/strong&gt; sysfs文件系统被映射在此目录上。linux设备驱动模型中的总线、驱动和设备都可以在sysfs文件系统中找到对应的节点。&lt;/li&gt;
-&lt;/ul&gt;</description>
-    </item>
-    
-    <item>
-      <title>Linux内核模块</title>
-      <link>https://yyf.zone/notes/2023-1-7-linux-module/</link>
-      <pubDate>Sat, 07 Jan 2023 21:02:47 +0800</pubDate>
-      
-      <guid>https://yyf.zone/notes/2023-1-7-linux-module/</guid>
-      <description>&lt;p&gt;Linux提供了将部分功能单独编译，动态加载到内核的机制，这就是内核模块。&lt;/p&gt;</description>
     </item>
     
   </channel>

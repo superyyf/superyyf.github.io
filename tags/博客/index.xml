@@ -9,7 +9,19 @@
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 21 Dec 2022 21:11:50 +0800</lastBuildDate><atom:link href="https://yyf.zone/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Feb 2023 21:18:12 +0800</lastBuildDate><atom:link href="https://yyf.zone/tags/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>C&#43;&#43; range-based for loop与临时对象</title>
+      <link>https://yyf.zone/blogs/2023-2-6-rangefor/</link>
+      <pubDate>Mon, 06 Feb 2023 21:18:12 +0800</pubDate>
+      
+      <guid>https://yyf.zone/blogs/2023-2-6-rangefor/</guid>
+      <description>range-based for loop是从C++11开始出现的新语法，可以非常简洁的实现序列迭代。在实际使用中，发现了一个需要注意的细节，就是当range-expression表达式中出现临时对象时需要十分小心。
+range-based for loop 语法 attr(optional) for ( init-statement(optional) range-declaration : range-expression ) loop-statement range-declaration是序列元素的声明，range-expression是表示某一个序列的表达式，这个序列可以是数组，有begin()、end()成员函数的可迭代对象，或者初始化队列。 上述的语法可以等效成下面的一组语句：
+{ auto &amp;amp;&amp;amp; __range = range-expression ; for (auto __begin = begin-expr, __end = end-expr; __begin != __end; ++__begin) { range-declaration = *__begin; loop-statement } } range-expression 与临时变量 尝试编译运行下面的代码
+#include &amp;lt;iostream&amp;gt; #include &amp;lt;memory&amp;gt; #include &amp;lt;string&amp;gt; #include &amp;lt;vector&amp;gt; struct xxx { std::vector&amp;lt;std::string&amp;gt; vec; }; std::shared_ptr&amp;lt;struct xxx&amp;gt; f() { auto p = std::make_shared&amp;lt;struct xxx&amp;gt;(); p-&amp;gt;vec.</description>
+    </item>
+    
     <item>
       <title>绑定RawSocket与Interface</title>
       <link>https://yyf.zone/blogs/2022-12-21-rawsocketbindinterface/</link>
