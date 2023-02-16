@@ -9,11 +9,11 @@
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 12 Feb 2023 17:01:33 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Feb 2023 21:07:24 +0800</lastBuildDate><atom:link href="https://yyf.zone/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Linux设备驱动开发详解</title>
       <link>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/</link>
-      <pubDate>Sun, 12 Feb 2023 17:01:33 +0800</pubDate>
+      <pubDate>Thu, 16 Feb 2023 21:07:24 +0800</pubDate>
       
       <guid>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AF%A6%E8%A7%A3/</guid>
       <description></description>
@@ -223,6 +223,15 @@
       <pubDate>Tue, 12 Jan 2021 16:32:10 +0000</pubDate>
       
       <guid>https://yyf.zone/categories/%E8%BF%90%E8%BE%93%E5%B1%82/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux设备驱动中的异步通知与异步I/O</title>
+      <link>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5%E4%B8%8E%E5%BC%82%E6%AD%A5i/o/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5%E4%B8%8E%E5%BC%82%E6%AD%A5i/o/</guid>
       <description></description>
     </item>
     

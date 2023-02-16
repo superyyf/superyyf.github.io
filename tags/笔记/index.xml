@@ -9,7 +9,19 @@
       <link>https://yyf.zone/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 12 Feb 2023 17:01:33 +0800</lastBuildDate><atom:link href="https://yyf.zone/tags/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 16 Feb 2023 18:51:05 +0800</lastBuildDate><atom:link href="https://yyf.zone/tags/%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>轮询</title>
+      <link>https://yyf.zone/notes/2023-2-16-polling/</link>
+      <pubDate>Thu, 16 Feb 2023 18:51:05 +0800</pubDate>
+      
+      <guid>https://yyf.zone/notes/2023-2-16-polling/</guid>
+      <description>应用程序中的轮询编程 int select(int numfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout); int poll(struct pollfd *fds, nfds_t nfds, int timeout); int epoll_create(int size); int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event); int epoll_wait(int epfd, struct epoll_event *event, int maxevents, int timeout); 设备驱动中的轮询编程 unsigned int(*poll)(struct file *filp, struct poll_table *wait); 第一个参数为file结构体指针，第二个参数为轮询表指针。这个函数应该进行两项工作。
+对可能引起设备文件状态变化的等待队列调用poll_wait()函数，将对应的等待队列头部添加到poll_table中。 返回表示是否能对设备进行无阻塞读、写访问的掩码。 void poll_wait(struct file *filp, wait_queue_head_t *queue, poll_table *wait); poll_wait()函数并不会引起阻塞，它的工作是将当前进程添加到wait参数指定的等待列表(poll_table)中，让唤醒参数queue对应的等待队列可以唤醒因select()而睡眠的进程。
+example:
+static unsigned int xxx_poll(struct file *filp, poll_table *wait) { unsigned int mask = 0; struct xxx_dev *dev = filp-&amp;gt;private_data; /* 获取设备结构体指针 */ .</description>
+    </item>
+    
     <item>
       <title>阻塞与非阻塞I/O</title>
       <link>https://yyf.zone/notes/2023-2-12-blockio/</link>

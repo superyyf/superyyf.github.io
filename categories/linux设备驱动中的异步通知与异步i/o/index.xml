@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Linux设备驱动中的异步通知与异步I/O on Play With YYF</title>
+    <link>https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5%E4%B8%8E%E5%BC%82%E6%AD%A5i/o/</link>
+    <description>Recent content in Linux设备驱动中的异步通知与异步I/O on Play With YYF</description>
+    <image>
+      <url>https://yyf.zone/papermod-cover.png</url>
+      <link>https://yyf.zone/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://yyf.zone/categories/linux%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8%E4%B8%AD%E7%9A%84%E5%BC%82%E6%AD%A5%E9%80%9A%E7%9F%A5%E4%B8%8E%E5%BC%82%E6%AD%A5i/o/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>异步通知</title>
+      <link>https://yyf.zone/notes/2023-2-16-asyncnotify/</link>
+      <pubDate>Thu, 16 Feb 2023 21:07:24 +0800</pubDate>
+      
+      <guid>https://yyf.zone/notes/2023-2-16-asyncnotify/</guid>
+      <description>Linux异步通知编程 异步通知的意思是：一旦设备就绪，则主动通知应用程序。比较准确的称谓是“信号驱动的异步I/O”。信号是在软件层次上对中断机制的一种模拟。
+Linux信号 使用信号进行进程间通信（IPC）是UNIX中的一种传统机制。除了SIGSTOP和SIGKILL两个信号外，进程能够忽略或捕获其他的全部信号。一个信号被捕获的意思是当一个信号到达时有相应的代码处理它。如果一个信号没有被这个进程所捕获，内核将采用默认行为处理。
+信号的接收 typedef void (*sighandler_t) (int); sighandler_t signal(int signum, sighandler_t handler); 第一个参数指定信号的值，第二参数指定针对前面信号值的处理函数。
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact); sigaction()可用于改变进程接收到特定信号后的行为。
+信号的释放 为了使设备支持异步通知的机制，驱动程序中涉及3项工作：
+支持F_SETOWN命令，能在这个控制命令处理中设置filp-&amp;gt;f_owner为对应进程ID。不过这项工作已经由内核完成了，设备驱动无须处理。 支持F_SETFL命令的处理，每当FASYNC标志改变时，驱动程序中的fasync()函数将得以执行。因此，驱动中应该实现fasync()函数。 在设备资源可获得时，调用kill_fasync()函数激发相应的信号。 异步通知编程涉及一项数据结构和两个函数。数据结构是fasync_struct结构体，两个函数分别是：
+处理FASYNC标志变更的函数。 int fasync_helper(int fd, struct file *filp, int mode, struct fasync_struct **fa); 释放信号用的函数。 void kill_fasync(struct fasync_struct **fa, int sig, int band); 支持异步通知的设备结构体模板：
+struct xxx_dev{ struct cdev cdev; /* cdev结构体 */ ... struct fasync_struct *async_queue; /* 异步结构体指针 */ }; 支持异步通知的设备驱动程序fasync()函数的模板：</description>
+    </item>
+    
+  </channel>
+</rss>
